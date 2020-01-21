@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/profile';
 
     /**
      * Create a new controller instance.
@@ -46,12 +46,22 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    public function account_page(){
+      if (isset($_GET['action']) && in_array($_GET['action'],array('login','register'))) {
+        return view('auth.account');
+      }else{
+        return redirect('/');
+      }
+    }
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
+            'birthdate' => ['required','date'],
+            'gender' => ['required', 'integer'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
     }
 
@@ -63,9 +73,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $role_id = 1;
+        $avatar = 'default.png';
         return User::create([
             'name' => $data['name'],
+            'surname' => $data['surname'],
+            'birthdate' => $data['birthdate'],
+            // 'phone' => $data['phone'],
+            'gender' => $data['gender'],
             'email' => $data['email'],
+            'role_id' => $role_id,
+            'avatar' => $avatar,
             'password' => Hash::make($data['password']),
         ]);
     }

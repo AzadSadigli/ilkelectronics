@@ -16,6 +16,7 @@ class CreateCategoryTable extends Migration
         Schema::create('category', function (Blueprint $table) {
           $table->bigIncrements('id');
           $table->string('name');
+          $table->string('slug')->unique();
           $table->integer('parent_id')->nullable();
           $table->integer('views')->default(0);
           $table->string('token')->unique();

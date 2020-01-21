@@ -25,6 +25,7 @@ class CreateProductsTable extends Migration
           $table->float('price');
           $table->float('old_price')->nullable();
           $table->text('description_title')->nullable();
+          $table->string('brand')->default('N/A');
           $table->text('description')->nullable();
           $table->integer('condition')->default(0); //	condition 0 means new, 1 means used
           $table->timestamps();

@@ -47,10 +47,10 @@
                         </ul>
                     </div>
                     <div class="body">
-                      @if(session()->has('success'))
-                          <div class="alert alert-success alert-dismissible">
+                      @if(session()->has('message'))
+                          <div class="alert alert-{{session()->get('type') }} alert-dismissible">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                              {{ session()->get('success') }}
+                              {{ session()->get('message') }}
                           </div>
                       @endif
                       @if(Request::is('admin/add-category'))
@@ -59,10 +59,10 @@
                         <h2 class="card-inside-title">{{__('app.Parent_category')}}</h2>
                           <div class="row clearfix">
                               <div class="col-sm-12">
-                                  <select class="form-control show-tick" name="category_name">
+                                  <select class="form-control show-tick" name="parent">
                                       <option value="">-- {{__('app.Independent')}} --</option>
-                                      @foreach(App\Category::all() as $ct)
-                                      <option value="{{$ct->id}}">{{$ct->name}}</option>
+                                      @foreach(App\Category::whereNull('parent_id')->get() as $ct)
+                                        <option value="{{$ct->id}}">{{$ct->name}}</option>
                                       @endforeach
                                   </select>
                               </div>
@@ -79,31 +79,46 @@
                               </div>
                             </div>
                             </div>
-                      </form>
+                        </form>
+                      @if(App\Category::all()->count() > 0)
+                        <div class="card">
+                          <div class="body table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th>{{__('app.Category')}}</th>
+                                          <th>{{__('app.Parent_category')}}</th>
+                                          <th>X</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @foreach(App\Category::all() as $ct)
+                                      <tr>
+                                          <th scope="row">{{$ct->name}}</th>
+                                          <td>@if(!empty($ct->parent_id)) {{App\Category::find($ct->parent_id)->name}} @endif</td>
+                                          <td><a href="/admin/delete-category/{{$ct->id}}" class="btn btn-danger">X</a> </td>
+                                      </tr>
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      @endif
                       @else
                       <form action="/admin/add-new-product" method="POST" enctype="multipart/form-data">
                         @csrf
                         <h2 class="card-inside-title">{{__('app.Category')}}</h2>
                           <div class="row clearfix">
-                              <div class="col-sm-6">
-                                  <select class="form-control show-tick" name="category">
-                                      <option value="">-- {{__('app.Select_category')}} --</option>
-                                      <option value="10">10</option>
-                                      <option value="20">20</option>
-                                      <option value="30">30</option>
-                                      <option value="40">40</option>
-                                      <option value="50">50</option>
+                              <div class="col-sm-6 pcats">
+                                  <select class="form-control show-tick" id="pcat" required>
+                                      <option selected>-- {{__('app.Select_category')}} --</option>
+                                      @foreach(App\Category::whereNull('parent_id')->get() as $ct)
+                                          <option value="{{$ct->id}}">{{$ct->name}}</option>
+                                      @endforeach
                                   </select>
                               </div>
-                              <div class="col-sm-6">
-                                  <select class="form-control" name="subcategory">
-                                      <option value="">-- {{__('app.Select_category')}} --</option>
-                                      <option value="10">10</option>
-                                      <option value="20">20</option>
-                                      <option value="30">30</option>
-                                      <option value="40">40</option>
-                                      <option value="50">50</option>
-                                  </select>
+                              <div class="col-sm-6 pcats">
+                                  <select class="form-control" name="category" id="psubcat" data-default="{{__('app.Select_category')}}" required></select>
                               </div>
                           </div>
                           <div class="row clearfix">
@@ -111,7 +126,7 @@
                                 <div class="form-group">
                                   <label for="product_name">{{__('app.ID')}}</label>
                                   <div class="form-line">
-                                      <input type="text" name="product_id" class="form-control" placeholder="{{__('app.ID')}}" />
+                                      <input type="text" name="prod_id" class="form-control" placeholder="{{__('app.ID')}}" required/>
                                   </div>
                                 </div>
                                   <div class="form-group">
@@ -123,31 +138,42 @@
                                   <div class="form-group">
                                     <label for="product_name">{{__('app.Product_name')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="product_name" class="form-control" placeholder="{{__('app.Product_name')}}" />
+                                        <input type="text" name="productname" class="form-control" placeholder="{{__('app.Product_name')}}" required/>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="price">{{__('app.Price')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="price" class="form-control" step="0.01" placeholder="{{__('app.Price')}}">
+                                        <input type="number" name="price" class="form-control" min="0" step="0.01" placeholder="{{__('app.Price')}}" required>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="old_price">{{__('app.Old_price')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="old_price" class="form-control" step="0.01" placeholder="{{__('app.Old_price')}}">
+                                        <input type="number" name="old_price" class="form-control" min="0" step="0.01" placeholder="{{__('app.Old_price')}}">
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="quantity">{{__('app.Quantity')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="quantity" class="form-control" placeholder="{{__('app.Quantity')}}">
+                                        <input type="number" name="quantity" min="0" class="form-control" placeholder="{{__('app.Quantity')}}" required>
                                     </div>
                                   </div>
                                   <div class="form-group">
+                                    <label for="quantity">{{__('app.Brand')}}</label>
+                                    <div class="form-line">
+                                        <input type="text" name="brand" class="form-control" placeholder="{{__('app.Brand')}}" required>
+                                    </div>
+                                  </div>
+                                  <div class="demo-switch">
+                                      <div class="switch">
+                                          <label>{{__('app.Used')}}<input type="checkbox" name="condition" checked value="1"><span class="lever"></span>{{__('app.New')}}</label>
+                                      </div>
+                                  </div><br>
+                                  <div class="form-group">
                                     <label for="description">{{__('app.Description_title')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="description" class="form-control" placeholder="{{__('app.Description_title')}}">
+                                        <input type="text" name="description_title" class="form-control" placeholder="{{__('app.Description_title')}}">
                                     </div>
                                   </div>
                               </div>
@@ -164,7 +190,7 @@
                           </div>
                           <div class="demo-switch">
                               <div class="switch">
-                                  <label>{{__('app.Not_active')}}<input type="checkbox" checked="" name="status"><span class="lever"></span>{{__('app.Active')}}</label>
+                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" checked value="1"><span class="lever"></span>{{__('app.Active')}}</label>
                               </div>
                           </div>
                           <div class="form-group">
@@ -192,4 +218,34 @@
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/forms/basic-form-elements.js"></script>
 <script src="/adm/js/demo.js"></script>
+<script type="text/javascript">
+$("#pcat").on("change",function(e){
+  e.preventDefault();
+  $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+  if ($(this).val() !== "") {
+    $.ajax({
+      url: '/admin/change-subcategory/' + $(this).val(),
+      type: 'GET',
+      cache:false,
+      success:function(data){
+        let html = "<option selected disabled>-- "+$("#psubcat").data('default')+" --</option>";
+        for (var i = 0; i < data.length; i++) {
+          html += "<option id='"+data[i].id+"'>"+data[i].name+"</option>";
+        }
+        $("#psubcat").html(html).selectpicker('refresh');
+      }
+    });
+  }
+});
+$("input[name='status'],input[name='condition']").change(function(){
+  if ($(this).val() == 1) {
+    $(this).val(0)
+  }else{
+    $(this).val(1)
+  }
+});
+$(document.body).on("change","#psubcat",function(){
+  console.log($(this).val());
+});
+</script>
 @endsection

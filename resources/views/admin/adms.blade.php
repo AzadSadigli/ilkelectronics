@@ -35,8 +35,8 @@
         opacity: 0.9;
         font-weight: 100;
       }
-      .words tr td input{
-        height: 32px;
+      .words tr td textarea{
+        /* height: 32px; */
         padding: 10px;
         width: 60%;
         border-radius: 7px;
@@ -73,17 +73,20 @@
       .btn{
         padding: 8px 25px 8px 25px;
         min-height: 38px;
+        cursor: pointer;
       }
       .modal-input-list{
         margin-top: 10px;
       }
-      .modal-input-list input{
+      .modal-input-list textarea,.modal-input-list input{
         display: block;
         width: 90%;
         border-radius: 6px;
         border: 1px solid #d4d4d4;
-        height: 38px;
         padding: 10px;
+      }
+      .modal-input-list input{
+        height: 38px;
       }
       .modal-input-list label{
         display: block;

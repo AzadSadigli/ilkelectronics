@@ -219,7 +219,13 @@
 						</div>
 						<h2 class="product-name"><a href="/product/{{$pro->slug}}">{{$pro->productname}}</a></h2>
 						<div class="product-btns">
-							<button class="primary-btn add-to-cart" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></button>
+							@if(Auth::check())
+							@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pro->id)->first()))
+							<a class="primary-btn add-to-cart" data-id="{{$pro->id}}" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></a>
+							@else
+							<a class="primary-btn" title="{{__('app.Added')}}"><i class="fa fa-check"></i></a>
+							@endif
+							@endif
 						</div>
 					</div>
 				</div>

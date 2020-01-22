@@ -94,47 +94,27 @@
 								@endif
 							</ul>
 						</li>
+						@if(Auth::check())
 						<li class="header-cart dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-shopping-cart"></i>
-									<span class="qty">3</span>
+									<span class="qty wish_count"></span>
 								</div>
 								<strong class="text-uppercase">My Cart:</strong>
 								<br>
-								<span>35.20$</span>
+								<span class="wish_total"></span>
 							</a>
 							<div class="custom-menu">
 								<div id="shopping-cart">
-									<div class="shopping-cart-list">
-										<div class="product product-widget">
-											<div class="product-thumb">
-												<img src="/img/thumb-product01.jpg" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
-										</div>
-										<div class="product product-widget">
-											<div class="product-thumb">
-												<img src="/img/thumb-product01.jpg" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
-										</div>
-									</div>
+									<div class="shopping-cart-list" id="wishlist_head"></div>
 									<div class="shopping-cart-btns">
-										<button class="main-btn">View Cart</button>
-										<button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i></button>
+										<a class="primary-btn pull-right" href="/wishlist">{{__('app.More')}} <i class="fa fa-arrow-circle-right"></i></a>
 									</div>
 								</div>
 							</div>
 						</li>
+						@endif
 						<li class="nav-toggle">
 							<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
 						</li>
@@ -153,27 +133,17 @@
 	@endif
   @section('body')
   @show
-
-	<!-- FOOTER -->
 	<footer id="footer" class="section section-grey">
-		<!-- container -->
 		<div class="container">
-			<!-- row -->
 			<div class="row">
-				<!-- footer widget -->
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<!-- footer logo -->
 						<div class="footer-logo">
 							<a class="logo" href="#">
-		            <img src="/img/logo.png" alt="">
+		            <img src="/img/logo.png" alt="{{config('settings.Site_title')}}">
 		          </a>
 						</div>
-						<!-- /footer logo -->
-
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-
-						<!-- footer social -->
+						<p>{{config('settings.Footer_slogan')}}</p>
 						<ul class="footer-social">
 							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -181,29 +151,23 @@
 							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
 							<li><a href="#"><i class="fa fa-pinterest"></i></a></li>
 						</ul>
-						<!-- /footer social -->
 					</div>
 				</div>
-				<!-- /footer widget -->
-
-				<!-- footer widget -->
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<h3 class="footer-header">My Account</h3>
+						<h3 class="footer-header">{{__('app.My_account')}}</h3>
 						<ul class="list-links">
-							<li><a href="#">My Account</a></li>
-							<li><a href="#">My Wishlist</a></li>
-							<li><a href="#">Compare</a></li>
-							<li><a href="#">Checkout</a></li>
-							<li><a href="#">Login</a></li>
+							@if(Auth::check())
+							<li><a href="/profile">{{__('app.My_account')}}</a></li>
+							<li><a href="/wishlist">{{__('app.Wishlist')}}</a></li>
+							@else
+							<li><a href="/account?action=login">{{__('app.Login')}}</a></li>
+							<li><a href="/account?action=register">{{__('app.Register')}}</a></li>
+							@endif
 						</ul>
 					</div>
 				</div>
-				<!-- /footer widget -->
-
 				<div class="clearfix visible-sm visible-xs"></div>
-
-				<!-- footer widget -->
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
 						<h3 class="footer-header">Customer Service</h3>

@@ -22,6 +22,10 @@ class ProductController extends Controller
       $pro->update();
       return view('product',compact('pro'));
     }
+    public function get_product_list(){
+      $pros = Products::orderBy('created_at','desc')->get();
+      return view('admin.list',compact('pros'));
+    }
     public function add_product_view(Request $req){
       return view('admin.add_product');
     }
@@ -62,13 +66,14 @@ class ProductController extends Controller
       for ($i=0; $i < count($imgArr); $i++) {
           $img_name = $imgArr[$i];
           resize($sm_folder.$img_name, $sm_folder.$img_name, 262.5, 350);
-          resize($folder.$img_name, $folder.$img_name, 455, 455);
+          resize($folder.$img_name, $folder.$img_name, 1200, 1200);
+          logo_on_image($folder.$img_name,'img/logo-transparent.png',$folder.$img_name);
           $img = new Images;
           $img->prod_id = $pro->id;
           $img->image = $img_name;
           $img->save();
       }
-      // update_sitemap();
+      update_sitemap();
       return redirect()->back()->with(['type' => 'success','message' => Lang::get('app.Product_added')]);
     }
     // if (!file_exists($sm_folder)) {

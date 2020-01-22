@@ -88,10 +88,10 @@
 
 							<div class="product-btns">
 								<div class="qty-input">
-									<span class="text-uppercase">QTY: </span>
-									<input class="input" type="number" value="1">
+									<span class="text-uppercase">{{__('app.Quantity')}}: </span>
+									<input class="input quantity" type="number" value="1">
 								</div>
-								<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+								<button class="primary-btn add-to-cart" id="{{$pro->id}}"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
 								<div class="pull-right">
 									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
 									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
@@ -103,12 +103,33 @@
 					<div class="col-md-12">
 						<div class="product-tab">
 							<ul class="tab-nav">
-								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab1">Details</a></li>
-								<li><a data-toggle="tab" href="#tab2">Reviews (3)</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab1">{{__('app.Description')}}</a></li>
+								<li><a data-toggle="tab" href="#tab2">{{__('app.Reviews')}} (3)</a></li>
 							</ul>
 							<div class="tab-content">
 								<div id="tab1" class="tab-pane fade in active">
+									<table class="table">
+								    <thead>
+								      <tr>
+								        <th>#</th>
+								        <th>Firstname</th>
+								        <th>Lastname</th>
+								        <th>Age</th>
+								        <th>City</th>
+								        <th>Country</th>
+								      </tr>
+								    </thead>
+								    <tbody>
+								      <tr>
+								        <td>1</td>
+								        <td>Anna</td>
+								        <td>Pitt</td>
+								        <td>35</td>
+								        <td>New York</td>
+								        <td>USA</td>
+								      </tr>
+								    </tbody>
+								  </table>
 									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
 										irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 								</div>
@@ -181,13 +202,17 @@
 										</div>
 										<div class="col-md-6">
 											<h4 class="text-uppercase">Write Your Review</h4>
-											<p>Your email address will not be published.</p>
-											<form class="review-form">
+											<p>
+												@if(config("settings.comment_verification") == 0)
+												{{__('app.Your_comment_will_shared_after_verification')}}
+												@endif
+											</p>
+											<div class="review-form">
 												<div class="form-group">
-													<input class="input" type="text" placeholder="Your Name" />
+													<input class="input" type="text" placeholder="Your Name" @if(Auth::check()) value="{{Auth::user()->name}} {{Auth::user()->surname}}" disabled @endif />
 												</div>
 												<div class="form-group">
-													<input class="input" type="email" placeholder="Email Address" />
+													<input class="input" type="email" placeholder="Email Address" @if(Auth::check()) value="{{Auth::user()->email}}" disabled @endif />
 												</div>
 												<div class="form-group">
 													<textarea class="input" placeholder="Your review"></textarea>
@@ -196,16 +221,16 @@
 													<div class="input-rating">
 														<strong class="text-uppercase">Your Rating: </strong>
 														<div class="stars">
-															<input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
-															<input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
-															<input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
-															<input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
-															<input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
+															<input type="radio" name="rating" value="5" /><label for="star5"></label>
+															<input type="radio" name="rating" value="4" checked/><label for="star4"></label>
+															<input type="radio" name="rating" value="3" /><label for="star3"></label>
+															<input type="radio" name="rating" value="2" /><label for="star2"></label>
+															<input type="radio" name="rating" value="1" /><label for="star1"></label>
 														</div>
 													</div>
 												</div>
-												<button class="primary-btn">Submit</button>
-											</form>
+												<button class="primary-btn">{{__('app.Share')}}</button>
+											</formdiv
 										</div>
 									</div>
 
@@ -315,9 +340,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- /Product Single -->
-
-				<!-- Product Single -->
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="product product-single">
 						<div class="product-thumb">
@@ -346,18 +368,9 @@
 						</div>
 					</div>
 				</div>
-				<!-- /Product Single -->
 			</div>
-			<!-- /row -->
 		</div>
-		<!-- /container -->
 	</div>
 @endsection
 @section('foot')
-	<!-- <script src="/js/jquery.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-	<script src="/js/slick.min.js"></script>
-	<script src="/js/nouislider.min.js"></script>
-	<script src="/js/jquery.zoom.min.js"></script>
-	<script src="/js/main.js"></script> -->
 @endsection

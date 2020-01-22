@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="modal-input-list">
                                   <label for="">{{__('app.Translation')}}</label>
-                                  <input type="text" id="word_translate" placeholder="{{__('app.Translation')}}...">
+                                  <textarea id="word_translate" placeholder="{{__('app.Translation')}}..."></textarea>
                                 </div>
                               </div>
                               <div class="modal-footer">
@@ -123,7 +123,7 @@
                 let string = "";
                 for (var i = 0; i < data.length; i++) {
                   let btns = "<a class='btn btn-danger delete_word' data-key='"+Object.keys(data[i])+"'><i class='fa fa-trash'></i></a><a><i></i></a>";
-                  string += "<tr><th scope='row' data-index='"+(i + 1)+"'>"+(i+1)+"</th><td>"+Object.keys(data[i])+"</td><td><input type='text' name='"+Object.keys(data[i])+"' value='"+Object.values(data[i])+"'> </td><td>"+btns+"</td></tr>";
+                  string += "<tr><th scope='row' data-index='"+(i + 1)+"'>"+(i+1)+"</th><td>"+Object.keys(data[i])+"</td><td><textarea name='"+Object.keys(data[i])+"'>"+Object.values(data[i])+"</textarea> </td><td>"+btns+"</td></tr>";
                 }
                 $(".header > h2 > small > b:eq(0)").html('/'+folder + '/' + fl);
                 $(".words").html(string);
@@ -138,7 +138,7 @@
             for (var i = 0; i < $(".words > tr").length; i++) {
               if ($(".words > tr:eq("+i+") > td:eq(0)").text() !== $(this).data("key")) {
                 let key = $(".words > tr:eq("+i+") > td:eq(0)").text();
-                let val = $(".words > tr:eq("+i+") > td:eq(1) > input").val();
+                let val = $(".words > tr:eq("+i+") > td:eq(1) > textarea").val();
                 list.push({key, val});
               }
             }
@@ -150,7 +150,7 @@
             var list = [];
             for (var i = 0; i < $(".words > tr").length; i++) {
               let key = $(".words > tr:eq("+i+") > td:eq(0)").text();
-              let val = $(".words > tr:eq("+i+") > td:eq(1) > input").val();
+              let val = $(".words > tr:eq("+i+") > td:eq(1) > textarea").val();
               list.push({key, val});
             }
             $(this).html('<i class="fa fa-refresh fa-spin"></i>');
@@ -165,7 +165,7 @@
               success:function(data){
                 console.log(data.message);
                 $('#addNewWord').modal('hide');
-                $('#addNewWord input').val("");
+                $('#addNewWord textarea').val("");
                 get_tr_file(folder,fl);
               },
               complete:function(){
@@ -179,7 +179,7 @@
             var list = [];
             for (var i = 0; i < $(".words > tr").length; i++) {
               let key = $(".words > tr:eq("+i+") > td:eq(0)").text();
-              let val = $(".words > tr:eq("+i+") > td:eq(1) > input").val();
+              let val = $(".words > tr:eq("+i+") > td:eq(1) > textarea").val();
               list.push({key, val});
             }
             let key = $("#index").val();

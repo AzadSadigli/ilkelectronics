@@ -33,7 +33,7 @@
 								@endif
 						</li>
 						@endforeach
-						<li><a href="#">View All</a></li>
+						<li><a href="/categories">{{__('app.View_all')}}</a></li>
 					</ul>
 				</div>
 				<!-- /category nav -->

@@ -94,7 +94,7 @@ class ProductController extends Controller
     public function change_im_order_view($slug){
       $pro = Products::where('slug',$slug)->first();
       $images = Images::where('prod_id',$pro->id)->orderBy('order','asc')->get();
-      return view('admin.add_product',compact('images'));
+      return view('admin.add_product',compact('images','pro'));
     }
     public function change_im_order(Request $req){
       $data = $req->list;

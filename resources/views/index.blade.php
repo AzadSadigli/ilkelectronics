@@ -204,7 +204,7 @@
 						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">
-						@else @php($img = App\Images::where('prod_id',$pro->id)->first())
+						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())
 						<img src="/uploads/pro/small/{{$img->image}}" alt="{{$pro->productname}}">
 						@endif
 					</div>

@@ -109,6 +109,7 @@
                       </div>
                       @endif
                       @elseif(Request::is('admin/change-image-order/*'))
+                      <span>{{$pro->prod_id}}: {{$pro->productname}}</span>
                       <a href="#" class="btn btn-primary my-btn pull-right">{{__('app.Reorder')}}</a><br><br>
                       <hr>
                       <ul class="image-list">

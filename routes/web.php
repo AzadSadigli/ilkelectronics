@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth'],function(){
   Route::get('/delete-wishlist','UserController@delete_wishlist');
 });
 
+Route::get('/update-latest-currency','Controller@currency_update');
 // Auth::routes();
 
 // Authentication Routes...

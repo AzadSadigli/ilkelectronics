@@ -5722,6 +5722,42 @@ function(t) {
     })
 }(jQuery);
 $(document).ready(function(){
+  var ds = "<div class=";
+  function number_format(number, decimals, dec_point, thousands_sep) {
+    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+        s = '',
+        toFixedFix = function (n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+        };
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
+  }
+  function time_diff( datetime ){
+      var datetime = typeof datetime !== 'undefined' ? datetime : "2014-01-01 01:02:03.123456";
+      var datetime = new Date( datetime ).getTime();
+      var now = new Date().getTime();
+      if( isNaN(datetime) ){return "";}
+      if (datetime < now) {var milisec_diff = now - datetime;}else{var milisec_diff = datetime - now;}
+      var days = Math.floor(milisec_diff / 1000 / 60 / (60 * 24));
+      var date_diff = new Date( milisec_diff );
+      return days;
+  }
+  function disc(a,b){
+    return number_format(((b-a)/b)*100,2);
+  }
+  let tv_time = 6000;
   function notify(message,type){
     let len = $(".notify").length;
     for (var i = 0; i < len; i++) {
@@ -5729,6 +5765,7 @@ $(document).ready(function(){
       let op = 0.6 + 0.4/i;
       $(".notify:eq("+(len - i - 1)+")").animate({bottom: bt+"px",opacity:op});
     }
+    tv_time = 6000;
     $("body").append("<div class='notify notify_"+(len - $(this).index())+" notify-"+type+"' data-index='"+(len - $(this).index())+"'><a class='close'>&times;</a>"+message+"</div>");
   }
   $(document.body).on("click",".notify .close",function(){
@@ -5744,7 +5781,7 @@ $(document).ready(function(){
     for (var i = 0; i < len; i++) {
       close_notify($(".notify:eq(0)").data("index"));
     }
-  },6000);
+  },tv_time);
   function close_notify(id){
     $(".notify_"+id).fadeOut(700, function() { $(this).remove(); });
   }
@@ -5872,24 +5909,32 @@ $(document).ready(function(){
 		});
 		urls = ['/get-search-result','/get-category-products'];
 		function get_prods(){
-			var u = urls[0];
-			if (document.URL.indexOf("category")) {u = urls[1];}
+			var u = urls[1];
+			if (document.URL.indexOf("search-result")) {u = urls[0];}
 			$.ajax({
 				url: u,
 				type: 'GET',
 				data: {filter: filter},
 				success:function(data){
 					let html = "";let id = "#prod_list";
-					let nw = $(id).data("words").split(",")[0];
 					let vw = $("#prod_list").data("words").split(",")[1];
 					for (var i = 0; i < data.length; i++) {
 						let val = data[i];
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'><span>"+nw+"</span><span class='sale'>"+val['price']+"%</span></div><a class='main-btn quick-view' href='/product/"+val['slug']+"'><i class='fa fa-search-plus'></i> "+vw+"</a><img src='/img/default.png' alt='"+val['productname']+"'></div><div class='product-body'><h3 class='product-price'>"+val['price']+" <del class='product-old-price'>$45.00</del></h3><div class='product-rating'><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-o empty'></i></div><h2 class='product-name'><a href='/product/"+val['slug']+"'>"+val['productname']+"</a></h2><div class='product-btns'><button class='primary-btn add-to-cart' data-id='"+val['id']+"'><i class='fa fa-shopping-cart'></i></button></div></div></div></div>";
+            let img = "src='/img/default.png'";
+            let new_case = "";let discount = "";let old_price = "";
+            if (val['image'] !== null) {img = "src='/uploads/pro/small/"+val['image']+"'";}
+            if (time_diff(val['created_at']) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
+            if (val['old_price'] !== "" && val['old_price'] !== null) {
+              discount = "<span class='sale'>"+disc(val['price'],val['old_price'])+"%</span>";
+              old_price = "<del class='product-old-price'>"+val['old_price']+" AZN</del>";
+            }
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val['slug']+"'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val['productname']+"'></div><div class='product-body'><h3 class='product-price'>"+val['price']+" AZN " + old_price+" </h3><div class='product-rating'><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-o empty'></i></div><h2 class='product-name'><a href='/product/"+val['slug']+"'>"+val['productname']+"</a></h2><div class='product-btns'><button class='primary-btn add-to-cart' data-id='"+val['id']+"'><i class='fa fa-shopping-cart'></i></button></div></div></div></div>";
 					}
 					$(id).html(html);
 				}
 			});
 		}
+
 		$(document.body).on("change",input +":eq(0)",function(){
 			if ($(this).hasClass("chckd")) {
 				$(".filt-by-brands b:eq(0)").css("display","");

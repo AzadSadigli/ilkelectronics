@@ -91,4 +91,18 @@ class ProductController extends Controller
     public function add_tab(Request $req){
 
     }
+    public function change_im_order_view($slug){
+      $pro = Products::where('slug',$slug)->first();
+      $images = Images::where('prod_id',$pro->id)->orderBy('order','asc')->get();
+      return view('admin.add_product',compact('images'));
+    }
+    public function change_im_order(Request $req){
+      $data = $req->list;
+      for ($i=0; $i < count($data); $i++) {
+        $img = Images::find($data[$i]);
+        $img->order = $i;
+        $img->update();
+      }
+      return response()->json(['success' => Lang::get('app.Images_reordered')]);
+    }
 }

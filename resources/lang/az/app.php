@@ -97,4 +97,7 @@ return [
     'Filter_by_brand' => 'Brendə görə filterlə',
     'Wishlist_removed' => 'Məhsul qutudan çıxarıldı',
     'Your_comment_will_shared_after_verification' => 'Sizin rəyiniz baxış keçirildikdən sonra əlavə ediləcəkdir',
+    'Reorder' => 'Sırala',
+    'Change_order' => 'Sıralamanı dəyiş',
+    'Images_reordered' => 'Şəkillər yenidən sıralandı',
 ];

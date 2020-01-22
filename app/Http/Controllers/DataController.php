@@ -78,60 +78,64 @@ class DataController extends Controller
       $cats = Category::whereNull('parent_id')->orderBy('views','desc')->get();
       return view('pg_list',compact('cats'));
     }
-    public function testing(Request $req){
-      echo '<!doctype html>
-            <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1">
-              <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-              <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-              <script>
-              let cnt = $("ul li").length;
-              console.log($("ul li").length)
-              function reoder(){
-                for (var i=0; i < 4; i++) {
-                  $("ul li:eq("+i+")").data("order", i);
-                }
-                // console.log(cnt);
-              }
-              $(function() {
-                  var isDragging = false;
-                  $("a")
-                  .mousedown(function() {
-                      reoder();
-                      console.log("mousedown");
-                      isDragging = false;
-                  })
-                  // .mousemove(function() {
-                  //     console.log("mousemove");
-                  //     isDragging = true;
-                  //  })
-                  .mouseup(function() {
-                      reoder();
-                      console.log("mouseup");
-                      var wasDragging = isDragging;
-                      isDragging = false;
-                      if (!wasDragging) {
-                          $("#throbble").toggle();
-                      }
-                  });
+    public function testing(){
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://sade.store/currency.json",
+        CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+          "accept: application/json"
+        ),
+      ));
+      curl_setopt($curl, CURLOPT_VERBOSE, TRUE);
+      curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+      $res = curl_exec($curl);
+      die($res);
+      $response = json_decode($res,TRUE);
+      $err = curl_error($curl);
+      curl_close($curl);
+      if ($err) {
+        echo "Error: " . $err;
+      } else {
+        $ips = file_get_contents(base().'/public/ips.txt');
+        $ips = json_decode($ips, TRUE);
+        $ips[] = ['date' => date('Y-m-d H:i:s'), 'ip' => $_SERVER['REMOTE_ADDR']];
+        $json = json_encode($ips);
 
-                  $("ul").sortable();
-              });
-              </script>
-            </head>
-            <body>
-            <div>
-                <ul>
-                    <li><a href="#">Some link #1</a></li>
-                    <li><a href="#">Some link #2</a></li>
-                    <li><a href="#">Some link #3</a></li>
-                    <li><a href="#">Some link #4</a></li>
-                </ul>
-            </div>
-            </body>
-            </html>';
+        // $rt = $response['rates'];
+        $arr = array("AZN" => 1,"RUB" => $rt['AZN'] / $rt["RUB"],"TRY" => $rt['AZN'] / $rt["TRY"],"USD" => $rt['AZN'] / $rt["USD"],);
+        file_put_contents(base().'/public/currency.json',json_encode($arr,true));
+        file_put_contents(base().'/public/ips.txt',$json);
+        $r = file_get_contents(base().'/public/currency.json');
+        if (isJson($r)) {
+          echo "success";
+        }else{
+          echo "not json";
+        }
+      }
+    }
+    public function testing0(Request $req){
+      $data = file_get_contents($base = burl().'/config/settings.php');
+      $data = preg_replace('!/\*.*?\*/!s', '', $data);
+      $data = preg_replace('/\n\s*\n/', "\n", $data);
+      $arr = preg_split("/\,/", substr($data,(strpos($data,"[") + 1),strpos($data,"];")));
+      // unset($arr[count($arr) - 1]);
+      $array = [];
+      for ($i=0; $i < count($arr); $i++) {
+        $part1 = str_replace("'","",substr($arr[$i], strpos($arr[$i], "' =>") + 5));
+        $part2 = str_replace("'","",substr($arr[$i], 0,strpos($arr[$i], "' =>")));
+        $part2 = preg_replace('/\s+/', '', $part2);
+        $array[] = [
+          $part2 => $part1
+        ];
+      }
+      print_r($array);
 
     }
 }

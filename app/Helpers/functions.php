@@ -11,19 +11,19 @@ function make_slug($word){
 }
 function update_sitemap(){
   $date = date("Y-m-d");
-  $home = "<url>\n<loc>https://ilkelectronics.az/</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>1.00</priority>\n</url>";
-  $all_news = "<url>\n<loc>https://ilkelectronics.az/news-list</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.80</priority>\n</url>";
-  $contact = "<url>\n<loc>https://ilkelectronics.az/contact</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.80</priority>\n</url>";
-  $acc = "<url>\n<loc>https://ilkelectronics.az/account?action=register</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.80</priority>\n</url>";
-  $acc .= "<url>\n<loc>https://ilkelectronics.az/account?action=login</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.80</priority>\n</url>";
+  $home = "<url>\n      <loc>https://ilkelectronics.az/</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>1.00</priority>\n      </url>";
+  $all_news = "<url>\n      <loc>https://ilkelectronics.az/news-list</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.80</priority>\n      </url>";
+  $contact = "<url>\n      <loc>https://ilkelectronics.az/contact</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.80</priority>\n      </url>";
+  $acc = "<url>\n      <loc>https://ilkelectronics.az/account?action=register</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.80</priority>\n      </url>";
+  $acc .= "<url>\n      <loc>https://ilkelectronics.az/account?action=login</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.80</priority>\n      </url>";
   $pros = "";$news = "";$pages = "";$cats = "";
   $products = App\Products::all();$ns = App\News::all();$pgs = App\Pages::all();
   $cts = App\Category::all();
-  foreach ($products as $key => $product) {$pros .= "<url>\n<loc>https://ilkelectronics.az/product/".$product->slug."</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.64</priority>\n</url>";}
-  foreach ($ns as $n) {$news .= "<url>\n<loc>https://ilkelectronics.az/news/".$n->slug."</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.56</priority>\n</url>";}
-  foreach ($pgs as $pg) {$pages .= "<url>\n<loc>https://ilkelectronics.az/page/".$pg->slug."</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.51</priority>\n</url>";}
-  foreach ($cts as $ct) {$cats .= "<url>\n<loc>https://ilkelectronics.az/category/".$ct->slug."</loc>\n<lastmod>".$date."T18:49:36+00:00</lastmod>\n<priority>0.53</priority>\n</url>";}
-  $main = "<?xml version='1.0' encoding='UTF-8'?>\n<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'\n xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 \n http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>".$home."\n".$all_news."\n".$contact."\n".$acc."\n".$pros."\n".$news."\n".$pages."\n".$cats."\n</urlset>";
+  foreach ($products as $key => $product) {$pros .= "<url>\n      <loc>https://ilkelectronics.az/product/".$product->slug."</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.64</priority>\n      </url>";}
+  foreach ($ns as $n) {$news .= "<url>\n      <loc>https://ilkelectronics.az/news/".$n->slug."</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.56</priority>\n      </url>";}
+  foreach ($pgs as $pg) {$pages .= "<url>\n      <loc>https://ilkelectronics.az/page/".$pg->slug."</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.51</priority>\n      </url>";}
+  foreach ($cts as $ct) {$cats .= "<url>\n      <loc>https://ilkelectronics.az/category/".$ct->slug."</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>0.53</priority>\n      </url>";}
+  $main = "<?xml version='1.0' encoding='UTF-8'?>\n<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'\n      xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n      xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 \n      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>".$home."\n      ".$all_news."\n      ".$contact."\n      ".$acc."\n      ".$pros."\n      ".$news."\n      ".$pages."\n      ".$cats."\n</urlset>";
   file_put_contents(burl().'/public/sitemap.xml', $main);
   // echo "<pre>".file_get_contents("../../public/sitemap.xml");
 }

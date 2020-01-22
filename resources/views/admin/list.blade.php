@@ -45,6 +45,8 @@
                                           <a class="btn btn-danger" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal"><i class="fa fa-trash"></i></a>
                                           <a class="btn btn-success" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal"><i class="fa fa-cog"></i></a>
                                           <a class="btn btn-primary" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal"><i class="fa fa-eye"></i></a>
+                                          <br><a href='/admin/change-image-order/{{$pro->slug}}'>Update image order</a>
+
                                         </td>
                                     </tr>
                                     @endforeach

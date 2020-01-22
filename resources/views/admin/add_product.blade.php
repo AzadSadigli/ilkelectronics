@@ -13,6 +13,8 @@
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
 @if(Request::is('admin/add-category'))
 <title>{{__('app.Add_new_category')}}</title>
+@elseif(Request::is('admin/change-image-order/*'))
+<title>{{__('app.Change_order')}}</title>
 @else
 <title>{{__('app.Add_new_product')}}</title>
 @endif
@@ -30,6 +32,8 @@
                         <h2>
                             @if(Request::is('admin/add-category')) {{__('app.Add_new_category')}}
                             <small><a href="/admin/add-product">{{__('app.Add_new_product')}}</a> </small>
+                            @elseif(Request::is('admin/change-image-order/*'))
+                            {{__('app.Change_order')}}
                             @else {{__('app.Add_new_product')}}
                             <small><a href="/admin/add-category">{{__('app.Add_new_category')}}</a> </small>
                             @endif
@@ -104,10 +108,21 @@
                           </div>
                       </div>
                       @endif
+                      @elseif(Request::is('admin/change-image-order/*'))
+                      <a href="#" class="btn btn-primary my-btn pull-right">{{__('app.Reorder')}}</a><br><br>
+                      <hr>
+                      <ul class="image-list">
+                          @foreach($images as $key => $img)
+                          <li data-id="{{$key}}">
+                            <b>{{$key + 1}}. </b>
+                            <img src="/uploads/pro/small/{{$img->image}}" data-id="{{$img->id}}">
+                          </li>
+                          @endforeach
+                      </ul>
                       @else
-                      <form action="/admin/add-new-product" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <h2 class="card-inside-title">{{__('app.Category')}}</h2>
+                        <form action="/admin/add-new-product" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <h2 class="card-inside-title">{{__('app.Category')}}</h2>
                           <div class="row clearfix">
                               <div class="col-sm-6 pcats">
                                   <select class="form-control show-tick" id="pcat" required>
@@ -197,7 +212,7 @@
                             <button type="submit" class="btn btn-primary pull-right">{{__('app.Add')}}</button>
                           </div>
                         </form>
-                        @endif
+                      @endif
                       </div>
                 </div>
             </div>
@@ -248,4 +263,46 @@ $(document.body).on("change","#psubcat",function(){
   console.log($(this).val());
 });
 </script>
+@if(Request::is('admin/change-image-order/*'))
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script>
+$(document.body).on("click",".my-btn",function(){
+  reorder();
+  var arr = [];
+  for (var i=0; i < $("ul.image-list li").length; i++) {
+    let img_id = $("ul.image-list li:eq("+i+") img").data("id");
+    arr.push(img_id);
+  }
+  $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+  $.ajax({
+    type: 'POST',
+    url: '/admin/change-images-order',
+    data:{list:arr},
+    success:function(data){notify(data.success,"success");}
+  });
+});
+function reorder(){
+  for (var i = 0; i < $("ul.image-list li").length; i++) {
+    $("ul.image-list li:eq("+i+") b").html((i + 1) + ".");
+  }
+}
+$(function() {
+    var isDragging = false;
+    $("ul.image-list li")
+    .mousedown(function() {
+        reorder();
+        isDragging = false;
+    })
+    .mouseup(function() {
+        reorder();
+        var wasDragging = isDragging;
+        isDragging = false;
+        if (!wasDragging) {
+            $("#throbble").toggle();
+        }
+    });
+    $("ul").sortable();
+});
+</script>
+@endif
 @endsection

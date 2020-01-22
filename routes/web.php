@@ -38,6 +38,8 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/delete-category/{id}','AdminController@delete_category');
     Route::get('/change-subcategory/{id}','AdminController@change_subcats');
     Route::get('/profile','AdminController@my_profile');
+    Route::get('/change-image-order/{slug}','ProductController@change_im_order_view');
+    Route::post('/change-images-order','ProductController@change_im_order');
 
     Route::get('/configuration','AdminController@configuration');
     Route::get('/translation','AdminController@translation');

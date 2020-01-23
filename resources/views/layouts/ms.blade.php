@@ -9,6 +9,7 @@
   @show
 	<link type="text/css" rel="stylesheet" href="/css/ms.css" />
 	<link rel="shortcut icon" type="image/x-icon" href="/img/icon.png" />
+	@include('layouts.google')
 </head>
 <body>
 	<header>

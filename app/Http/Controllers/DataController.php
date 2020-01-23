@@ -87,7 +87,11 @@ class DataController extends Controller
       for ($i=0; $i < count($data); $i++) {
         $str = str_replace(array(' =>',' => ','=> '), '=>', $data[$i]);
         $item = explode("=>",$str);
-        $arr[] = [$item[0] => $item[1]];
+        $val = trim($item[1]);
+        if (!is_numeric($val)) {
+          $val = substr(trim($item[1]), 1,strlen(trim($item[1])) - 2);
+        }
+        $arr[] = [$item[0] => $val];
       }
       print_r(json_encode($arr,true));
 

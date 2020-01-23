@@ -5722,7 +5722,10 @@ function(t) {
     })
 }(jQuery);
 $(document).ready(function(){
-  var ds = "<div class=";
+  const mult = function(a,b){
+    return a*b;
+  }
+  console.log(mult(5,10));
   function number_format(number, decimals, dec_point, thousands_sep) {
     number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
     var n = !isFinite(+number) ? 0 : +number,

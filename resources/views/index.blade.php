@@ -199,7 +199,7 @@
 					<div class="product-thumb">
 						<div class="product-label">
 							@if(nd($pro->created_at->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
-							@if(!empty($pro->old_price)) <span class="sale">-20%</span> @endif
+							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
 						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
@@ -209,7 +209,7 @@
 						@endif
 					</div>
 					<div class="product-body">
-						<h3 class="product-price">{{$pro->price}} AZN @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} AZN</del>@endif</h3>
+						<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h3>
 						<div class="product-rating">
 							<i class="fa fa-star"></i>
 							<i class="fa fa-star"></i>

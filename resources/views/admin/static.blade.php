@@ -72,7 +72,7 @@
                         @endif
                         <div class="body table-responsive">
                             <table class="table table-striped">
-                                <thead><tr><th>#</th><th>Index</th><th>{{__('app.Word')}}</th><th>{{__('app.Operations')}}</th></tr></thead>
+                                <thead><tr><th>#</th><th>Index</th><th>{{__('app.Value')}}</th><th>{{__('app.Operations')}}</th></tr></thead>
                                 <tbody class="words"></tbody>
                             </table>
                             <div class=" pull-right">
@@ -165,8 +165,10 @@
               success:function(data){
                 console.log(data.message);
                 $('#addNewWord').modal('hide');
-                $('#addNewWord textarea').val("");
+                $('#addNewWord textarea,#addNewWord input').val("");
                 get_tr_file(folder,fl);
+                let $target = $('html,body');
+                $target.animate({scrollTop: $target.height()}, 1000);
               },
               complete:function(){
                 $("#save_files .fa-spin").remove();
@@ -189,17 +191,69 @@
           });
         }else if(document.URL.indexOf("configuration") >= 0){
           function get_configuration(){
-            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             $.ajax({
               url: '/admin/configuration',
               type: 'GET',
               data:{get_data:0},
-              success:function(t){
-                console.log(t);
+              success:function(data){
+                let tr = "";
+                let len = Object.keys(data).length;
+                for (var i = 0; i < len; i++) {
+                  let val = Object.values(data)[i]; let key = Object.keys(data)[i];
+                  let input = "no input detected";
+                  if (val[1] === "text_input") {input = "<input type='text' id='"+key+"' value='"+val[0]+"' class='value'>";
+                  }else if(val[1] === "radio_input"){
+                    input = "<div class='demo-switch'><div class='switch'><label data-on='"+val[3]+"' data-off='"+val[4]+"'>"+val[4]+"<input type='checkbox' checked='' id='"+key+"' data-on='"+val[0]+"' data-off='"+val[2]+"' class='value' value='"+val[2]+"'><span class='lever'></span>"+val[3]+"</label></div></div>";
+                  }else if(val[1] === "textarea"){
+                    input = "<textarea id='"+key+"' class='value'>"+val[0]+"</textarea>";
+                  }else if(val[1] === "number_input"){
+                    input = "<input type='number' id='"+key+"' value='"+val[0]+"' class='value'>";
+                  }
+                  let btns = "<a class='btn btn-danger delete_word' data-key='"+key+"'><i class='fa fa-trash'></i></a><a><i></i></a>";
+                  tr += "<tr><th scope='row' data-tp='"+val[1]+"' data-index='"+(i + 1)+"'>"+(i+1)+"</th><td>"+key+"</td><td>"+input+" </td><td>"+btns+"</td></tr>";
+                }
+                $("#save_files,.add_new_w").css("display","");
+                $(".words").html(tr);
+              },complete:function(){
+                $("#save_files").html('<i class="fa fa-save"></i>');
               }
             });
           }
+          $("#save_files").on("click",function(){
+            let list = [];
+            for (var i = 0; i < $(".words > tr").length; i++) {
+              let base = ".words > tr:eq("+i+")"; let off_value = ""; let on_text = ""; let off_text ="";
+              if ($(base+" td label").data("on")) {
+                on_text = $(base+" td label").data("on");
+                off_text = $(base+" td label").data("off");
+                off_value = $(base+" td .value").data("off");
+              }
+              let key = $(base+" > td:eq(0)").text();
+              let val = $(base+" > td:eq(1) .value").val();
+              let type = $(base + ">th").data("tp");
+              list.push({key,val,type,on_text,off_text,off_value});
+            }
+            console.log(list);
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+              type: 'POST',
+              url: '/admin/update-configuration',
+              data:{list:list},
+              success:function(data){
+                console.log(data);
+              }
+            });
+            $(this).html('<i class="fa fa-refresh fa-spin"></i>');
+            get_configuration();
+          });
           get_configuration();
+          $(document.body).on("change",".switch > label > input[type='checkbox']",function(){
+            if ($(this).val() == $(this).data("on") | $(this).val() === $(this).data("on")) {
+              $(this).val($(this).data("off"))
+            }else{
+              $(this).val($(this).data("on"))
+            }
+          });
         }
       });
     </script>

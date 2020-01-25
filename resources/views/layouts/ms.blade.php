@@ -15,15 +15,17 @@
 	<header>
 		<div id="top-header">
 			<div class="container">
-				<div class="pull-left">
-					<span>Welcome to E-shop!</span>
+				<div class="pull-left hfirst">
+					<span>{{__('app.Site_welcome')}}</span>
 				</div>
-				<div class="pull-right">
+				<div class="pull-right hsec">
 					<ul class="header-top-links">
-						<li><a href="#">Store</a></li>
-						<li><a href="#">Newsletter</a></li>
-						<li><a href="#">FAQ</a></li>
-						<li class="dropdown default-dropdown">
+						<li><a href="/news-list">{{__('app.News')}}</a></li>
+						@foreach(App\Pages::where('status',0)->where('important',1)->get() as $page)
+							<li><a href="/page/{{$page->slug}}">{{$page->shortname}}</a></li>
+						@endforeach
+
+						<!-- <li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
 								<li><a href="#">English (ENG)</a></li>
@@ -31,12 +33,14 @@
 								<li><a href="#">French (FR)</a></li>
 								<li><a href="#">Spanish (Es)</a></li>
 							</ul>
-						</li>
+						</li> -->
 						<li class="dropdown default-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i class="fa fa-caret-down"></i></a>
+							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">@if(empty(get("currency"))) AZN @else {{get("currency")}} @endif <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
-								<li><a href="#">USD ($)</a></li>
-								<li><a href="#">EUR (€)</a></li>
+								<li><a href="/currency/AZN">AZN</a></li>
+								<li><a href="/currency/USD">USD</a></li>
+								<li><a href="/currency/RUB">RUB</a></li>
+								<li><a href="/currency/TRY">TRY</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -82,10 +86,7 @@
 								<li><a href="/admin"><i class="fa fa-columns"></i> {{__('app.Panel')}}</a></li>
 								@endif
 								<li><a href="/wishlist"><i class="fa fa-shopping-cart"></i> {{__('app.My_wishlist')}}</a></li>
-								<li><a href="{{ route('logout') }}"
-									 onclick="event.preventDefault();
-																 document.getElementById('logout-form').submit();"><i class="fa fa-angle-left"></i> {{__('app.Logout')}}</a></li>
-
+								<li><a href="{{ route('logout') }}" class="lg-out-btn"><i class="fa fa-angle-left"></i> {{__('app.Logout')}}</a></li>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 										@csrf
 								</form>
@@ -106,7 +107,7 @@
 								<br>
 								<span class="wish_total"></span>
 							</a>
-							<div class="custom-menu">
+							<div class="custom-menu wish_head_list">
 								<div id="shopping-cart">
 									<div class="shopping-cart-list" id="wishlist_head"></div>
 									<div class="shopping-cart-btns">
@@ -171,24 +172,23 @@
 				<div class="clearfix visible-sm visible-xs"></div>
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<h3 class="footer-header">Customer Service</h3>
+						<h3 class="footer-header">{{__('app.Pages')}}</h3>
 						<ul class="list-links">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Shiping & Return</a></li>
-							<li><a href="#">Shiping Guide</a></li>
-							<li><a href="#">FAQ</a></li>
+							@foreach(App\Pages::where('footer',1)->get() as $pg)
+							<li><a href="/page/{{$pg->slug}}">{{$pg->shortname}}</a></li>
+							@endforeach
 						</ul>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<h3 class="footer-header">Stay Connected</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.</p>
+						<h3 class="footer-header">{{__('app.Stay_connected')}}</h3>
+						<p>{{__('app.Stay_connected_details')}}</p>
 						<form>
 							<div class="form-group">
-								<input class="input" placeholder="Enter Email Address">
+								<input class="input" placeholder="{{__('app.E_mail')}}...">
 							</div>
-							<button class="primary-btn">Join Newslatter</button>
+							<button class="primary-btn">{{__('app.Subscribe')}}</button>
 						</form>
 					</div>
 				</div>

@@ -13,27 +13,59 @@ use Image;
 class ProductController extends Controller
 {
     public function index(){
-        $pros = Products::orderBy('created_at','desc')->get();
+        $pros = Products::orderBy('created_at','desc')->take(20)->get();
         return view('index',compact('pros'));
     }
     public function get_product_details($slug){
       $pro = Products::where('slug',$slug)->first();
       $pro->views += 1;
       $pro->update();
-      return view('product',compact('pro'));
+      $pros = Products::where('category',$pro->category)->take(4)->get();
+      $prod_tabs = Protab::where('prod_id',$pro->id)->get();
+      return view('product',compact('pro','pros','prod_tabs'));
     }
     public function get_product_list(){
       $pros = Products::orderBy('created_at','desc')->get();
       return view('admin.list',compact('pros'));
     }
-    public function add_product_view(Request $req){
-      return view('admin.add_product');
+    public function add_product_view(Request $req,$id = null){
+      if (!is_null($id)) {
+        $pro = Products::find($id);
+        return view('admin.add_product',compact('pro'));
+      }else{
+        return view('admin.add_product');
+      }
     }
-    public function add_product(Request $req){
-      $this->validate($req,[
-        'prod_id' => 'required|unique:products'
-      ]);
-      $pro = new Products;
+    public function add_prod_tabs($slug){
+      $pro = Products::where('slug',$slug)->first();
+      $pro_tabs = Protab::where('prod_id',$pro->id)->get();
+      return view('admin.add_product',compact('pro','pro_tabs'));
+    }
+    public function update_product_tabs(Request $req){
+      $arr = $req->list;
+      for ($i=0; $i < count($arr); $i++) {
+        $pt = new Protab;
+        $pt->prod_id = $req->prod;
+        if (!empty($arr[$i]["title"]) && !empty($arr[$i]["desc"])) {
+          $pt->title = $arr[$i]["title"];
+          $pt->description = $arr[$i]["desc"];
+          $pt->save();
+        }
+      }
+
+      return response()->json(['list' => $req->list,'product' => $req->prod]);
+    }
+    public function add_product(Request $req,$id = null){
+      // $this->validate($req,[
+      //   'prod_id' => 'required|unique:products'
+      // ]);
+      if (is_null($id)) {
+        $pro = new Products;
+      }else{
+        $pro = Products::find($id);
+      }
+      // echo "string";exit();
+
       $pro->productname = $req->productname;
       if (empty($req->slug)) {
         $pro->slug = make_slug($req->productname);
@@ -50,31 +82,40 @@ class ProductController extends Controller
       $pro->brand = $req->brand;
       $pro->condition = $req->condition;
       $pro->token = md5(microtime());
-      $pro->save();
-      $imgArr=[];
-      $sm_folder = 'uploads/pro/small/';
-      $folder = 'uploads/pro/';
-      foreach ($req->images as $picture) {
-          $ext=$picture->getClientOriginalExtension();
-          if($ext=='jpg' || $ext=='png' || $ext=='jpeg' || $ext=='bmp')  {
-              $filename=time()+random_int(1, 100000000).'.'.$picture->getClientOriginalExtension();
-              Image::make($picture)->save($sm_folder.$filename);
-              $picture->move(public_path($folder),$filename);
-              array_push($imgArr,$filename);
+      if (is_null($id)) {
+        $mess = Lang::get('app.Product_added');
+        $pro->save();
+      }else{
+        $mess = Lang::get('app.Product_updated');
+        $pro->update();
+      }
+      // if (isset($req->images) && !empty($req->images)) {
+      if ($req->hasFile('images')) {
+        $imgArr=[];
+        $sm_folder = 'uploads/pro/small/';
+        $folder = 'uploads/pro/';
+        foreach ($req->images as $picture) {
+            $ext=$picture->getClientOriginalExtension();
+            if($ext=='jpg' || $ext=='png' || $ext=='jpeg' || $ext=='bmp')  {
+                $filename=time()+random_int(1, 100000000).'.'.$picture->getClientOriginalExtension();
+                Image::make($picture)->save($sm_folder.$filename);
+                $picture->move(public_path($folder),$filename);
+                array_push($imgArr,$filename);
+          }
+        }
+        for ($i=0; $i < count($imgArr); $i++) {
+            $img_name = $imgArr[$i];
+            resize($sm_folder.$img_name, $sm_folder.$img_name, 262.5, 350);
+            resize($folder.$img_name, $folder.$img_name, 1200, 1200);
+            logo_on_image($folder.$img_name,'img/logo-transparent.png',$folder.$img_name);
+            $img = new Images;
+            $img->prod_id = $pro->id;
+            $img->image = $img_name;
+            $img->save();
         }
       }
-      for ($i=0; $i < count($imgArr); $i++) {
-          $img_name = $imgArr[$i];
-          resize($sm_folder.$img_name, $sm_folder.$img_name, 262.5, 350);
-          resize($folder.$img_name, $folder.$img_name, 1200, 1200);
-          logo_on_image($folder.$img_name,'img/logo-transparent.png',$folder.$img_name);
-          $img = new Images;
-          $img->prod_id = $pro->id;
-          $img->image = $img_name;
-          $img->save();
-      }
       update_sitemap();
-      return redirect()->back()->with(['type' => 'success','message' => Lang::get('app.Product_added')]);
+      return redirect()->back()->with(['type' => 'success','message' => $mess]);
     }
     // if (!file_exists($sm_folder)) {
     //     mkdir($folder, 666, true);
@@ -82,12 +123,10 @@ class ProductController extends Controller
     // if (!file_exists($save_path)) {
     //     mkdir($folder, 666, true);
     // }
-    public function edit_product(Request $req){
 
-    }
-    public function delete_product(){
-
-    }
+    // public function edit_product(Request $req){
+    //
+    // }
     public function add_tab(Request $req){
 
     }

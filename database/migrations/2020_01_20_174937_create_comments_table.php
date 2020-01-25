@@ -20,9 +20,9 @@ class CreateCommentsTable extends Migration
             $table->integer('news_id')->nullable()->references('id')->on('news');
             $table->integer('page_id')->nullable()->references('id')->on('pages');
             $table->integer('user_id')->nullable()->references('id')->on('users');
-            $table->string('name')->nullabe();
-            $table->string('surname')->nullabe();
-            $table->string('email')->nullabe();
+            $table->string('name')->nullable();
+            $table->string('surname')->nullable();
+            $table->string('email')->nullable();
             $table->float('rating')->default(0);
             $table->text('comment');
             $table->timestamps();

@@ -7,7 +7,8 @@ return /*start*/[
     'comment_verification' => 0,//here
     'new_product_duration' => 40,//here
     'show_wishlist_max_header' => 3,//here
-    'Footer_slogan' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'
+    'Footer_slogan' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna',//here
+    'Currencies' => array('USD','RUB','AZN','TRY')
 
 
 ];

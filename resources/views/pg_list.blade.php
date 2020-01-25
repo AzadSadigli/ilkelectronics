@@ -28,8 +28,8 @@
 									<i class="fa fa-chevron-circle-right"></i>
 								</li>
 								@foreach(App\Category::where('parent_id',$ct->id)->get() as $sbct)
-								<li class="child" data-url="/category/{{$ct->slug}}">
-									<i class="fa fa-dot-circle"></i> {{$ct->name}}
+								<li class="child" data-url="/category/{{$sbct->slug}}">
+									<i class="fa fa-dot-circle"></i> {{$sbct->name}}
 									<i class="fa fa-chevron-circle-right"></i>
 								</li>
 								@endforeach

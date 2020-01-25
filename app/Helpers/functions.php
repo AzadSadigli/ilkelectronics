@@ -9,6 +9,12 @@ function make_slug($word){
   $word = str_slug($word)."-".rand(100000,99999);
   return $word;
 }
+function unregistered_user(){
+  if (Auth::guest() && empty(Session::get('unreg_user'))) {
+    Session::put('unreg_user',time().rand(1000,9999));
+  }
+  return Session::get('unreg_user');
+}
 function update_sitemap(){
   $date = date("Y-m-d");
   $home = "<url>\n      <loc>https://ilkelectronics.az/</loc>\n      <lastmod>".$date."T18:49:36+00:00</lastmod>\n      <priority>1.00</priority>\n      </url>";
@@ -44,7 +50,12 @@ function burl(){
   return substr(realpath(dirname(__FILE__)), 0, -11);
 }
 function discount($a,$b){
-  return number_format(($a - $b)*100/$a,2);
+  $c = ($a - $b)*100/$a;
+  if (!is_int($c)) {
+    return number_format($c,2);
+  }else{
+    return $c;
+  }
 }
 // $ims = Images::where('pro_id',$id)->get();
 // foreach ($ims as $key => $im) {
@@ -171,12 +182,44 @@ function nd($date){ //new date
   }
 }
 function currency(){
-  return "AZN";
+  if (empty(get("currency"))) {
+    return "AZN";
+  }else{
+    return get("currency");
+  }
 }
 
 function number_of_tags($path,$element){
   $data = file_get_contents(burl().$path);
   return substr_count($data,$element);
 }
+function conf($key){
+  $data = App\Config::where('config',$key)->first();
+  return $data->value;
+}
+function get($data){
+  return Session::get($data);
+}
+function testing_json(){
+  $conf = [
+    "admin_title" => ["Ilkelectronics Panel","text_input"],
+    "Site_title" => ["Ilkelectronics","text_input"],
+    "comment_verification" => [0,"radio_input",1,"Active","Not Active"],
+    "new_product_duration" => [40,"number_input"],
+    "show_wishlist_max_header" => [3,"number_input"],
+    "Footer_slogan" => ["Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna","textarea"],
+    "currencies" => [['USD','RUB','AZN','TRY'],"textarea"]
+  ];
+  for ($i=0; $i < count($conf); $i++) {
+    $cn = App\Config::where('config',array_keys($conf)[$i])->first();
+    if (empty($cn)) {
+      DB::select("INSERT INTO config (config,value) VALUES ('".array_keys($conf)[$i]."','".json_encode($conf[array_keys($conf)[$i]])."')");
+    }else{
+      DB::select("UPDATE config SET value = '".json_encode($conf[array_keys($conf)[$i]])."' WHERE id = ".$cn->id);
+    }
+  }
+  return array_keys($conf);
+}
+
 
 ?>

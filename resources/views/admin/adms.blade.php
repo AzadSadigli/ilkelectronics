@@ -35,10 +35,12 @@
         opacity: 0.9;
         font-weight: 100;
       }
+      .words tr td input,
       .words tr td textarea{
         /* height: 32px; */
         padding: 10px;
-        width: 60%;
+        width: 95%;
+        height: 100%;
         border-radius: 7px;
         border: none;
         box-shadow: 0 0 6px 0px #cccccc;
@@ -101,6 +103,25 @@
         border: 1px solid #bb9e9e;
         margin: auto;
         display: block;
+      }
+      .user-prof-image img{
+        width: 120px;
+      }
+      .tab_inputs{
+        width: 100%;
+        height: 47px;
+        padding: 10px;
+        box-shadow: 0 0 3px 1px #cccccc;
+        border: none;
+      }
+      .read_more{
+        cursor: pointer;
+      }
+      .modal .modal-header{
+        border-bottom: 1px solid #e4e4e4;
+      }
+      .modal .modal-footer{
+        border-top:1px solid #e4e4e4;
       }
     </style>
 </head>
@@ -320,8 +341,8 @@
     <section>
         <aside id="leftsidebar" class="sidebar">
             <div class="user-info">
-                <div class="image">
-                    <img src="/adm/images/user.png" width="48" height="48" alt="User" />
+                <div class="image pimg">
+                    <img data-src="/uploads/avatars/{{Auth::user()->avatar}}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{Auth::user()->name}} {{Auth::user()->surname}}</div>
@@ -348,31 +369,37 @@
             </div>
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="header">{{__('app.Main_navigation')}}</li>
                     <li @if(Request::is('admin')) class="active" @endif>
                         <a href="/admin">
                             <i class="material-icons">home</i>
                             <span>{{__('app.Home')}}</span>
                         </a>
                     </li>
-                    <li @if(Request::is('admin/product-list') | Request::is('admin/user-list')) class="active" @endif>
+                    <li @if(in_array(Request::path(),array('admin/product-list','admin/user-list','admin/page-list','admin/news-list'))) class="active" @endif>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">format_list_bulleted</i>
                             <span>{{__('app.List')}}</span>
                         </a>
                         <ul class="ml-menu">
-                            <li @if(Request::is('admin/add-product')) class="active" @endif>
+                            <li @if(Request::is('admin/product-list')) class="active" @endif>
                                 <a href="/admin/product-list">{{__('app.Product_list')}}</a>
-                            </li>
-                            <li @if(Request::is('admin/add-category')) class="active" @endif>
-                                <a href="/admin/user-list">{{__('app.User_list')}}</a>
                             </li>
                             <li @if(Request::is('admin/add-category')) class="active" @endif>
                                 <a href="/admin/add-category">{{__('app.Category_list')}}</a>
                             </li>
+                            <li @if(Request::is('admin/page-list')) class="active" @endif>
+                                <a href="/admin/page-list">{{__('app.Page_list')}}</a>
+                            </li>
+                            <li @if(Request::is('admin/news-list')) class="active" @endif>
+                                <a href="/admin/news-list">{{__('app.News_list')}}</a>
+                            </li>
+                            <li @if(Request::is('admin/user-list')) class="active" @endif>
+                                <a href="/admin/user-list">{{__('app.User_list')}}</a>
+                            </li>
                         </ul>
                     </li>
-                    <li @if(Request::is('admin/add-product') | Request::is('admin/add-category') | Request::is('admin/add-user')) class="active" @endif>
+                    <li @if(in_array(Request::path(),array('admin/add-product','admin/add-category','admin/add-user'))) class="active" @endif>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">add_circle_outline</i>
                             <span>{{__('app.Add')}}</span>
@@ -383,6 +410,12 @@
                             </li>
                             <li @if(Request::is('admin/add-category')) class="active" @endif>
                                 <a href="/admin/add-category">{{__('app.Add_new_category')}}</a>
+                            </li>
+                            <li @if(Request::is('admin/create-page')) class="active" @endif>
+                                <a href="/admin/create-page">{{__('app.Create_page')}}</a>
+                            </li>
+                            <li @if(Request::is('admin/add-news')) class="active" @endif>
+                                <a href="/admin/add-news">{{__('app.Add_news')}}</a>
                             </li>
                             <li @if(Request::is('admin/add-user')) class="active" @endif>
                                 <a href="/admin/add-user">{{__('app.Add_new_user')}}</a>
@@ -395,13 +428,15 @@
                             <span>Static</span>
                         </a>
                         <ul class="ml-menu">
-                            <li @if(Request::is('admin/add-product')) class="active" @endif>
+                            <li @if(Request::is('admin/translation')) class="active" @endif>
                               <a href="/admin/translation">
                                   <span>{{__('app.Translation')}}</span>
                               </a>
                             </li>
                             <li @if(Request::is('admin/configuration')) class="active" @endif>
-                                <a href="/admin/configuration">{{__('app.Configuration')}}</a>
+                                <a href="/admin/configuration">
+                                  <span>{{__('app.Configuration')}}</span>
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -415,7 +450,7 @@
         </aside>
     </section>
     @if(session()->has('message'))
-  			<div class="notify notify-{{session()->get('type') }}">
+  			<div class="notify notify_0 notify-{{session()->get('type') }}">
   				<a href="#" class="close">&times;</a>
   					{{ session()->get('message') }}
   			</div>
@@ -425,10 +460,6 @@
     @section('foot')
     @show
     <script type="text/javascript">
-    function reload_js(src) {
-       $('script[src="' + src + '"]').remove();
-       $('<script>').attr('src', src).appendTo('head');
-    }
     function notify(message,type){
       let len = $(".notify").length;
       for (var i = 0; i < len; i++) {
@@ -455,6 +486,42 @@
     function close_notify(id){
       $(".notify_"+id).fadeOut(700, function() { $(this).remove(); });
     }
+    function change_pimg(){
+      for (var i = 0; i < $(".pimg img").length; i++) {
+        $(".pimg:eq("+i+") img").attr("src",$(".pimg:eq("+i+") img").data("src"));
+      }
+    }
+    change_pimg();
+    const setCookie = function(name,value,days) {
+      var expires = "";
+      if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + (days*24*60*60*1000));
+          expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+    const getCookie = function(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+    const eraseCookie = function(name) {
+        document.cookie = name+'=; Max-Age=-99999999;';
+    }
+    $(".switch > label > input").change(function(){
+      let $sb = $(this).parents("label").siblings("input");
+      if ($sb.val() == 1) {
+        $sb.val(0)
+      }else{
+        $sb.val(1)
+      }
+    });
     </script>
 </body>
 

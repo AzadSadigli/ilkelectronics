@@ -26,39 +26,27 @@
 				<div id="aside" class="col-md-3">
 					@include('layouts.filter')
 					<div class="aside">
-						<h3 class="aside-title">Top Rated Product</h3>
+						<h3 class="aside-title">{{__('app.Top_rated_products')}}</h3>
+						@foreach($tp_pros as $tp)
 						<div class="product product-widget">
 							<div class="product-thumb">
-								<img src="/img/thumb-product01.jpg" alt="">
+								<img src="/uploads/pro/{{$tp->image}}" alt="{{$tp->productname}}">
 							</div>
 							<div class="product-body">
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
+								<h2 class="product-name"><a href="/product/{{$tp->slug}}" title="{{$tp->productname}}">{{$tp->productname}}</a></h2>
+								<h3 class="product-price">{{$tp->price}} @if(!empty($tp->old_price)) <del class="product-old-price">{{$tp->old_price}}</del> @endif</h3>
 								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
+									@for($k=1;$k<=5;$k++)
+										@if($k < $tp->rating)
+											<i class="fa fa-star"></i>
+										@else
+											<i class="fa fa-star-o empty"></i>
+										@endif
+									@endfor
 								</div>
 							</div>
 						</div>
-						<div class="product product-widget">
-							<div class="product-thumb">
-								<img src="/img/thumb-product01.jpg" alt="">
-							</div>
-							<div class="product-body">
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<h3 class="product-price">$32.50</h3>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
-								</div>
-							</div>
-						</div>
+						@endforeach
 					</div>
 				</div>
 				<div id="main" class="col-md-9">
@@ -85,7 +73,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="store">
+					<div class="product-list">
 						<div class="row" id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}}">
 							<div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">

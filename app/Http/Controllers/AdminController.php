@@ -6,15 +6,17 @@ use Illuminate\Http\Request;
 use App\Category;
 use Lang;
 use DB;
-
+use App\Pages;
+use Auth;
 class AdminController extends Controller
 {
-    public function panel_home(){
-      return view('admin.index');
+    // public function panel_home(){return view('admin.index');}
+    public function create_user(){
+
     }
-    public function add_category_view(){
-      return view('admin.add_product');
-    }
+    
+    public function add_category_view(){return view('admin.add_product');}
+    
     public function add_category(Request $req){
       // $this->validate($req,[
       //   'category_name' => 'unique|required'
@@ -47,9 +49,7 @@ class AdminController extends Controller
       }
       return $cts;
     }
-    public function my_profile(){
-      return view('admin.profile');
-    }
+    // public function my_profile(){return view('admin.profile');}
     public function translation(){
       $directories = glob(burl().'/resources/lang/*' , GLOB_ONLYDIR);
       $dirs = [];
@@ -100,40 +100,36 @@ class AdminController extends Controller
       $data = file_put_contents(burl().'/resources/lang/'.$req->folder.'/'.$req->file,$data);
       return response()->json(['message' => 'ok']);
     }
-    public function configuration(){
-      $base = burl().'/config/settings.php';
-      $data = file_get_contents($base);
-      $data = preg_replace('!/\*.*?\*/!s', '', $data);
-      $data = preg_replace('/\n\s*\n/', "\n", $data);
-
-      $directories = glob(burl().'/resources/lang/*' , GLOB_ONLYDIR);
-      $dirs = [];
-      for ($i=0; $i < count($directories); $i++) {
-        $dirs[] = substr($directories[$i], strrpos($directories[$i], '/') + 1);
-      }
-      if (1 == 2) {
-        $start = "<?php\n\n// '".$req->file."' file in lang '".$req->folder."' folder \n\nreturn [";
-        $end = "\n];";
-        $body = "";
-      }
-
-      if (isset($_GET['get_data'])) {
-        $data = file_get_contents($base);
-        $data = preg_replace('!/\*.*?\*/!s', '', $data);
-        $data = preg_replace('/\n\s*\n/', "\n", $data);
-        $arr = preg_split("/\,/", substr($data,(strpos($data,"[") + 1),strpos($data,"];")));
-        // unset($arr[count($arr) - 1]);
+    public function development_page(){
+      return view('admin.dev');
+    }
+    public function configuration(Request $req){
+      $url = burl().'/config/config.json';
+      if (isset($_POST['list']) && !empty($_POST['list'])) {
         $array = [];
-        for ($i=0; $i < count($arr); $i++) {
-          $part1 = str_replace("'","",substr($arr[$i], strpos($arr[$i], "' =>") + 5));
-          $part2 = str_replace("'","",substr($arr[$i], 0,strpos($arr[$i], "' =>")));
-          $part2 = preg_replace('/\s+/', '', $part2);
-          $array[] = [
-            $part2 => $part1
-          ];
+        for ($i=0; $i < count($req->list); $i++) {
+          $vl = $req->list[$i];$key = $vl['key'];
+          if (!empty($vl['on_text'])) {
+            $arr = [$vl['val'],$vl['type'],$vl['off_value'],$vl['on_text'],$vl['off_text']];
+          }else{
+            $arr = [$vl['val'],$vl['type']];
+          }
+          $array = [$key => $arr];
+          // array_push($array,$arr_1);
         }
-        return response()->json($array);
+        $json = json_encode($array);
+        // $json = trim($json, '[]');
+        file_put_contents($url,$json);
+        $confs = file_get_contents($url);
+        $confs = json_decode($confs,true);
+        return response()->json(['array' => $confs[0],'success' => Lang::get('app.Config_changed')]);
+      }else if(isset($req->get_data)){
+        $confs = file_get_contents($url);
+        $confs = json_decode($confs,true);
+        return response()->json($confs);
+      }else{
+        $dirs = 0;
+        return view('admin.static');
       }
-      return view('admin.static',compact('dirs'));
     }
 }

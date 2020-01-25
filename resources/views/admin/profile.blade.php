@@ -17,8 +17,8 @@
                     <div class="card profile-card">
                         <div class="profile-header">&nbsp;</div>
                         <div class="profile-body">
-                            <div class="image-area">
-                                <img src="/adm/images/user-lg.jpg" alt="{{Auth::user()->name}} {{Auth::user()->surname}}" />
+                            <div class="image-area user-prof-image pimg">
+                                <img data-src="/uploads/avatars/{{Auth::user()->avatar}}" alt="{{Auth::user()->name}} {{Auth::user()->surname}}" />
                             </div>
                             <div class="content-area">
                                 <h3>{{Auth::user()->name}} {{Auth::user()->surname}}</h3>
@@ -42,11 +42,11 @@
                     <div class="card">
                         <div class="body">
                             <div>
-                                <ul class="nav nav-tabs" role="tablist">
+                                <ul class="nav nav-tabs profile-set-section" role="tablist">
                                     <li role="presentation"><a href="#profile_settings" aria-controls="settings" role="tab" data-toggle="tab">{{__('app.Account_settings')}}</a></li>
                                     <li role="presentation"><a href="#change_password" aria-controls="settings" role="tab" data-toggle="tab">{{__('app.Change_password')}}</a></li>
+                                    <li role="presentation"><a href="#change_image" aria-controls="settings" role="tab" data-toggle="tab">{{__('app.Change_profile_picture')}}</a></li>
                                 </ul>
-
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane fade in" id="profile_settings">
                                         <form class="form-horizontal" action="/update-profile-data" method="POST">
@@ -133,6 +133,26 @@
                                             </div>
                                         </form>
                                     </div>
+                                    <div role="tabpanel" class="tab-pane fade in" id="change_image">
+                                        <form class="form-horizontal" id="img_up_form" action="/change-user-profile" method="POST" enctype="multipart/form-data">
+                                          @csrf
+                                            <div class="form-group">
+                                                <label for="NewPasswordConfirm" class="col-sm-3 control-label">{{__('app.Choose_image')}} </label>
+                                                <div class="col-sm-9">
+                                                    <div class="form-line">
+                                                        <input type="file" class="form-control" name="user_image" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <button type="submit" class="btn btn-primary">{{__('app.Update')}}</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -154,11 +174,31 @@
     <script type="text/javascript">
       $(".nav-tabs > li > a").on("click",function(){window.location.hash = $(this).attr("href");});
       $(document).ready(function(){
+          if (!window.location.hash) {
+            window.location.hash = $(".profile-set-section > li:eq(0) > a").attr("href");
+          }
           var pg = window.location.hash;
-          var index = $(".nav-tabs > li > a[href='"+pg+"']").parent().index();
+          var index = $(".profile-set-section > li > a[href='"+pg+"']").parent().index();
           $(".nav-tabs > li:eq("+index+")").addClass("active");
           $(".nav-tabs > li:not(:eq("+index+"))").removeClass("active");
           $(pg).addClass("active");
+          $("#img_up_form").on("submit",function(e){
+            e.preventDefault();
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+              url: '/change-user-profile',
+              type: 'POST',dataType:'JSON',
+              contentType: false,
+              cache: false,
+              processData: false,
+              data:new FormData(this),
+              success:function(data){notify(data.success,"success");
+              for (var i = 0; i < $(".pimg img").length; i++) {
+                $(".pimg:eq("+i+") img").data("src",data.image);
+              }
+              change_pimg();}
+            })
+          });
       });
 
     </script>

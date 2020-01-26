@@ -48,10 +48,17 @@ class UserController extends Controller
         $com->surname = "0";
         $com->email = $req->email;
       }
-      if (isset($req->prod_id)) {
-        $com->prod_id = $req->prod_id;
+      if (!in_array($req->type, ['news','prod'])) {
+        exit();
       }
-      $com->rating = $req->rating;
+      if ($req->type === "prod") {
+        $com->prod_id = $req->id;
+      }else{
+        $com->news_id = $req->id;
+      }
+      if (isset($req->rating) && !empty($req->rating)) {
+        $com->rating = $req->rating;
+      }else{$com->rating = 0;}
       $com->comment = $req->comment;
       $com->save();
       $res = Lang::get('app.Your_comment_added');
@@ -101,8 +108,8 @@ class UserController extends Controller
                           w.created_at as wtime,
                           p.prod_id,
                           p.productname,
-                          p.price,
-                          p.old_price,
+                          FORMAT(p.price/".currency(0).",2) as price,
+                          FORMAT(p.old_price/".currency(0).",2) as old_price,
                           p.slug,
                           p.category,
                           p.quantity as pquantity,
@@ -124,7 +131,7 @@ class UserController extends Controller
       $count = Wishlist::where('user_id',Auth::user()->id)->count();
       $currency = currency();
       $sum = DB::select("SELECT SUM(p.price)*w.quantity as sum FROM wishlist w LEFT JOIN products p ON p.id = w.prod_id");
-      $tot = $sum[0]->sum;
+      $tot = number_format(($sum[0]->sum)/currency(0),2);
       if ($sum[0]->sum === null) {
         $tot = 0;
       }

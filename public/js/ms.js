@@ -5887,14 +5887,9 @@ $(document).ready(function(){
           }
           $("#wishlist_tbody").html(html);
         }
-        console.log(data);
-
       }
     });
   }
-  // $(".stars input").on("change",function(){
-  //   console.log($(this).val());
-  // })
   $(document.body).on("click",".wdelete",function(){
     $.ajax({
       url: '/delete-wishlist',
@@ -5970,16 +5965,19 @@ $(document).ready(function(){
 					let vw = $("#prod_list").data("words").split(",")[1];
 					for (var i = 0; i < data['pros'].length; i++) {
 						let val = data['pros'][i];
+            let star = "";
+            for (var k = 1; k <= 5; k++) {
+              if (k <= parseInt(val['rating'])) {star += "<i class='fa fa-star'></i>";}else{star += "<i class='fa fa-star-o empty'></i>";}
+            }
             let img = "src='/uploads/pro/small/"+val['image']+"'";
             let new_case = "";let discount = "";let old_price = "";
-            // if (val['image'] !== null) {img = ;}
             if (time_diff(val['created_at']) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
             if (val['old_price'] !== "" && val['old_price'] !== null) {
               discount = "<span class='sale'>"+disc(val['price'],val['old_price'])+"%</span>";
               old_price = "<del class='product-old-price'>"+val['old_price']+" AZN</del>";
             }
             if (pro_numb > data['pros'].length) {$(".load-section").css("display","none");}
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val['slug']+"'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val['productname']+"'></div><div class='product-body'><h3 class='product-price'>"+val['price']+" AZN " + old_price+" </h3><div class='product-rating'><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-o empty'></i></div><h2 class='product-name'><a href='/product/"+val['slug']+"'>"+val['productname']+"</a></h2><div class='product-btns'><button class='primary-btn add-to-cart' data-id='"+val['id']+"'><i class='fa fa-shopping-cart'></i></button></div></div></div></div>";
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val['slug']+"'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val['productname']+"'></div><div class='product-body'><h3 class='product-price'>"+val['price']+" AZN " + old_price+" </h3><div class='product-rating'>"+star+"</div><h2 class='product-name'><a href='/product/"+val['slug']+"'>"+val['productname']+"</a></h2><div class='product-btns'><button class='primary-btn add-to-cart' data-id='"+val['id']+"'><i class='fa fa-shopping-cart'></i></button></div></div></div></div>";
 					}
           console.log(data);
 					$(id).html(html);
@@ -6008,29 +6006,32 @@ $(document).ready(function(){
 		});
 		get_prods(pro_numb);
   }
-  if (document.URL.indexOf("product/") > 0) {
+  if (document.URL.indexOf("product/") > 0 | document.URL.indexOf("news/") > 0) {
     $(document.body).on("click",".pages-body > ul > li",function(){
       window.location = $(this).data("url");
     });
     $(".share_comment").on("click",function(){
-      let th = this;
+      let th = this;let id;let tp;
+      if ($("#prod_review_list").length > 0) {
+        id = $("#prod_review_list").data("id");tp="prod";
+      }else{
+        id = $(".news-commenting").data("id");tp="news";
+      }
       let em = "#commenter_email";let nm = "#commenter_name";let com = "#comment_section";
       if (isEmail($(em).val()) && $(nm).val() !== "" && $(com).val() !== "") {
-        console.log("clicked");
         $(th).html('<i class="fa fa-refresh fa-spin"></i>');
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         $.ajax({
-          url: '/add-new-comment',type: 'GET',
-          data:{prod_id:$("#prod_review_list").data("id"),name:$(nm).val(),email:$(em).val(),rating:$("input[name='rating']:checked").val(),comment:$(com).val()},
+          url: '/add-new-comment',type: 'POST',
+          data:{id:id,type:tp,name:$(nm).val(),email:$(em).val(),rating:$("input[name='rating']:checked").val(),comment:$(com).val()},
           success:function(data){
             if ($(".custom-menu > #shopping-cart").length == 0) {$("#commenter_name, #commenter_email").val("");}
             $("#comment_section").val("");
             notify(data.success,"success");
-            get_reviews();
+            if ($("#prod_review_list").length > 0) {get_reviews();}
           },complete:function(){$(th).html('<i class="fa fa-arrow-right"></i>');}
         });
       }
-      console.log($(nm).val());
       if (isEmail($(em).val())) {isValidInput($(em));}else{inNotValidInput($(em))}
       if (isNotNull($(nm).val())) {isValidInput($(nm));}else{inNotValidInput($(nm))}
       if (isNotNull($(com).val())) {isValidInput($(com));}else{inNotValidInput($(com))}
@@ -6058,15 +6059,20 @@ $(document).ready(function(){
             html += "<div class='single-review'><div class='review-heading'><div><a href='#'><i class='fa fa-user-o'></i> "+vl['name']+"</a></div><div><a href='#'><i class='fa fa-clock-o'></i> "+vl['time']+"</a></div><div class='review-rating pull-right'>"+star+"</div></div><div class='review-body'><p>"+vl['comment']+"</p></div></div>"
           }
           let str = "";
-          for (var z = 1; z <= 5; z++) {
-            if (z > data.rating) {str += "<i class='fa fa-star-o empty'></i>";}else{str += "<i class='fa fa-star'></i>";}
-          }
+          for (var z = 1; z <= 5; z++) {if (z > data.rating) {str += "<i class='fa fa-star-o empty'></i>";}else{str += "<i class='fa fa-star'></i>";}}
+          $("a[href='#reviews'] b").html(data.comments.length)
           $("#un_product_rating").html(str);
-          $("#prod_review_list").html(html);
+          if (data.comments.length !== 0) {
+            $("#prod_review_list").html(html);
+          }else{
+            $(".no_review").css("display","");
+          }
         }
       });
     }
-    get_reviews();
+    if (document.URL.indexOf("news/") <= 0) {
+      get_reviews();
+    }
   }
   function readURL(input) {
     if (input.files && input.files[0]) {
@@ -6083,4 +6089,46 @@ $(document).ready(function(){
     event.preventDefault();
     document.getElementById('logout-form').submit();
   });
+
+  let slideIndex = 0;
+  const showSlides = function(n) {
+    $(".mySlides:eq("+n+")").css("display","");
+    $(".mySlides:not(:eq("+n+"))").css("display","none");
+  }
+  showSlides(slideIndex);
+  $(".slideshow-container a.next,.slideshow-container a.prev").on("click",function(){
+    if ($(this).hasClass("next")) {
+      $(".slideshow-container a.prev").css("display","");
+      if (slideIndex != $('.mySlides').length - 1) {
+        slideIndex = slideIndex + 1;
+        showSlides(slideIndex);
+      }else{
+        slideIndex = $('.mySlides').length - 1;
+      }
+    }
+    if ($(this).hasClass("prev")) {
+      $(".slideshow-container a.next").css("display","");
+      if (slideIndex != 0) {
+        slideIndex = slideIndex - 1;
+        showSlides(slideIndex);
+      }else{
+        slideIndex = 0;
+      }
+    }
+  });
+
+  let acc = document.getElementsByClassName("accordion");
+  let acc_i;
+
+  for (acc_i = 0; acc_i < acc.length; acc_i++) {
+    acc[acc_i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+  }
 });

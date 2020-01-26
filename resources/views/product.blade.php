@@ -1,6 +1,6 @@
 @extends('layouts.ms')
 @section('head')
-<title>{{$pro->productname}} - {{config("settings.Site_title")}}</title>
+<title>{{$pro->productname}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
 	<div id="breadcrumb">
@@ -54,14 +54,15 @@
 								@if(nd($pro->created_at))<span>{{__('app.New')}}</span> @endif
 								@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 							</div>
-							<h2 class="product-name">{{$pro->productname}} <span class="pro-id">{{$pro->prod_id}}</span></h2>
+							<h2 class="product-name">{{$pro->productname}}</h2>
 
-							<h3 class="product-price">{{$pro->price}} AZN @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} AZN</del> @endif</h3>
+							<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del> @endif</h3>
 							<div>
 								<div class="product-rating" id="un_product_rating"></div>
 								<a href="#">3 Review(s) / Add Review</a>
 							</div>
 							<p><strong>{{__('app.Availability')}}:</strong> @if($pro->quantity > 0) <span class="in_stock">{{__('app.In_stock')}}</span> @else <span class="not_in_stock">{{__('app.Not_in_stock')}}</span> @endif</p>
+							<p><strong>{{__('app.Product_ID')}}:</strong> {{$pro->prod_id}}</p>
 							<p><strong>{{__('app.Brand')}}:</strong> {{$pro->brand}}</p>
 							<p>{{$pro->description}}</p>
 							<div class="product-options">
@@ -98,7 +99,7 @@
 						<div class="product-tab">
 							<ul class="tab-nav product-tabs">
 								<li class="active"><a data-toggle="tab" href="#description">{{__('app.Description')}}</a></li>
-								<li><a data-toggle="tab" href="#reviews">{{__('app.Reviews')}} (3)</a></li>
+								<li><a data-toggle="tab" href="#reviews">{{__('app.Reviews')}} (<b></b>)</a></li>
 							</ul>
 							<div class="tab-content">
 								<div id="description" class="tab-pane fade in active">
@@ -119,6 +120,7 @@
 									<div class="row">
 										<div class="col-md-6">
 											<div class="product-reviews" id="prod_review_list" data-id="{{$pro->id}}">
+												<p class="no_review" style="display:none;">{{__('app.No_review_here')}}</p>
 												<!-- <ul class="reviews-pages">
 													<li class="active">1</li>
 													<li><a href="#">2</a></li>
@@ -189,13 +191,15 @@
 							@endif
 						</div>
 						<div class="product-body">
-							<h3 class="product-price">{{$pr->price}}</h3>
+							<h3 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h3>
 							<div class="product-rating">
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star-o empty"></i>
+								@for($k=1;$k<=5;$k++)
+									@if($k <= $pr->rating)
+										<i class="fa fa-star"></i>
+									@else
+										<i class="fa fa-star-o empty"></i>
+									@endif
+								@endfor
 							</div>
 							<h2 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{$pr->productname}}</a></h2>
 							<div class="product-btns">

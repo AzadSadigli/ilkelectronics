@@ -8,15 +8,16 @@ use Lang;
 use DB;
 use App\Pages;
 use Auth;
+use App\Config;
 class AdminController extends Controller
 {
     // public function panel_home(){return view('admin.index');}
     public function create_user(){
 
     }
-    
+
     public function add_category_view(){return view('admin.add_product');}
-    
+
     public function add_category(Request $req){
       // $this->validate($req,[
       //   'category_name' => 'unique|required'
@@ -101,32 +102,93 @@ class AdminController extends Controller
       return response()->json(['message' => 'ok']);
     }
     public function development_page(){
-      return view('admin.dev');
+      $view = 'admin.dev';
+      // $file = "/resources/views/".str_replace(".","/",$view).".blade.php";
+      // // $data = file_get_contents($file);
+      // echo number_of_tags($file,"<link");
+      // exit();
+      return view($view);
+    }
+    public function get_file_data(Request $req){
+      $data = "";
+      if (in_array($req->file,array('ms.js','ms.css'))) {
+        if ($req->file === "ms.css") {
+          $file = "css/ms.css";
+          $new_file = "css/ms.min.css";
+        }else{
+          $file = "js/ms.js";
+          $new_file = "js/ms.min.js";
+        }
+        $url = burl()."/public/".$file;
+        $data = file_get_contents($url);
+      }
+      return response()->json($data);
+    }
+    public function update_css_js(Request $req){
+      if (in_array($req->file,array('ms.js','ms.css'))) {
+        if ($req->file === "ms.css") {
+          $file = "css/ms.min.css";
+          $data = minimizeCSS($req->val);
+        }else{
+          $file = "js/ms.min.js";
+          $data = minimizeJS($req->val);
+        }
+        $url = burl()."/public/".$file;
+        if (!empty($req->val)) {
+          file_put_contents($url,$data);
+        }
+      }
+      return response()->json(['message' => Lang::get('app.File_updated')]);
+    }
+    public function code_view($file){
+      $data = "";
+      if (in_array($file,array('ms.js','ms.css'))) {
+        if ($file === "ms.css") {
+          $file = "css/ms.css";
+        }else{
+          $file = "js/ms.js";
+        }
+        $url = burl()."/public/".$file;
+        $data = file_get_contents($url);
+      }
+      return view('layouts.code',compact('data'));
+    }
+    public function delete_conf(Request $req){
+      $conf = Config::where('config',$req->config)->first();
+      $conf->delete();
+      return response()->json(['message' => Lang::get('app.Config_deleted')]);
     }
     public function configuration(Request $req){
-      $url = burl().'/config/config.json';
       if (isset($_POST['list']) && !empty($_POST['list'])) {
-        $array = [];
         for ($i=0; $i < count($req->list); $i++) {
           $vl = $req->list[$i];$key = $vl['key'];
           if (!empty($vl['on_text'])) {
-            $arr = [$vl['val'],$vl['type'],$vl['off_value'],$vl['on_text'],$vl['off_text']];
+            $array = [$vl['val'],$vl['type'],$vl['off_value'],$vl['on_text'],$vl['off_text']];
           }else{
-            $arr = [$vl['val'],$vl['type']];
+            $array = [$vl['val'],$vl['type']];
           }
-          $array = [$key => $arr];
-          // array_push($array,$arr_1);
+          $json = json_encode($array);
+          $cn = Config::where('config',$vl['key'])->first();
+          if (!empty($cn)) {
+            $cn->value = $json;
+            $cn->update();
+          }else{
+            $cn_new = new Config;
+            $cn_new->config = $vl['key'];
+            $cn_new->value = $json;
+            $cn_new->save();
+          }
         }
-        $json = json_encode($array);
-        // $json = trim($json, '[]');
-        file_put_contents($url,$json);
-        $confs = file_get_contents($url);
-        $confs = json_decode($confs,true);
-        return response()->json(['array' => $confs[0],'success' => Lang::get('app.Config_changed')]);
+        return response()->json(['message' => Lang::get('app.Config_changed')]);
       }else if(isset($req->get_data)){
-        $confs = file_get_contents($url);
-        $confs = json_decode($confs,true);
-        return response()->json($confs);
+        $configs = Config::all();
+        $arr_list = [];
+        for ($i=0; $i < count($configs); $i++) {
+          $key = $configs[$i]["config"];
+          $val = json_decode($configs[$i]["value"]);
+          $arr_list[] = [$key => $val];
+        }
+        return response()->json($arr_list);
       }else{
         $dirs = 0;
         return view('admin.static');

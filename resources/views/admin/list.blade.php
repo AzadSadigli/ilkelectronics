@@ -9,11 +9,11 @@
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
 @if(Request::is('admin/page-list'))
-<title>{{__('app.Page_list')}}</title>
+<title>{{__('app.Page_list')}} - {{conf("admin_title")}}</title>
 @elseif(Request::is('admin/news-list'))
-<title>{{__('app.News_list')}}</title>
+<title>{{__('app.News_list')}} - {{conf("admin_title")}}</title>
 @else
-<title>{{__('app.Product_list')}}</title>
+<title>{{__('app.Product_list')}} - {{conf("admin_title")}}</title>
 @endif
 @endsection
 @section('body')
@@ -104,6 +104,7 @@
                                         </td>
                                         <td class="list-btns">
                                           <a class="btn btn-danger dl_page" data-id="{{$page->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_page')}}" data-words="{{__('app.Delete_page')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
+                                          <a class="btn btn-success edit_page_modal" data-id="{{$page->id}}" data-toggle="modal" data-target="#promodal" data-words="{{__('app.Edit_page')}},{{__('app.Delete')}},{{__('app.Close')}},{{__('app.Update')}},{{__('app.Page_slug')}},{{__('app.Page_title')}},{{__('app.Parent_page')}},{{__('app.Page_body')}},{{__('app.Page_shortname')}}"><i class="fa fa-cog"></i></a>
                                           <a class="btn btn-primary" href="/add-page-tab/{{$page->id}}"><i class="fa fa-plus"></i></a>
                                         </td>
                                       </tr>
@@ -139,7 +140,7 @@
 @section('foot')
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
-<script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<!-- <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script> -->
 <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="/adm/plugins/node-waves/waves.js"></script>
 <script src="/adm/plugins/jquery-datatable/jquery.dataTables.js"></script>
@@ -165,13 +166,67 @@
   });
   $(document.body).on("click",".list-btns > .dl_page",function(){
     let wrds = $(this).data("words").split(",");
-    let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a href='/admin/delete-page/"+$(this).data("id")+"' class='btn btn-danger'>"+wrds[1]+"</a></div></div></div>";
+    let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a data-id='"+$(this).data("id")+"' class='btn btn-danger pg_dl_btn'>"+wrds[1]+"</a></div></div></div>";
     $("#promodal").html(html);
   });
   $(document.body).on("click",".read_more",function(){
     let wrds = $(this).data("words").split(",");
     let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[1]+"</a></div></div></div>";
     $("#promodal").html(html);
+  });
+
+
+  $(document.body).on("click",".list-btns > .edit_page_modal",function(){
+    let wrds = $(this).data("words").split(",");
+    let id = $(this).data("id");
+    $.ajax({
+      type: 'GET',
+      url: '/admin/get-page-details-for-edit',
+      data:{id:id},
+      success:function(data){
+        let inp0 = "<label>"+wrds[6]+"</label><select class='form-control' id='pg_parent'><option>---";
+        for (var i = 0; i < data.pages.length; i++) {
+          if (data.page['parent_id'] == data.pages[i]['id']) {
+            inp0 += "<option value='"+data.pages[i]['id']+"' selected>"+data.pages[i]['shortname']+"</option>";
+          }else{
+            inp0 += "<option value='"+data.pages[i]['id']+"'>"+data.pages[i]['shortname']+"</option>";
+          }
+        }
+        inp0 += "</select>";
+        let inp1 = "<br><label>"+wrds[4]+"</label><input class='form-control' id='pg_slug' type='text' value='"+data.page['slug']+"'>";
+        let inp2 = "<br><label>"+wrds[8]+"</label><input class='form-control' id='pg_shortname' type='text' value='"+data.page['shortname']+"'>";
+        let inp3 = "<br><label>"+wrds[5]+"</label><input class='form-control' id='pg_title' type='text' value='"+data.page['title']+"'>";
+        let inp4 = "<br><label>"+wrds[7]+"</label><textarea class='form-control' id='pg_body' type='text'>"+data.page['body']+"</textarea>";
+        let inputs = inp0 + inp1 + inp2 + inp3 + inp4;
+        let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'>"+inputs+"</div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a class='btn btn-primary upt_pg' data-id='"+id+"'>"+wrds[3]+"</a></div></div></div>";
+        $("#promodal").html(html);
+        console.log(data);
+      }
+    });
+  });
+  $(document.body).on("click",".upt_pg",function(){
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    $.ajax({
+      url: '/admin/update-page',
+      type: 'POST',
+      data:{id:$(this).data("id"),parent_id:$("#pg_parent").val(),slug:$("#pg_slug").val(),shortname: $("#pg_shortname").val(), title: $("#pg_title").val(),body:$("#pg_body").val()},
+      success:function(data){
+        $('#promodal').modal('hide');
+        notify(data.success,"success");
+      }
+    });
+  });
+  $(document.body).on("click",".pg_dl_btn",function(){
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    $.ajax({
+      url: '/admin/delete-page',
+      type: 'DELETE',
+      data:{id:$(this).data("id")},
+      success:function(data){
+        $('#promodal').modal('hide');
+        notify(data.message,"danger");
+      }
+    });
   });
 
 

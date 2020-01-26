@@ -11,7 +11,7 @@
 <link href="/adm/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
-<title>{{__('app.Create_page')}}</title>
+<title>{{__('app.Create_page')}} - {{conf("admin_title")}}</title>
 @endsection
 @section('body')
 <section class="content">
@@ -81,15 +81,22 @@
                                   </div>
                                   <div class="demo-switch">
                                       <div class="switch">
+                                        <input type="hidden" name="important" value="0">
+                                          <label>{{__('app.Important')}}<input type="checkbox" ><span class="lever"></span></label>
+                                      </div>
+                                  </div>
+                                  <hr>
+                                  <div class="demo-switch">
+                                      <div class="switch">
                                         <input type="hidden" name="footer" value="0">
-                                          <label>{{__('app.In_footer')}}<input type="checkbox" id="pg_footer" ><span class="lever"></span>{{__('app.Not_in_footer')}}</label>
+                                          <label>{{__('app.In_footer')}}<input type="checkbox" ><span class="lever"></span>{{__('app.Not_in_footer')}}</label>
                                       </div>
                                   </div>
                                   <hr>
                                   <div class="demo-switch">
                                       <div class="switch">
                                         <input type="hidden" name="header" value="0">
-                                          <label>{{__('app.In_header')}}<input type="checkbox" id="pg_header" ><span class="lever"></span>{{__('app.Not_in_header')}}</label>
+                                          <label>{{__('app.In_header')}}<input type="checkbox" ><span class="lever"></span>{{__('app.Not_in_header')}}</label>
                                       </div>
                                   </div>
                               </div>

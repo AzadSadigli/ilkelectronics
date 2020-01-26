@@ -39,7 +39,7 @@ class DataController extends Controller
         for ($i=0; $i < count($list[4]); $i++) {if ($i != (count($list[4]) - 1)) {$arr .= "'".$list[4][$i]."',";}else{$arr .= "'".$list[4][$i]."'";}}
         $brand_query = "AND brand IN (".$arr.")";
       }
-      $sql = "SELECT *,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%') AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ORDER BY created_at DESC LIMIT ".$req->numb;
+      $sql = "SELECT *,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,(SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%') AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ORDER BY created_at DESC LIMIT ".$req->numb;
       $pros = DB::select($sql);
       return response()->json(['pros' => $pros]);
     }
@@ -71,7 +71,7 @@ class DataController extends Controller
         for ($i=0; $i < count($list[4]); $i++) {if ($i != (count($list[4]) - 1)) {$arr .= "'".$list[4][$i]."',";}else{$arr .= "'".$list[4][$i]."'";}}
         $brand_query = "AND brand IN (".$arr.")";
       }
-      $sql = "SELECT *,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category = ".$ct." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ORDER BY created_at DESC LIMIT ".$req->numb;
+      $sql = "SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at,p.price/".currency(0)." as price,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category = ".$ct." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ORDER BY created_at DESC LIMIT ".$req->numb;
       $pros = DB::select($sql);
       return response()->json(['pros' => $pros]);
     }
@@ -82,6 +82,6 @@ class DataController extends Controller
     }
 
     public function testing(Request $req){
-      return testing_json();
+      return conf("Site_title");
     }
 }

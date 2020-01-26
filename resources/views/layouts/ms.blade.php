@@ -145,7 +145,7 @@
 		            <img src="/img/logo.png" alt="{{config('settings.Site_title')}}">
 		          </a>
 						</div>
-						<p>{{config('settings.Footer_slogan')}}</p>
+						<p>{{conf('Footer_slogan')}}</p>
 						<ul class="footer-social">
 							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 							<li><a href="#"><i class="fa fa-twitter"></i></a></li>

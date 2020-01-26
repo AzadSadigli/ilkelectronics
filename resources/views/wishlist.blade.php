@@ -1,6 +1,6 @@
 @extends('layouts.ms')
 @section('head')
-<title>{{__('app.Wishlist')}}</title>
+<title>{{__('app.Wishlist')}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
 	<div id="breadcrumb">

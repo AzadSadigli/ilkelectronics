@@ -13,14 +13,15 @@ use Image;
 class ProductController extends Controller
 {
     public function index(){
-        $pros = Products::orderBy('created_at','desc')->take(20)->get();
+        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
+        // return $pros;
         return view('index',compact('pros'));
     }
     public function get_product_details($slug){
-      $pro = Products::where('slug',$slug)->first();
+      $pro = Products::select(DB::raw("*,FORMAT(price/".currency(0).",2) as price,FORMAT(old_price/".currency(0).",2) as old_price"))->where('slug',$slug)->first();
       $pro->views += 1;
       $pro->update();
-      $pros = Products::where('category',$pro->category)->take(4)->get();
+      $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
       $prod_tabs = Protab::where('prod_id',$pro->id)->get();
       return view('product',compact('pro','pros','prod_tabs'));
     }

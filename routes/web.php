@@ -28,11 +28,12 @@ Route::get('/categories','DataController@get_all_categories');
 Route::get('/product/{slug}','ProductController@get_product_details');
 Route::get('/page/{slug}','PageController@page_view');
 Route::get('/news/{slug}','PageController@news_view');
+Route::get('/page/{slug}','PageController@page_view');
 Route::get('/news-list','PageController@news_list');
 Route::get('/contact-us','UserController@contact_us');
 
 
-Route::get('/add-new-comment','UserController@add_comment');
+Route::post('/add-new-comment','UserController@add_comment');
 Route::get('/get-review-list','UserController@get_comments');
 
 Route::group(['prefix' => 'admin'], function(){
@@ -60,10 +61,12 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/create-page','PageController@create_page_vew');
     Route::post('/create-new-page','PageController@create_page');
     Route::view('/page-list','admin.list',['pages' => Pages::all()]);
-    Route::get('/delete-page/{id}','AdminController@delete_page');
+    Route::delete('/delete-page','PageController@delete_page');
     Route::get('/page-edit/{id}','AdminController@edit_page_view');
     Route::post('/edit-page/{id}','AdminController@edit_page');
     Route::post('/update-pg-head-foot','PageController@update_head_foot');
+    Route::get('/get-page-details-for-edit','PageController@get_page_details_edit');
+    Route::post('/update-page','PageController@update_page');
 
     //new section
     Route::get('/add-news','PageController@add_news_view');
@@ -76,6 +79,7 @@ Route::group(['prefix' => 'admin'], function(){
 
     //configuration section
     Route::get('/configuration','AdminController@configuration');
+    Route::delete('/delete-configuration','AdminController@delete_conf');
     Route::post('/update-configuration','AdminController@configuration');
     Route::get('/translation','AdminController@translation');
     Route::post('/save-tr-file','AdminController@save_tr_file');
@@ -84,6 +88,9 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/delete-product/{id}','Controller@delete_product');
   });
   Route::group(['middleware' => 'mainadmin'],function(){
+    Route::get('/get-file-data','AdminController@get_file_data');
+    Route::post('/update-css-js','AdminController@update_css_js');
+    Route::get('/code-view/{file}','AdminController@code_view');
     Route::get('/development','AdminController@development_page');
   });
 });

@@ -1,6 +1,6 @@
 @extends('layouts.ms')
 @section('head')
-<title>{{config("settings.Site_title")}}</title>
+<title>{{conf("Site_title")}}</title>
 @endsection
 @section('body')
 <div id="home">
@@ -56,7 +56,7 @@
 			<div class="col-md-9 col-sm-6 col-xs-6">
 				<div class="row">
 					<div id="product-slick-1" class="product-slick">
-						<div class="product product-single">
+						<div class="product product-single deals_of_day">
 							<div class="product-thumb">
 								<div class="product-label">
 									<span>New</span>
@@ -87,7 +87,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="product product-single">
+						<div class="product product-single deals_of_day">
 							<div class="product-thumb">
 								<div class="product-label">
 									<span class="sale">-20%</span>
@@ -117,7 +117,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="product product-single">
+						<div class="product product-single deals_of_day">
 							<div class="product-thumb">
 								<div class="product-label">
 									<span>New</span>
@@ -130,37 +130,6 @@
 								</ul>
 								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
 								<img src="/img/product06.jpg" alt="">
-							</div>
-							<div class="product-body">
-								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
-								</div>
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<div class="product-btns">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-									<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-								</div>
-							</div>
-						</div>
-						<div class="product product-single">
-							<div class="product-thumb">
-								<div class="product-label">
-									<span>New</span>
-									<span class="sale">-20%</span>
-								</div>
-								<ul class="product-countdown">
-									<li><span>00 H</span></li>
-									<li><span>00 M</span></li>
-									<li><span>00 S</span></li>
-								</ul>
-								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-								<img src="/img/product08.jpg" alt="">
 							</div>
 							<div class="product-body">
 								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
@@ -198,7 +167,7 @@
 				<div class="product product-single">
 					<div class="product-thumb">
 						<div class="product-label">
-							@if(nd($pro->created_at->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
+							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
 						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
@@ -211,11 +180,13 @@
 					<div class="product-body">
 						<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h3>
 						<div class="product-rating">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star-o empty"></i>
+							@for($k=1;$k<=5;$k++)
+								@if($k <= $pro->rating)
+									<i class="fa fa-star"></i>
+								@else
+									<i class="fa fa-star-o empty"></i>
+								@endif
+							@endfor
 						</div>
 						<h2 class="product-name"><a href="/product/{{$pro->slug}}">{{$pro->productname}}</a></h2>
 						<div class="product-btns">

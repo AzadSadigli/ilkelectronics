@@ -1,6 +1,5 @@
 ﻿@extends('admin.adms')
 @section('head')
-<title>Static</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 <link href="/adm/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -8,6 +7,11 @@
 <link href="/adm/plugins/animate-css/animate.css" rel="stylesheet" />
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
+@if(Request::is('admin/translation'))
+<title>{{__('app.Translation')}} - {{conf("admin_title")}}</title>
+@else
+<title>{{__('app.Configuration')}} - {{conf("admin_title")}}</title>
+@endif
 @endsection
 @section('body')
     <section class="content">
@@ -69,6 +73,33 @@
                           </div>
                           <div id="exist_files"></div>
                         </div>
+                        @else
+                        <div id="newConfig" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">{{__('app.Add_new_configuration')}}</h4>
+                              </div>
+                              <div class="modal-body">
+                                <div class="form-group input-grp">
+                                  <label for="">{{__('app.Choose_type')}}</label>
+                                  <select class="form-control" name="input_type" data-words="{{__('app.Value')}},{{__('app.Not_true_value')}},{{__('app.First_text')}},{{__('app.Second_text')}},Index">
+                                    <option selected disabled>{{__('app.Select')}}</option>
+                                    <option value="textarea">Textarea</option>
+                                    <option value="text_input">Text input</option>
+                                    <option value="number_input">Number input</option>
+                                    <option value="radio_input">Radio button</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <a class="btn btn-default" data-dismiss="modal">{{__('app.Close')}}</a>
+                                <a class="btn btn-primary add_new_conf">{{__('app.Add')}}</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         @endif
                         <div class="body table-responsive">
                             <table class="table table-striped">
@@ -76,7 +107,7 @@
                                 <tbody class="words"></tbody>
                             </table>
                             <div class=" pull-right">
-                              <a class="btn btn-primary add_new_w" data-toggle="modal" data-target="#addNewWord" style="display:none;" title="{{__('app.Add')}}"><i class="fa fa-plus"></i> </a>
+                              <a class="btn btn-primary add_new_w" data-toggle="modal" @if(Request::is('admin/translation')) data-target="#addNewWord" @else data-target="#newConfig" @endif style="display:none;" title="{{__('app.Add')}}"><i class="fa fa-plus"></i> </a>
                               <a class="btn btn-primary" id="save_files" style="display:none;" title="{{__('app.Save')}}"><i class="fa fa-save"></i></a>
                             </div>
                         </div>
@@ -89,13 +120,19 @@
 @section('foot')
     <script src="/adm/plugins/jquery/jquery.min.js"></script>
     <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
+    @if(!Request::is('admin/configuration'))
     <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    @endif
     <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
     <script src="/adm/plugins/node-waves/waves.js"></script>
     <script src="/adm/js/admin.js"></script>
     <script src="/adm/js/demo.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
+        const go_to_bottom = function(){
+          let $target = $('html,body');
+          $target.animate({scrollTop: $target.height()}, 1000);
+        }
         if (document.URL.indexOf("translation") >= 0) {
           var folder = "";
           var fl = "";
@@ -167,8 +204,7 @@
                 $('#addNewWord').modal('hide');
                 $('#addNewWord textarea,#addNewWord input').val("");
                 get_tr_file(folder,fl);
-                let $target = $('html,body');
-                $target.animate({scrollTop: $target.height()}, 1000);
+                go_to_bottom();
               },
               complete:function(){
                 $("#save_files .fa-spin").remove();
@@ -199,7 +235,7 @@
                 let tr = "";
                 let len = Object.keys(data).length;
                 for (var i = 0; i < len; i++) {
-                  let val = Object.values(data)[i]; let key = Object.keys(data)[i];
+                  let val = data[i][Object.keys(data[i])[0]]; let key = Object.keys(data[i])[0];
                   let input = "no input detected";
                   if (val[1] === "text_input") {input = "<input type='text' id='"+key+"' value='"+val[0]+"' class='value'>";
                   }else if(val[1] === "radio_input"){
@@ -209,7 +245,7 @@
                   }else if(val[1] === "number_input"){
                     input = "<input type='number' id='"+key+"' value='"+val[0]+"' class='value'>";
                   }
-                  let btns = "<a class='btn btn-danger delete_word' data-key='"+key+"'><i class='fa fa-trash'></i></a><a><i></i></a>";
+                  let btns = "<a class='btn btn-danger delete_conf' data-key='"+key+"'><i class='fa fa-trash'></i></a><a><i></i></a>";
                   tr += "<tr><th scope='row' data-tp='"+val[1]+"' data-index='"+(i + 1)+"'>"+(i+1)+"</th><td>"+key+"</td><td>"+input+" </td><td>"+btns+"</td></tr>";
                 }
                 $("#save_files,.add_new_w").css("display","");
@@ -220,6 +256,69 @@
             });
           }
           $("#save_files").on("click",function(){
+            var list = [];
+            for (var i = 0; i < $(".words > tr").length; i++) {
+              let base = ".words > tr:eq("+i+")"; let off_value = ""; let on_text = ""; let off_text ="";
+              if ($(base+" td label").data("on")) {
+                on_text = $(base+" td label").data("on");
+                off_text = $(base+" td label").data("off");
+                off_value = $(base+" td .value").data("off");
+              }
+              let key = $(base+" > td:eq(0)").text();
+              let val = $(base+" > td:eq(1) .value").val();
+              let type = $(base + "> th").data("tp");
+              list.push({key,val,type,on_text,off_text,off_value});
+            }
+            conf_post_data(list);
+            $(this).html('<i class="fa fa-refresh fa-spin"></i>');
+          });
+          function conf_post_data(list){
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+              type: 'POST',
+              url: '/admin/update-configuration',
+              data:{list:list},
+              success:function(data){
+                $('#newConfig').modal('hide');
+                $(".temp_input").remove();$(".input-grp:eq(0) select option:eq(0)").prop('selected', true);
+                notify(data.message,"success");
+                get_configuration();
+              }
+            });
+          }
+          get_configuration();
+          $(document.body).on("change",".switch > label > input[type='checkbox']",function(){
+            if ($(this).val() == $(this).data("on") | $(this).val() === $(this).data("on")) {
+              $(this).val($(this).data("off"))
+            }else{$(this).val($(this).data("on"))}
+          });
+          let div_in = function(word,name){
+            return "<div class='form-group input-grp temp_input'><label>"+word+"</label><input type='text' placeholder='"+word+"...' name='"+name+"' class='form-control'></div>";
+          }
+          let conf_input_type = "";
+          $(".input-grp:eq(0) select").on("change",function(){
+            $(".temp_input").remove();
+            let $t = $(this);
+            conf_input_type = $t.val();
+            let wds = $t.data("words").split(",");
+            let inp0 = div_in(wds[4],"new_key");
+            let inp1 = div_in(wds[0],"val");
+            let inp2 = div_in(wds[1],"opposite");
+            let inp3 = div_in(wds[2],"1th_text");
+            let inp4 = div_in(wds[3],"2nd_text");
+            let whole = "";
+            if ($t.val() === "radio_input") {
+              whole = inp0 + inp1 + inp2 + inp3 + inp4;
+            }else if($t.val() === "textarea"){
+              whole = inp0 + inp1;
+            }else if($t.val() === "number_input"){
+              whole = inp0 + inp1;
+            }else if($t.val() === "text_input"){
+              whole = inp0 + inp1;
+            }
+            $t.after(whole);
+          });
+          $(".add_new_conf").on("click",function(){
             let list = [];
             for (var i = 0; i < $(".words > tr").length; i++) {
               let base = ".words > tr:eq("+i+")"; let off_value = ""; let on_text = ""; let off_text ="";
@@ -230,29 +329,35 @@
               }
               let key = $(base+" > td:eq(0)").text();
               let val = $(base+" > td:eq(1) .value").val();
-              let type = $(base + ">th").data("tp");
+              let type = $(base + "> th").data("tp");
               list.push({key,val,type,on_text,off_text,off_value});
             }
-            console.log(list);
+
+            let key = $("input[name='new_key']").val();
+            let val = $("input[name='val']").val();
+            let off_value = "";
+            let on_text = "";
+            let off_text = "";
+            if ($("input[name='opposite']").length > 0) {
+              off_value = $("input[name='opposite']").val();
+              on_text = $("input[name='1th_text']").val();
+              off_text = $("input[name='2nd_text']").val();
+            }
+            type = conf_input_type;
+            list.push({key,val,type,on_text,off_text,off_value});
+            conf_post_data(list);
+          });
+          $(document.body).on("click",".delete_conf",function(){
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             $.ajax({
-              type: 'POST',
-              url: '/admin/update-configuration',
-              data:{list:list},
+              type: 'DELETE',
+              url: '/admin/delete-configuration',
+              data: {config:$(this).data("key")},
               success:function(data){
-                console.log(data);
+                notify(data.message,"success");
+                get_configuration();
               }
             });
-            $(this).html('<i class="fa fa-refresh fa-spin"></i>');
-            get_configuration();
-          });
-          get_configuration();
-          $(document.body).on("change",".switch > label > input[type='checkbox']",function(){
-            if ($(this).val() == $(this).data("on") | $(this).val() === $(this).data("on")) {
-              $(this).val($(this).data("off"))
-            }else{
-              $(this).val($(this).data("on"))
-            }
           });
         }
       });

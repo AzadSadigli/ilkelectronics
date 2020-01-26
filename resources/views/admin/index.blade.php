@@ -8,7 +8,7 @@
     <link href="/adm/plugins/morrisjs/morris.css" rel="stylesheet" />
     <link href="/adm/css/style.css" rel="stylesheet">
     <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
-    <title>{{config("settings.admin_title")}}</title>
+    <title>{{conf("admin_title")}}</title>
 @endsection
 @section('body')
     <section class="content">

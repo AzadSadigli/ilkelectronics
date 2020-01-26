@@ -50,7 +50,7 @@ function burl(){
   return substr(realpath(dirname(__FILE__)), 0, -11);
 }
 function discount($a,$b){
-  $c = ($a - $b)*100/$a;
+  $c = (floatval($a) - floatval($b))*100/floatval($a);
   if (!is_int($c)) {
     return number_format($c,2);
   }else{
@@ -181,11 +181,19 @@ function nd($date){ //new date
     return false;
   }
 }
-function currency(){
-  if (empty(get("currency"))) {
-    return "AZN";
+function currency($val = null){
+  if ($val !== null) {
+    if (empty(get("currency_value"))) {
+      return 1;
+    }else{
+      return get("currency_value");
+    }
   }else{
-    return get("currency");
+    if (empty(get("currency"))) {
+      return "AZN";
+    }else{
+      return get("currency");
+    }
   }
 }
 
@@ -193,32 +201,46 @@ function number_of_tags($path,$element){
   $data = file_get_contents(burl().$path);
   return substr_count($data,$element);
 }
+function minimizeCSS($css){
+  $css = preg_replace('/\/\*((?!\*\/).)*\*\//','',$css); // negative look ahead
+  $css = preg_replace('/\s{2,}/',' ',$css);
+  $css = preg_replace('/\s*([:;{}])\s*/','$1',$css);
+  $css = preg_replace('/;}/','}',$css);
+  return $css;
+}
+function minimizeJS($javascript){
+  return preg_replace(array("/\s+\n/","/\n\s+/","/ +/"),array("\n","\n "," "),$javascript);
+}
 function conf($key){
   $data = App\Config::where('config',$key)->first();
-  return $data->value;
+  if ($data) {
+    return json_decode($data->value)[0];
+  }else{
+    return "";
+  }
 }
 function get($data){
   return Session::get($data);
 }
 function testing_json(){
-  $conf = [
-    "admin_title" => ["Ilkelectronics Panel","text_input"],
-    "Site_title" => ["Ilkelectronics","text_input"],
-    "comment_verification" => [0,"radio_input",1,"Active","Not Active"],
-    "new_product_duration" => [40,"number_input"],
-    "show_wishlist_max_header" => [3,"number_input"],
-    "Footer_slogan" => ["Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna","textarea"],
-    "currencies" => [['USD','RUB','AZN','TRY'],"textarea"]
-  ];
-  for ($i=0; $i < count($conf); $i++) {
-    $cn = App\Config::where('config',array_keys($conf)[$i])->first();
-    if (empty($cn)) {
-      DB::select("INSERT INTO config (config,value) VALUES ('".array_keys($conf)[$i]."','".json_encode($conf[array_keys($conf)[$i]])."')");
-    }else{
-      DB::select("UPDATE config SET value = '".json_encode($conf[array_keys($conf)[$i]])."' WHERE id = ".$cn->id);
-    }
-  }
-  return array_keys($conf);
+  // $conf = [
+  //   "admin_title" => ["Ilkelectronics Panel","text_input"],
+  //   "Site_title" => ["Ilkelectronics","text_input"],
+  //   "comment_verification" => [0,"radio_input",1,"Active","Not Active"],
+  //   "new_product_duration" => [40,"number_input"],
+  //   "show_wishlist_max_header" => [3,"number_input"],
+  //   "Footer_slogan" => ["Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna","textarea"],
+  //   "currencies" => [['USD','RUB','AZN','TRY'],"textarea"]
+  // ];
+  // for ($i=0; $i < count($conf); $i++) {
+  //   $cn = App\Config::where('config',array_keys($conf)[$i])->first();
+  //   if (empty($cn)) {
+  //     DB::select("INSERT INTO config (config,value) VALUES ('".array_keys($conf)[$i]."','".json_encode($conf[array_keys($conf)[$i]])."')");
+  //   }else{
+  //     DB::select("UPDATE config SET value = '".json_encode($conf[array_keys($conf)[$i]])."' WHERE id = ".$cn->id);
+  //   }
+  // }
+  // return array_keys($conf);
 }
 
 

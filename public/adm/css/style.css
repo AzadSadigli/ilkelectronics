@@ -4278,13 +4278,14 @@ section.content {
     font-weight: bold;
     font-size: 17px; }
 
-/* Modals ====================================== */
 .modal .modal-header {
   border: none;
-  padding: 25px 25px 5px 25px; }
-  .modal .modal-header .modal-title {
+  padding: 23px 19px 16px 20px;
+}
+.modal .modal-header .modal-title {
     font-weight: bold;
-    font-size: 16px; }
+    font-size: 16px;
+}
 
 .modal .modal-content {
   -webkit-border-radius: 0;

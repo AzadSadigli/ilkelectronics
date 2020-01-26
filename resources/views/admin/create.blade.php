@@ -11,7 +11,7 @@
 <link href="/adm/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
-<title>{{__('app.Add_news')}}</title>
+<title>{{__('app.Add_news')}} - {{conf("admin_title")}}</title>
 @endsection
 @section('body')
 <section class="content">

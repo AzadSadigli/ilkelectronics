@@ -123,6 +123,62 @@
       .modal .modal-footer{
         border-top:1px solid #e4e4e4;
       }
+      .input-grp input, .input-grp select{
+        border: 1px solid #dddddd !important;
+        height: 43px;
+        border-radius: 10px !important;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-left: 20px !important;
+      }
+      .input-grp select{
+        margin-bottom: 20px;
+      }
+      #code_review{
+        width: 100%;
+        height: -webkit-fill-available;
+        padding: 7px;
+        border: none;
+        background: #050505;
+        color: #d5d3d3;
+        border-radius: 4px;
+        box-shadow: 0 0 4px 2px grey;
+      }
+      .txt_replacer{
+        display: block;
+        margin-top: 13px;
+        margin-bottom: 13px;
+      }
+      .txt_replacer .rp_item{
+        display: inline-block;
+      }
+      .txt_replacer .rp_item label{
+        color: gray;
+        font-weight: normal;
+        display: inline-block;
+      }
+      .txt_replacer .rp_item input{
+        padding-left: 9px;
+          border-radius: 6px;
+          border: 1px solid #dddddd;
+          color: #065187;
+      }
+      .txt_replacer .rp_item input[type='checkbox']{
+        position: static;
+        opacity: 1;
+        font-size: 50px;
+      }
+      .txt_replacer .rp_btns{
+        display: inline-block;
+      }
+      .txt_replacer .rp_btns a{
+        background: #08c5e5;
+        color: white;
+        padding: 7px;
+        border-radius: 4px;
+        font-size: 11px;
+      }
     </style>
 </head>
 <body class="theme-red">
@@ -422,7 +478,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li @if(Request::is('admin/translation') | Request::is('admin/configuration') | Request::is('admin/add-user')) class="active" @endif>
+                    @if(Auth::user()->role_id == 4)
+                    <li @if(in_array(Request::path(),array('admin/translation','admin/configuration','admin/development'))) class="active" @endif>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">add_circle_outline</i>
                             <span>Static</span>
@@ -438,8 +495,14 @@
                                   <span>{{__('app.Configuration')}}</span>
                                 </a>
                             </li>
+                            <li @if(Request::is('admin/development')) class="active" @endif>
+                                <a href="/admin/development">
+                                  <span>Development</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
+                    @endif
                 </ul>
             </div>
             <div class="legal">

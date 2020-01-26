@@ -1,6 +1,6 @@
 ﻿@extends('admin.adms')
 @section('head')
-<title>{{Auth::user()->name}} {{Auth::user()->surname}}</title>
+<title>{{Auth::user()->name}} {{Auth::user()->surname}} - {{conf("admin_title")}}</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 <link href="/adm/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">

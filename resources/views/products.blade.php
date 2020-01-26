@@ -1,8 +1,8 @@
 @extends('layouts.ms')
 @section('head')
-<title>@if(Request::is('search-result/*')) {{$search}}
+<title>@if(Request::is('search-result/*')) {{$search}} - {{conf("Site_title")}}
 	@else
-	{{$cat->name}}
+	{{$cat->name}} - {{conf("Site_title")}}
 	@endif</title>
 @endsection
 @section('body')

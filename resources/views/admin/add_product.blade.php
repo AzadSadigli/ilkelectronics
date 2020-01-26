@@ -12,22 +12,22 @@
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
 @if(Request::is('admin/add-category'))
-<title>{{__('app.Add_new_category')}}</title>
-@elseif(Request::is('admin/edit-product/*'))
-<title>{{__('app.Edit_product')}}</title>
+<title>{{__('app.Add_new_category')}} - {{conf("admin_title")}}</title>
+@elseif(!empty($pro))
+<title>{{__('app.Edit_product')}} - {{conf("admin_title")}}</title>
 @elseif(Request::is('admin/change-image-order/*'))
 <title>{{__('app.Change_order')}}</title>
 @elseif(Request::is('admin/products-tabs/*'))
-<title>{{__('app.Add_product_tabs')}}</title>
+<title>{{__('app.Add_product_tabs')}} - {{conf("admin_title")}}</title>
 @else
-<title>{{__('app.Add_new_product')}}</title>
+<title>{{__('app.Add_new_product')}} - {{conf("admin_title")}}</title>
 @endif
 @endsection
 @section('body')
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
-          @if(Request::is('admin/edit-product/*'))
+          @if(!empty($pro))
             <h2>{{__('app.Edit')}}</h2>
           @else
             <h2>{{__('app.Add')}}</h2>
@@ -42,7 +42,7 @@
                             <small><a href="/admin/add-product">{{__('app.Add_new_product')}}</a> </small>
                             @elseif(Request::is('admin/change-image-order/*'))
                             {{__('app.Change_order')}}
-                            @elseif(Request::is('admin/edit-product/*'))
+                            @elseif(!empty($pro))
                             {{__('app.Edit_product')}}
                             <small><a href='/admin/change-image-order/{{$pro->slug}}'>{{__('app.Update_image_order')}}</a> |
                               <a href="/admin/products-tabs/{{$pro->slug}}"> {{__('app.Add_product_tabs')}}</a>
@@ -156,66 +156,65 @@
                         </div>
                       </div>
                       @else
-                        <form @if(Request::is('admin/edit-product/*')) action="/admin/update-product/{{$pro->id}}" @else action="/admin/add-new-product" @endif method="POST" enctype="multipart/form-data">
+                        <form @if(!empty($pro)) action="/admin/update-product/{{$pro->id}}" @else action="/admin/add-new-product" @endif method="POST" enctype="multipart/form-data">
                           @csrf
                           <h2 class="card-inside-title">{{__('app.Category')}}</h2>
                           <div class="row clearfix">
                               <div class="col-sm-6 pcats">
-                                @php($parent_id = App\Category::find($pro->category)->parent_id)
-                                  <select class="form-control show-tick" id="pcat" @if(Request::is('admin/edit-product/*')) data-select="{{$parent_id}}" @endif required>
-                                      <option @if(!Request::is('admin/edit-product/*')) selected @endif>-- {{__('app.Select_category')}} --</option>
+                                  <select class="form-control show-tick" id="pcat" @if(!empty($pro)) data-select="{{App\Category::find($pro->category)->parent_id}}" @endif required>
+                                      <option @if(empty($pro)) selected @endif>-- {{__('app.Select_category')}} --</option>
                                       @foreach(App\Category::whereNull('parent_id')->get() as $ct)
-                                          <option value="{{$ct->id}}" @if(Request::is('admin/edit-product/*')) @if($ct->id == $parent_id) selected @endif @endif>{{$ct->name}}</option>
+                                          <option value="{{$ct->id}}" @if(!empty($pro)) @if($ct->id == App\Category::find($pro->category)->parent_id) selected @endif @endif>{{$ct->name}}</option>
                                       @endforeach
                                   </select>
                               </div>
                               <div class="col-sm-6 pcats">
-                                  <select class="form-control" id="psubcat" @if(Request::is('admin/edit-product/*')) data-select="{{$pro->category}}" @endif data-default="{{__('app.Select_category')}}" required></select>
+                                  <select class="form-control" id="psubcat" @if(!empty($pro)) data-select="{{$pro->category}}" @endif data-default="{{__('app.Select_category')}}" required></select>
                               </div>
                           </div>
-                          <input type="hidden" id="hidden_sub" name="category" @if(Request::is('admin/edit-product/*')) value="{{$pro->category}}" @endif>
+                          <input type="hidden" id="hidden_sub" name="category" @if(!empty($pro)) value="{{$pro->category}}" @endif>
                           <div class="row clearfix">
                               <div class="col-sm-12">
                                 <div class="form-group">
                                   <label for="product_name">{{__('app.ID')}}</label>
                                   <div class="form-line">
-                                      <input type="text" name="prod_id" class="form-control" @if(Request::is('admin/edit-product/*')) value="{{$pro->prod_id}}" @endif placeholder="{{__('app.ID')}}" required/>
+                                      <input type="text" name="prod_id" class="form-control" @if(!empty($pro)) value="{{$pro->prod_id}}" @endif placeholder="{{__('app.ID')}}" required/>
                                   </div>
                                 </div>
                                   <div class="form-group">
                                     <label for="product_name">{{__('app.Product_slug')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="slug" class="form-control" @if(Request::is('admin/edit-product/*')) value="{{$pro->slug}}" @endif placeholder="{{__('app.Product_slug')}}" />
+                                        <input type="text" name="slug" class="form-control" @if(!empty($pro)) value="{{$pro->slug}}" @endif placeholder="{{__('app.Product_slug')}}" />
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="product_name">{{__('app.Product_name')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="productname" class="form-control" @if(Request::is('admin/edit-product/*')) value="{{$pro->productname}}" @endif placeholder="{{__('app.Product_name')}}" required/>
+                                        <input type="text" name="productname" class="form-control" @if(!empty($pro)) value="{{$pro->productname}}" @endif placeholder="{{__('app.Product_name')}}" required/>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="price">{{__('app.Price')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="price" class="form-control" min="0" step="0.01" @if(Request::is('admin/edit-product/*')) value="{{$pro->price}}" @endif placeholder="{{__('app.Price')}}" required>
+                                        <input type="number" name="price" class="form-control" min="0" step="0.01" @if(!empty($pro)) value="{{$pro->price}}" @endif placeholder="{{__('app.Price')}}" required>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="old_price">{{__('app.Old_price')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="old_price" class="form-control" min="0" step="0.01" @if(Request::is('admin/edit-product/*')) value="{{$pro->old_price}}" @endif placeholder="{{__('app.Old_price')}}">
+                                        <input type="number" name="old_price" class="form-control" min="0" step="0.01" @if(!empty($pro)) value="{{$pro->old_price}}" @endif placeholder="{{__('app.Old_price')}}">
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="quantity">{{__('app.Quantity')}}</label>
                                     <div class="form-line">
-                                        <input type="number" name="quantity" min="0" class="form-control" @if(Request::is('admin/edit-product/*')) value="{{$pro->quantity}}" @endif placeholder="{{__('app.Quantity')}}" required>
+                                        <input type="number" name="quantity" min="0" class="form-control" @if(!empty($pro)) value="{{$pro->quantity}}" @endif placeholder="{{__('app.Quantity')}}" required>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="quantity">{{__('app.Brand')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="brand" class="form-control" @if(Request::is('admin/edit-product/*')) value="{{$pro->brand}}" @endif placeholder="{{__('app.Brand')}}" required>
+                                        <input type="text" name="brand" class="form-control" @if(!empty($pro)) value="{{$pro->brand}}" @endif placeholder="{{__('app.Brand')}}" required>
                                     </div>
                                   </div>
                                   <div class="demo-switch">
@@ -226,7 +225,7 @@
                                   <div class="form-group">
                                     <label for="description">{{__('app.Description_title')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="description_title" @if(Request::is('admin/edit-product/*')) value="{{$pro->description_title}}" @endif class="form-control" placeholder="{{__('app.Description_title')}}">
+                                        <input type="text" name="description_title" @if(!empty($pro)) value="{{$pro->description_title}}" @endif class="form-control" placeholder="{{__('app.Description_title')}}">
                                     </div>
                                   </div>
                               </div>
@@ -234,20 +233,20 @@
                           <h2 class="card-inside-title">{{__('app.Description')}}</h2>
                           <div class="form-group">
                               <div class="form-line">
-                                  <textarea rows="3" name="description" class="form-control no-resize auto-growth" placeholder="{{__('app.Description')}}">@if(Request::is('admin/edit-product/*')){{$pro->description}}@endif</textarea>
+                                  <textarea rows="3" name="description" class="form-control no-resize auto-growth" placeholder="{{__('app.Description')}}">@if(!empty($pro)){{$pro->description}}@endif</textarea>
                               </div>
                           </div>
                           <div class="form-group">
                             <label for="images">{{__('app.Images')}}</label>
-                            <input type="file" name="images[]" class="form-control" multiple @if(!Request::is('admin/edit-product/*')) required @endif>
+                            <input type="file" name="images[]" class="form-control" multiple @if(empty($pro)) required @endif>
                           </div>
                           <div class="demo-switch">
                               <div class="switch">
-                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" @if(Request::is('admin/edit-product/*')) @if($pro->status != 1) checked @endif @endif value="1"><span class="lever"></span>{{__('app.Active')}}</label>
+                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" @if(!empty($pro)) @if($pro->status != 1) checked @endif @endif value="1"><span class="lever"></span>{{__('app.Active')}}</label>
                               </div>
                           </div>
                           <div class="form-group">
-                            <button type="submit" class="btn btn-primary pull-right">@if(Request::is('admin/edit-product/*')) {{__('app.Update')}}  @else {{__('app.Add')}} @endif</button>
+                            <button type="submit" class="btn btn-primary pull-right">@if(!empty($pro)) {{__('app.Update')}}  @else {{__('app.Add')}} @endif</button>
                           </div>
                         </form>
                       @endif

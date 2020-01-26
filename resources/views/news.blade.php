@@ -1,6 +1,10 @@
 @extends('layouts.ms')
 @section('head')
-<title>{{__('app.All_news')}}</title>
+@if(empty($news_unique))
+<title>{{__('app.All_news')}} - {{conf("Site_title")}}</title>
+@else
+<title>{{$news_unique->title}} - {{conf("Site_title")}}</title>
+@endif
 @endsection
 @section('body')
 	<div id="breadcrumb">
@@ -100,8 +104,37 @@
 							<h3><a href="/news/{{$news_unique->slug}}" title="{{$news_unique->title}}">{{$news_unique->title}}</a> </h3>
 							<p>{!!$news_unique->body!!}</p>
 						</div>
-						<div class="news-commenting">
-
+						<div class="news-commenting" data-id="{{$news_unique->id}}">
+							<div class="product-reviews">
+								<div class="single-review">
+									<div class="review-heading">
+										<div><a href="#"><i class="fa fa-user-o"></i> John</a></div>
+										<div><a href="#"><i class="fa fa-clock-o"></i> 27 DEC 2017 / 8:0 PM</a></div>
+									</div>
+									<div class="review-body">
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute
+											irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+									</div>
+								</div>
+									<ul class="reviews-pages">
+										<li class="active">1</li>
+										<li><a href="#">2</a></li>
+										<li><a href="#">3</a></li>
+										<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+									</ul>
+								</div>
+							<div class="review-form">
+								<div class="form-group">
+									<input class="input" type="text" @if(Auth::check()) value="{{Auth::user()->name}} {{Auth::user()->surname}}" readonly @else placeholder="{{__('app.Name')}}..." @endif id="commenter_name"  />
+								</div>
+								<div class="form-group">
+									<input class="input" type="email" @if(Auth::check()) value="{{Auth::user()->email}}" readonly @else placeholder="{{__('app.E_mail')}}..." @endif id="commenter_email" />
+								</div>
+								<div class="form-group">
+									<textarea class="input" placeholder="{{__('app.Your_comment')}}..." id="comment_section" required></textarea>
+								</div>
+								<a class="primary-btn share_comment pull-right" title="{{__('app.Share')}}"><i class="fa fa-arrow-right"></i> </a>
+							</div>
 						</div>
 					</div>
 					@endif

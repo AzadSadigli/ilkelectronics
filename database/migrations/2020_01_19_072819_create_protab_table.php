@@ -15,7 +15,7 @@ class CreateProtabTable extends Migration
     {
         Schema::create('protab', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('prod_id')->references('id')->on('products');
+            $table->integer('prod_id')->nullable()->references('id')->on('products');
             $table->text('title');
             $table->text('description');
             $table->timestamps();

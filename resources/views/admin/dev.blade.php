@@ -11,23 +11,19 @@
 <link href="/adm/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
-<title>Development</title>
-
-
-
-
+<title>Development - {{conf("admin_title")}}</title>
 @endsection
 @section('body')
 <section class="content">
     <div class="container-fluid">
-        <div class="block-header"><h2>{{__('app.Development')}}</h2></div>
+        <div class="block-header"><h2>Development</h2></div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            {{__('app.Development')}}
-                            <small></small>
+                            Development
+                            <small class="url-link"></small>
                         </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -42,23 +38,38 @@
                         </ul>
                     </div>
                     <div class="body">
-                          <h2 class="card-inside-title">{{__('app.Development')}}</h2>
+                          <h2 class="card-inside-title">Development</h2>
                           <div class="row clearfix">
-                              <div class="col-sm-12">
-                                  <div class="form-group">
-                                    <label for="description">{{__('app.Description_title')}}</label>
-                                    <div class="form-line">
-                                        <input type="text" name="description_title" class="form-control" placeholder="{{__('app.Description_title')}}">
-                                    </div>
-                                  </div>
-                              </div>
+                             <div class="col-sm-12">
+                                 <select class="form-control show-tick" id="select_file">
+                                     <option value="ms.css">master.css</option>
+                                     <option value="ms.js">master.js</option>
+                                 </select>
+                             </div>
                           </div>
                           <h2 class="card-inside-title">Code</h2>
                           <div class="form-group">
                               <div class="form-line">
-                                  <textarea rows="3" name="description" id="js_code_area" placeholder="{{__('app.Description')}}">
-                                    <h2>test</h2>
-                                  </textarea>
+                                  <textarea name="description" id="code_review" placeholder="{{__('app.Description')}}"><h2>test</h2></textarea>
+                                  <div class="txt_replacer">
+                                      <div class="rp_item">
+                                        <label for="termSearch">Search</label>
+                                        <input type="text" id="termSearch" name="termSearch" placeholder="First word..." />
+                                      </div>
+                                      <div class="rp_item">
+                                        <label for="termReplace">Replace</label>
+                                        <input type="text" id="termReplace" name="termReplace" placeholder="Second word..."/>
+                                      </div>
+                                      <div class="rp_item">
+                                        <label for="caseSensitive">Case Sensitive</label>
+                                        <input type="checkbox" name="caseSensitive" id="caseSensitive" />
+                                      </div>
+                                      <div class="rp_btns">
+                                        <a href="#" onclick="SAR.find(); return false;" id="find">FIND</a>
+                                        <a href="#" onclick="SAR.findAndReplace(); return false;" id="findAndReplace">FIND/REPLACE</a>
+                                        <a href="#" onclick="SAR.replaceAll(); return false;" id="replaceAll">REPLACE ALL</a>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
                           <div class="demo-switch">
@@ -67,7 +78,7 @@
                               </div>
                           </div>
                           <div class="form-group">
-                            <button class="btn btn-primary pull-right">{{__('app.Update')}}</button>
+                            <button class="btn btn-primary pull-right" title="{{__('app.Save')}}" id="save_code" style="display:none;"><i class="fa fa-save"></i></button>
                           </div>
                     </div>
                 </div>
@@ -79,7 +90,7 @@
 @section('foot')
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
-<script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<!-- <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script> -->
 <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 <script src="/adm/plugins/node-waves/waves.js"></script>
 <script src="/adm/plugins/autosize/autosize.js"></script>
@@ -90,75 +101,156 @@
 <script src="/adm/js/pages/forms/basic-form-elements.js"></script>
 <script src="/adm/js/demo.js"></script>
 <script type="text/javascript">
-$("#pcat").on("change",function(e){
-  e.preventDefault();
-  $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-  if ($(this).val() !== "") {
+$(document).ready(function(){
+  $("#select_file").on("change",function(){
+    get_code_ontext($(this).val());
+  });
+  get_code_ontext($("#select_file").val());
+  function get_code_ontext(file){
+    let $sc = $("#save_code");
+    $sc.html('<i class="fa fa-refresh fa-spin"></i>');
     $.ajax({
-      url: '/admin/change-subcategory/' + $(this).val(),
-      type: 'GET',
-      cache:false,
+        type: 'GET',
+        url: '/admin/get-file-data',
+        data:{file:file},
+        success:function(data){
+          $("#code_review").val(data);
+          $(".url-link").html("<a href='/admin/code-view/"+file+"'>"+file+"</a>");
+          let textarea = document.getElementById('code_review');
+          textarea.scrollTop = textarea.scrollHeight;
+        },
+        complete:function(){$sc.css("display","").html('<i class="fa fa-save"></i>');}
+    });
+  }
+  $("#save_code").on("click",function(e){
+    let $sc = $("#save_code");
+    $sc.html('<i class="fa fa-refresh fa-spin"></i>');
+    e.preventDefault();
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    $.ajax({
+      type: 'POST',
+      url: '/admin/update-css-js',
+      data:{file:$("#select_file").val(),val:$("#code_review").val()},
       success:function(data){
-        let html = "<option selected disabled>-- "+$("#psubcat").data('default')+" --</option>";
-        for (var i = 0; i < data.length; i++) {
-          html += "<option id='"+data[i].id+"'>"+data[i].name+"</option>";
-        }
-        $("#psubcat").html(html).selectpicker('refresh');
+        notify(data.message,"success");
+      },
+      complete:function(){
+          $sc.html('<i class="fa fa-save"></i>');
       }
     });
-  }
-});
-$("input[name='status'],input[name='condition']").change(function(){
-  if ($(this).val() == 1) {
-    $(this).val(0)
-  }else{
-    $(this).val(1)
-  }
-});
-$(document.body).on("change","#psubcat",function(){
-  console.log($(this).val());
-});
-</script>
-@if(Request::is('admin/change-image-order/*'))
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script>
-$(document.body).on("click",".my-btn",function(){
-  reorder();
-  var arr = [];
-  for (var i=0; i < $("ul.image-list li").length; i++) {
-    let img_id = $("ul.image-list li:eq("+i+") img").data("id");
-    arr.push(img_id);
-  }
-  $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-  $.ajax({
-    type: 'POST',
-    url: '/admin/change-images-order',
-    data:{list:arr},
-    success:function(data){notify(data.success,"success");}
   });
 });
-function reorder(){
-  for (var i = 0; i < $("ul.image-list li").length; i++) {
-    $("ul.image-list li:eq("+i+") b").html((i + 1) + ".");
-  }
-}
-$(function() {
-    var isDragging = false;
-    $("ul.image-list li")
-    .mousedown(function() {
-        reorder();
-        isDragging = false;
-    })
-    .mouseup(function() {
-        reorder();
-        var wasDragging = isDragging;
-        isDragging = false;
-        if (!wasDragging) {
-            $("#throbble").toggle();
-        }
-    });
-    $("ul").sortable();
-});
+
+var SAR = {};
+
+  SAR.find = function(){
+      // collect variables
+      var txt = $("#code_review").val();
+      var strSearchTerm = $("#termSearch").val();
+      var isCaseSensitive = ($("#caseSensitive").attr('checked') == 'checked') ? true : false;
+
+      // make text lowercase if search is supposed to be case insensitive
+      if(isCaseSensitive == false){
+          txt = txt.toLowerCase();
+          strSearchTerm = strSearchTerm.toLowerCase();
+      }
+
+      // find next index of searchterm, starting from current cursor position
+      var cursorPos = ($("#code_review").getCursorPosEnd());
+      var termPos = txt.indexOf(strSearchTerm, cursorPos);
+
+      // if found, select it
+      if(termPos != -1){
+          $("#code_review").selectRange(termPos, termPos+strSearchTerm.length);
+      }else{
+          // not found from cursor pos, so start from beginning
+          termPos = txt.indexOf(strSearchTerm);
+          if(termPos != -1){
+              $("#code_review").selectRange(termPos, termPos+strSearchTerm.length);
+          }else{
+              alert("not found");
+          }
+      }
+  };
+
+  SAR.findAndReplace = function(){
+      var origTxt = $("#code_review").val(); // needed for text replacement
+      var txt = $("#code_review").val(); // duplicate needed for case insensitive search
+      var strSearchTerm = $("#termSearch").val();
+      var strReplaceWith = $("#termReplace").val();
+      var isCaseSensitive = ($("#caseSensitive").attr('checked') == 'checked') ? true : false;
+      var termPos;
+      if(isCaseSensitive == false){
+          txt = txt.toLowerCase();
+          strSearchTerm = strSearchTerm.toLowerCase();
+      }
+      var cursorPos = ($("#code_review").getCursorPosEnd());
+      var termPos = txt.indexOf(strSearchTerm, cursorPos);
+      var newText = '';
+      if(termPos != -1){
+          newText = origTxt.substring(0, termPos) + strReplaceWith + origTxt.substring(termPos+strSearchTerm.length, origTxt.length)
+          $("#code_review").val(newText);
+          $("#code_review").selectRange(termPos, termPos+strReplaceWith.length);
+      }else{
+          termPos = txt.indexOf(strSearchTerm);
+          if(termPos != -1){
+              newText = origTxt.substring(0, termPos) + strReplaceWith + origTxt.substring(termPos+strSearchTerm.length, origTxt.length)
+              $("#code_review").val(newText);
+              $("#code_review").selectRange(termPos, termPos+strReplaceWith.length);
+          }else{
+              alert("not found");
+          }
+      }
+  };
+
+  SAR.replaceAll = function(){
+      var origTxt = $("#code_review").val(); // needed for text replacement
+      var txt = $("#code_review").val(); // duplicate needed for case insensitive search
+      var strSearchTerm = $("#termSearch").val();
+      var strReplaceWith = $("#termReplace").val();
+      var isCaseSensitive = ($("#caseSensitive").attr('checked') == 'checked') ? true : false;
+      if(isCaseSensitive == false){
+          txt = txt.toLowerCase();
+          strSearchTerm = strSearchTerm.toLowerCase();
+      }
+      var matches = [];
+      var pos = txt.indexOf(strSearchTerm);
+      while(pos > -1) {
+          matches.push(pos);
+          pos = txt.indexOf(strSearchTerm, pos+1);
+      }
+      for (var match in matches){
+          SAR.findAndReplace();
+      }
+  };
+  $.fn.selectRange = function(start, end) {
+      return this.each(function() {
+          if(this.setSelectionRange) {
+              this.focus();
+              this.setSelectionRange(start, end);
+          } else if(this.createTextRange) {
+              var range = this.createTextRange();
+              range.collapse(true);
+              range.moveEnd('character', end);
+              range.moveStart('character', start);
+              range.select();
+          }
+      });
+  };
+
+  $.fn.getCursorPosEnd = function() {
+      var pos = 0;
+      var input = this.get(0);
+      // IE Support
+      if (document.selection) {
+          input.focus();
+          var sel = document.selection.createRange();
+          pos = sel.text.length;
+      }
+      // Firefox support
+      else if (input.selectionStart || input.selectionStart == '0')
+          pos = input.selectionEnd;
+      return pos;
+  };
 </script>
-@endif
 @endsection

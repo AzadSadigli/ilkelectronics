@@ -1,6 +1,6 @@
 @extends('layouts.ms')
 @section('head')
-<title>{{__('app.My_account')}} - {{config("settings.title")}}</title>
+<title>{{__('app.My_account')}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
 	<div id="breadcrumb">

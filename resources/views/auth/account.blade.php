@@ -26,7 +26,6 @@
 						@csrf
 						<div class="col-md-6">
 							<div class="billing-details">
-								<p>{{__('app.Register_now')}} ? <a href="/account?action=register">{{__('app.Register')}}</a></p>
 								<div class="section-title">
 									<h3 class="title">{{__('app.Login')}} </h3>
 								</div>
@@ -177,28 +176,22 @@
 					<div class="col-md-6">
 						<div class="shiping-methods">
 							<div class="section-title">
-									<h4 class="title">Shiping Methods</h4>
+									<h4 class="title">{{__('app.Why_need_account')}}</h4>
 							</div>
-							<div class="input-checkbox">
-									<input type="radio" name="shipping" id="shipping-1" checked>
-									<label for="shipping-1">Free Shiping -  $0.00</label>
-									<div class="caption">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-											<p>
-									</div>
-								</div>
-								<div class="input-checkbox">
-									<input type="radio" name="shipping" id="shipping-2">
-									<label for="shipping-2">Standard - $4.00</label>
-									<div class="caption">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-												<p>
-									</div>
-								</div>
+							<p>
+								{{conf('Reasons_to_open_account')}}
+							</p>
+							@if(isset($_GET['action']))
+								@if($_GET['action'] === 'login')
+									<p>{{__('app.Register_now')}}:
+										<a href="/account?action=register">{{__('app.Register')}}</a>
+									</p>
+								@endif
+							@endif
+
 							</div>
 						</div>
 					</div>
 			</div>
 		</div>
-	</div>
 @endsection

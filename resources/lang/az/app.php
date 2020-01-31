@@ -232,4 +232,5 @@ return [
     'You_password_changed_successfully' => 'Şifrəniz uğurla dəyişdirildi',
     'Wrong_code' => 'Yalnış kod',
     'User_not_found' => 'İstifadəçi tapılmadı',
+    'Why_need_account' => 'Nəyə görə hesab açım?',
 ];

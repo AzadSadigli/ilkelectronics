@@ -20,7 +20,9 @@
 	<div class="container">
 		<div class="home-wrap">
 			<div id="home-slick">
-				@foreach(App\Posters::where('type',0)->where('status',1)->get() as $ps)
+				@php($pss = App\Posters::where('type',0)->where('status',1)->get())
+				@if(count($pss) != 0)
+				@foreach($pss as $ps)
 				<div class="banner banner-1">
 					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
 					<div class="banner-caption">
@@ -33,6 +35,12 @@
 					</div>
 				</div>
 				@endforeach
+				@else
+				<div class="banner banner-1">
+					<img src="/uploads/posters/default-slide.png" alt="{{conf('Site_title')}}">
+				</div>
+
+				@endif
 			</div>
 		</div>
 	</div>

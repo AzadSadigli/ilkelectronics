@@ -37,9 +37,8 @@
 				@endforeach
 				@else
 				<div class="banner banner-1">
-					<img src="/uploads/posters/default-slide.png" alt="{{conf('Site_title')}}">
+					<img src="/uploads/posters/default-slide.jpg" alt="{{conf('Site_title')}}">
 				</div>
-
 				@endif
 			</div>
 		</div>

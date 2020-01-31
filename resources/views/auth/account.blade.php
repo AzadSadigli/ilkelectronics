@@ -31,7 +31,7 @@
 									<h3 class="title">{{__('app.Login')}} </h3>
 								</div>
 								<div class="form-group">
-									<input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus class="input @error('email') is-invalid @enderror">
+									<input id="email" type="email" name="email" placeholder="{{__('app.E_mail')}}..." value="{{ old('email') }}" required autocomplete="email" autofocus class="input @error('email') is-invalid @enderror">
 									@error('email')
 											<span class="invalid-feedback" role="alert">
 													<strong>{{ $message }}</strong>
@@ -39,7 +39,7 @@
 									@enderror
 								</div>
 								<div class="form-group">
-									<input id="password" type="password" class="input @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+									<input id="password" type="password" placeholder="{{__('app.Password')}}..." class="input @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 									@error('password')
 											<span class="invalid-feedback" role="alert">
 													<strong>{{ $message }}</strong>

@@ -6279,9 +6279,12 @@ $(document).ready(function(){
   $(".pg-tabs a.accordion").on("click",function(){
     pg_tabs_click($(this).parent().index() - 2);
   });
-  var dtt = new Date();
-  var dtty = dtt.getFullYear();
-  document.getElementById("copyright_year").innerHTML = dtty;
+  const cprt = document.getElementById("copyright_year");
+  if(cprt){
+      var dtt = new Date();
+      var dtty = dtt.getFullYear();
+      cprt.innerHTML = dtty;
+  }
 
 
   $db.on("click",".hc-news,.news-item,.product-single > img",function(){

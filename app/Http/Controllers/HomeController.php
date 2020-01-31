@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if (isAdmin()) {
+          return redirect('/admin/profile');
+        }else{
+          return view('home');
+        }
     }
 }

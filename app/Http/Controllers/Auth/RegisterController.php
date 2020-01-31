@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use App\OTP;
 class RegisterController extends Controller
 {
     /*
@@ -47,8 +47,17 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function account_page(){
-      if (isset($_GET['action']) && in_array($_GET['action'],array('login','register'))) {
-        return view('auth.account');
+      if (isset($_GET['action']) && in_array($_GET['action'],array('login','register','password-reset'))) {
+        if (isset($_GET['email']) && !empty($_GET['email'])) {
+          $otp = OTP::where('email',$_GET['email'])->where('status',0)->get();
+          if (count($otp) !== 0) {
+            return view('auth.account');
+          }else{
+            return redirect('/account?action=login');
+          }
+        }else{
+          return view('auth.account');
+        }
       }else{
         return redirect('/');
       }

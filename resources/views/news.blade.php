@@ -1,8 +1,24 @@
 @extends('layouts.ms')
 @section('head')
 @if(empty($news_unique))
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property=”og:title” content=””/>
+<meta property=”og:url” content=””/>
+<meta property=”og:site_name” content=””/>
+<meta property=”og:image” content=””/>
+<meta property=”og:type” content=””/>
+<meta property=”og:description” content=””/>
 <title>{{__('app.All_news')}} - {{conf("Site_title")}}</title>
 @else
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property=”og:title” content=””/>
+<meta property=”og:url” content=””/>
+<meta property=”og:site_name” content=””/>
+<meta property=”og:image” content=””/>
+<meta property=”og:type” content=””/>
+<meta property=”og:description” content=””/>
 <title>{{$news_unique->title}} - {{conf("Site_title")}}</title>
 @endif
 @endsection
@@ -21,7 +37,7 @@
 				<div id="aside" class="col-md-3">
 					<div class="aside">
 						<h3 class="aside-title">{{__('app.Related_news')}}</h3>
-						@foreach(App\News::where('status',1)->get() as $newss)
+						@foreach(App\News::where('status',1)->orderBy('created_at','desc')->get() as $newss)
 						<div class="product product-widget">
 							<div class="product-thumb">
 								@php($img = App\Images::where('news_id',$newss->id)->orderBy('order','asc')->first())
@@ -41,29 +57,6 @@
 				</div>
 				<div id="main" class="col-md-9">
 					@if(empty($news_unique))
-					<div class="store-filter clearfix">
-						<div class="pull-left">
-							<div class="sort-filter">
-								<span class="text-uppercase">{{__('app.Sort_By')}}:</span>
-								<select class="input sortby_value">
-										<option value="0">{{__('app.Latest_products')}}</option>
-										<option value="1">{{__('app.First_cheaper')}}</option>
-										<option value="2">{{__('app.First_expensive')}}</option>
-									</select>
-								<a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
-							</div>
-						</div>
-						<div class="pull-right">
-							<div class="page-filter">
-								<span class="text-uppercase">{{__('app.Show')}}:</span>
-								<select class="input show_num_prod">
-										<option value="10">10</option>
-										<option value="20">20</option>
-										<option value="30">30</option>
-									</select>
-							</div>
-						</div>
-					</div>
 					<div class="news-section">
 						@foreach($news as $ns)
 						<div class="news-item">
@@ -85,6 +78,7 @@
 							</div>
 						</div>
 						@endforeach
+						{{$news->render()}}
 					</div>
 					@else
 					<div class="news-details">
@@ -106,23 +100,9 @@
 						</div>
 						<div class="news-commenting" data-id="{{$news_unique->id}}">
 							<div class="product-reviews">
-								<div class="single-review">
-									<div class="review-heading">
-										<div><a href="#"><i class="fa fa-user-o"></i> John</a></div>
-										<div><a href="#"><i class="fa fa-clock-o"></i> 27 DEC 2017 / 8:0 PM</a></div>
-									</div>
-									<div class="review-body">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute
-											irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-									</div>
-								</div>
-									<ul class="reviews-pages">
-										<li class="active">1</li>
-										<li><a href="#">2</a></li>
-										<li><a href="#">3</a></li>
-										<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
-									</ul>
-								</div>
+								<ul class="reviews-pages" id="review_pages"></ul>
+							</div>
+							<hr>
 							<div class="review-form">
 								<div class="form-group">
 									<input class="input" type="text" @if(Auth::check()) value="{{Auth::user()->name}} {{Auth::user()->surname}}" readonly @else placeholder="{{__('app.Name')}}..." @endif id="commenter_name"  />
@@ -144,4 +124,9 @@
 	</div>
 @endsection
 @section('foot')
+@if(!empty($news_unique))
+<script type="text/javascript">
+	const news_id = {{$news_unique->id}};
+</script>
+@endif
 @endsection

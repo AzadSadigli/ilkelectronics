@@ -1,5 +1,7 @@
 @extends('layouts.ms')
 @section('head')
+<meta name="description" content="">
+<meta name="keywords" content="">
 <title>{{__('app.Wishlist')}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
@@ -35,18 +37,8 @@
 								<tfoot>
 									<tr>
 										<th class="empty" colspan="3"></th>
-										<th>SUBTOTAL</th>
-										<th colspan="2" class="sub-total">$97.50</th>
-									</tr>
-									<tr>
-										<th class="empty" colspan="3"></th>
-										<th>SHIPING</th>
-										<td colspan="2">Free Shipping</td>
-									</tr>
-									<tr>
-										<th class="empty" colspan="3"></th>
-										<th>TOTAL</th>
-										<th colspan="2" class="total">$97.50</th>
+										<th>{{__('app.Total')}}</th>
+										<th colspan="2" class="total" id="wsh_total">$97.50</th>
 									</tr>
 								</tfoot>
 							</table>

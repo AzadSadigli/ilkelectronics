@@ -6,14 +6,70 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 use DB;
 use App\Images;
 use File;
 use Lang;
 use Session;
+use Mail;
+use App\OTP;
+use App\User;
+use Hash;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function forgot_password(Request $req){
+      $email = $req->email;$code = rand(1111111,99999999);
+      $user = User::where('email',$email)->first();
+      if (!empty($user)) {
+        $otp = new OTP;
+        $otp->email = $email;
+        $otp->user_id = $user->id;
+        $otp->otp_code = $code;
+        $otp->token = md5(microtime().rand(1000,9999));
+        $otp->save();
+        Mail::send('auth.email', ['subject' => Lang::get('app.Password_reset_email_subject'),'name' => Lang::get('app.Email_greeting',['surname' => $user->surname]),'text' => Lang::get('app.In_order_to_reset_use_the_code',['code' => $code])], function ($mess) use ($email){
+              $mess->from('support@ilkelectronics.az', 'Ilk Electronics Support');
+              $mess->subject(Lang::get('app.Reset_email_title'));
+              $mess->to($email);
+        });
+        return redirect('/account?action=password-reset&email='.$email)->with(['message' => Lang::get('app.Code_sent_for_resetting'),'type' => 'success']);
+      }else{
+        return redirect()->back()->with(['type' => 'danger','message' => Lang::get('app.User_not_found')]);
+      }
+    }
+    public function check_otp_code(Request $req){
+      $otp = $req->code;
+      $email = $req->email;
+      $otp = OTP::where('otp_code',$otp)->where('email',$email)->where('status',0)->first();
+      if (!empty($otp)) {
+        $token = $otp->token;
+        return redirect('/account?action=password-reset&email='.$email.'&access_token='.$token)->with(['message' => Lang::get('app.Code_is_correct'),'type' => 'success']);
+      }else{
+        return redirect()->back()->with(['type'=>'danger','message'=>Lang::get('app.Wrong_code')]);
+      }
+    }
+    public function change_password(Request $req){
+      $email = $req->email;
+      $token = $req->access_token;
+      $otp = OTP::where('token',$token)->where('email',$email)->where('status',0)->first();
+      if (!empty($otp)) {
+        $this->validate($req, [
+            'password' => 'confirmed|min:6',
+        ]);
+        $user = User::where('email',$email)->first();
+        $user->password = Hash::make($req->password);
+        $user->update();
+        $otp->status = 1;
+        $otp->update();
+        return redirect('/account?action=login')->with(['type' => 'success','message' => Lang::get('app.You_password_changed_successfully')]);
+      }else{
+        return redirect()->back()->with(['type' => 'danger', 'message' => Lang::get('app.Could_not_change_password')]);
+      }
+    }
+
 
     public function delete_product($id){
       $imgs = Images::where('prod_id',$id)->get();
@@ -27,6 +83,18 @@ class Controller extends BaseController
       DB::select("DELETE FROM protab WHERE prod_id = ".$id);
       DB::select("DELETE FROM products WHERE id = ".$id);
       return redirect()->back()->with(['type' => 'success','message' => Lang::get('app.Product_deteled')]);
+    }
+
+    public function delete_image(Request $req){
+      $img = Images::find($req->id);
+      $image = "uploads/pro/".$img->image;
+      if(File::exists($image) && $img->image !== 'default.png') {File::delete($image);}
+      $image_small = "uploads/pro/small/".$img->image;
+      if(File::exists($image_small) && $img->image !== 'default.png') {File::delete($image_small);}
+      if (!empty($img)) {
+        $img->delete();
+      }
+      return response()->json(['mess'=>Lang::get('app.Message_deleted')]);
     }
     public function change_currency($currency){
       $val = file_get_contents(burl().'/public/currency.json');
@@ -93,5 +161,8 @@ class Controller extends BaseController
           echo "not json";
         }
       }
+    }
+    public function error_page(){
+      return view('error');
     }
 }

@@ -10,12 +10,50 @@ use Lang;
 use Auth;
 use Image;
 use App\Images;
+use App\Protab;
 class PageController extends Controller
 {
     public function page_view($slug){
       $page = Pages::where('slug',$slug)->first();
-      // print_r($page);
       return view('page',compact('page'));
+    }
+    public function page_tabs($slug){
+      $page = Pages::where('slug',$slug)->first();
+      return view('admin.add_product',compact('page'));
+    }
+    public function update_page_tabs(Request $req){
+      $arr = $req->list;
+      for ($i=0; $i < count($arr); $i++) {
+        $pt_check = Protab::find($arr[$i]["id"]);
+        if (!isset($pt_check) | empty($pt_check)) {
+          $pt = new Protab;
+        }else{
+          $pt = Protab::find($arr[$i]["id"]);
+        }
+        $pt->page_id = $req->main_id;
+        if (!empty($arr[$i]["title"]) && !empty($arr[$i]["desc"])) {
+          $pt->title = $arr[$i]["title"];
+          $pt->description = $arr[$i]["desc"];
+          $pt->order = $arr[$i]["index"];
+          if (!isset($pt_check) | empty($pt_check)) {
+            $pt->save();
+          }else{
+            $pt->update();
+          }
+        }
+      }
+      return response()->json(['message' => Lang::get('app.Tab_updated')]);
+    }
+    public function get_page_tabs_ajax(Request $req){
+      $pts = Protab::where('page_id',$req->main_id)->orderBy('order','ASC')->get();
+      return response()->json(['pts' => $pts]);
+    }
+    public function delete_page_tab(Request $req){
+      $pt = Protab::find($req->id);
+      if (!empty($pt)) {
+        $pt->delete();
+      }
+      return response()->json(['message' => Lang::get('app.Tab_deleted')]);
     }
     public function get_page_details_edit(Request $req){
       $page = Pages::find($req->id);
@@ -28,6 +66,11 @@ class PageController extends Controller
       return response()->json(['message' => Lang::get('app.Page_deleted')]);
     }
     public function update_page(Request $req){
+      $this->validate($req,[
+        'title' => 'min:2|required',
+        'body' => 'min:2|required',
+        'shortname' => 'min:2|required',
+      ]);
       $pg = Pages::find($req->id);
       $pg->title = $req->title;
       $pg->parent_id = $req->parent_id;
@@ -48,24 +91,45 @@ class PageController extends Controller
       return view('news',compact('news_unique'));
     }
     public function news_list(){
-      $news = News::where('status',1)->orderBy('created_at','desc')->get();
+      $news = News::where('status',1)->orderBy('created_at','desc')->paginate(6);
       return view('news',compact('news'));
     }
     public function add_news_view(){
       return view('admin.create');
     }
-    public function add_news(Request $req){
-      $ns = new News;
+    public function add_news(Request $req,$id = null){
+      $this->validate($req,[
+        'title' => 'min:2|required',
+        'body' => 'min:2|required',
+        'status' => 'integer|min:0|max:1',
+      ]);
+      $ns = News::find($id);
+      $ns_1 = $ns;
+      if (!isset($ns) | empty($ns)) {
+        $ns = new News;
+      }
       $ns->creator = Auth::user()->id;
       $ns->title = $req->title;
       $ns->body = $req->body;
-      if (empty($req->slug)) {
-        $ns->slug = make_slug($req->title);
+      if (!isset($ns) | empty($ns_1)) {
+        if (empty($req->slug)) {
+          $ns->slug = make_slug($req->title);
+        }else{
+          $ns->slug = make_slug($req->slug);
+        }
       }else{
-        $ns->slug = make_slug($req->slug);
+        if (!empty($req->slug) && $ns->slug !== $req->slug) {
+          $ns->slug = make_slug($req->slug);
+        }
       }
       $ns->status = $req->status;
-      $ns->save();
+      if (!isset($ns) | empty($ns_1)) {
+        $ns->save();
+        $mess = Lang::get('app.News_added');
+      }else{
+        $ns->update();
+        $mess = Lang::get('app.News_updated');
+      }
       if ($req->hasFile('images')) {
         $imgArr=[];
         $folder = 'uploads/news/';
@@ -88,17 +152,30 @@ class PageController extends Controller
         }
       }
       update_sitemap();
-      return redirect()->back()->with(['type'=>'success','message'=> Lang::get('app.News_added')]);
+      return redirect()->back()->with(['type'=>'success','message'=> $mess]);
+    }
+    public function update_news_status(Request $req){
+      $this->validate($req,[
+        'news' => 'required',
+        'status' => 'required'
+      ]);
+      $ns = News::find($req->news);
+      $ns->status = $req->status;
+      $ns->update();
+      return response()->json(['message' => Lang::get('app.News_status_updated')]);
     }
     public function edit_news_view($id){
-
+      $news = News::find($id);
+      return view('admin.create',compact('news'));
     }
-    public function delete_news($news){
-
+    public function delete_news($id){
+      $news = News::find($id);
+      $news->delete();
+      return redirect()->back()->with(['message' => Lang::get('app.News_deleted'),'type' => 'danger']);
     }
-    public function edit_news(Request $req,$id){
-
-    }
+    // public function edit_news(Request $req,$id){
+    //
+    // }
 
 
     public function create_page_vew(){

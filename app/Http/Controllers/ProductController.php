@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Products;
 use App\Protab;
+use App\News;
+use App\Pages;
 use Lang;
 use DB;
 use App\Images;
@@ -19,11 +21,15 @@ class ProductController extends Controller
     }
     public function get_product_details($slug){
       $pro = Products::select(DB::raw("*,FORMAT(price/".currency(0).",2) as price,FORMAT(old_price/".currency(0).",2) as old_price"))->where('slug',$slug)->first();
-      $pro->views += 1;
-      $pro->update();
-      $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
-      $prod_tabs = Protab::where('prod_id',$pro->id)->get();
-      return view('product',compact('pro','pros','prod_tabs'));
+      if (!empty($pro)) {
+        $pro->views += 1;
+        $pro->update();
+        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
+        $prod_tabs = Protab::where('prod_id',$pro->id)->orderBy('order','ASC')->get();
+        return view('product',compact('pro','pros','prod_tabs'));
+      }else{
+        return Lang::get('app.Product_you_looking_not_found');
+      }
     }
     public function get_product_list(){
       $pros = Products::orderBy('created_at','desc')->get();
@@ -42,19 +48,40 @@ class ProductController extends Controller
       $pro_tabs = Protab::where('prod_id',$pro->id)->get();
       return view('admin.add_product',compact('pro','pro_tabs'));
     }
+    public function get_prod_tabs_ajax(Request $req){
+      $pts = Protab::where('prod_id',$req->main_id)->orderBy('order','ASC')->get();
+      return response()->json(['pts' => $pts]);
+    }
+    public function delete_prod_tab(Request $req){
+      $pt = Protab::find($req->id);
+      if (!empty($pt)) {
+        $pt->delete();
+      }
+      return response()->json(['message' => Lang::get('app.Tab_deleted')]);
+    }
     public function update_product_tabs(Request $req){
       $arr = $req->list;
       for ($i=0; $i < count($arr); $i++) {
-        $pt = new Protab;
-        $pt->prod_id = $req->prod;
+        $pt_check = Protab::find($arr[$i]["id"]);
+        if (!isset($pt_check) | empty($pt_check)) {
+          $pt = new Protab;
+        }else{
+          $pt = Protab::find($arr[$i]["id"]);
+        }
+        $pt->prod_id = $req->main_id;
         if (!empty($arr[$i]["title"]) && !empty($arr[$i]["desc"])) {
           $pt->title = $arr[$i]["title"];
           $pt->description = $arr[$i]["desc"];
-          $pt->save();
+          $pt->order = $arr[$i]["index"];
+          if (!isset($pt_check) | empty($pt_check)) {
+            $pt->save();
+          }else{
+            $pt->update();
+          }
         }
       }
 
-      return response()->json(['list' => $req->list,'product' => $req->prod]);
+      return response()->json(['message' => Lang::get('app.Product_tabs_updated'),'list' => $req->list,'product' => $req->prod]);
     }
     public function add_product(Request $req,$id = null){
       // $this->validate($req,[
@@ -131,10 +158,21 @@ class ProductController extends Controller
     public function add_tab(Request $req){
 
     }
-    public function change_im_order_view($slug){
-      $pro = Products::where('slug',$slug)->first();
-      $images = Images::where('prod_id',$pro->id)->orderBy('order','asc')->get();
-      return view('admin.add_product',compact('images','pro'));
+    public function change_im_order_view($type,$slug){
+      if ($type === "product") {
+        $pro = Products::where('slug',$slug)->first();
+        $images = Images::where('prod_id',$pro->id)->orderBy('order','asc')->get();
+        $url = "/uploads/pro/small/";
+      }elseif($type === "page"){
+        $page = Pages::where('slug',$slug)->first();
+        $images = Images::where('page_id',$page->id)->orderBy('order','asc')->get();
+        $url = "/uploads/pages/";
+      }else{
+        $ns = News::where('slug',$slug)->first();
+        $images = Images::where('news_id',$ns->id)->orderBy('order','asc')->get();
+        $url = "/uploads/news/";
+      }
+      return view('admin.add_product',compact('images','url'));
     }
     public function change_im_order(Request $req){
       $data = $req->list;

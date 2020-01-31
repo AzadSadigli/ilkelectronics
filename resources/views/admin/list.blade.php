@@ -46,6 +46,14 @@
                                       <td>#</td>
                                     </tr>
                                   @elseif(Request::is('admin/news-list'))
+                                  <tr>
+                                    <td>ID</td>
+                                    <td>{{__('app.Title')}}</td>
+                                    <td>{{__('app.News_slug')}}</td>
+                                    <td>{{__('app.News')}}</td>
+                                    <td>{{__('app.Status')}}</td>
+                                    <td>{{__('app.Operations')}}</td>
+                                  </tr>
                                   @else
                                     <tr>
                                       <th>ID</th><th>{{__('app.Product_name')}}</th><th>{{__('app.Price')}} / {{__('app.Old_price')}}</th>
@@ -105,11 +113,38 @@
                                         <td class="list-btns">
                                           <a class="btn btn-danger dl_page" data-id="{{$page->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_page')}}" data-words="{{__('app.Delete_page')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
                                           <a class="btn btn-success edit_page_modal" data-id="{{$page->id}}" data-toggle="modal" data-target="#promodal" data-words="{{__('app.Edit_page')}},{{__('app.Delete')}},{{__('app.Close')}},{{__('app.Update')}},{{__('app.Page_slug')}},{{__('app.Page_title')}},{{__('app.Parent_page')}},{{__('app.Page_body')}},{{__('app.Page_shortname')}}"><i class="fa fa-cog"></i></a>
-                                          <a class="btn btn-primary" href="/add-page-tab/{{$page->id}}"><i class="fa fa-plus"></i></a>
+                                          <a class="btn btn-primary" href="/admin/page-tabs/{{$page->slug}}"><i class="fa fa-plus"></i></a>
+                                          <a class="btn btn-primary" href='/admin/change-image-order/page/{{$page->slug}}'><i class="fa fa-image"></i> </a>
                                         </td>
                                       </tr>
                                       @endforeach
                                     @elseif(Request::is('admin/news-list'))
+                                      @foreach($news as $n)
+                                      <tr>
+                                        <td>{{$n->id}}</td>
+                                        <td>{{$n->title}}</td>
+                                        <td>{{$n->slug}}</td>
+                                        <td>
+                                          {{str_limit($n->body, $limit = 100, $end = '...')}}
+                                            @if(strlen($n->body) > 100)
+                                            <a class="read_more_news" data-toggle="modal" data-target="#promodal" data-text="{{$n->body}}" data-words="{{__('app.More')}},{{__('app.Close')}}">{{__('app.More')}}</a>
+                                            @endif
+                                        </td>
+                                        <td class="page-list-rd-btns">
+                                          <div class="demo-switch">
+                                              <div class="switch">
+                                                  <input type="hidden" name="status" @if($n->status == 1) value="1" @else value="0" @endif>
+                                                  <label>{{__('app.Status')}}<input type="checkbox" data-news="{{$n->id}}" @if($n->status == 1) checked @endif><span class="lever"></span></label>
+                                              </div>
+                                          </div>
+                                        </td>
+                                        <td class="list-btns">
+                                          <a class="btn btn-danger delete dl_news" data-id="{{$n->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_news')}}" data-words="{{__('app.Delete_news')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
+                                          <a class="btn btn-success" href="/admin/news-edit/{{$n->id}}"><i class="fa fa-cog"></i></a>
+                                          <a class="btn btn-primary" href='/admin/change-image-order/news/{{$n->slug}}'><i class="fa fa-image"></i> </a>
+                                        </td>
+                                      </tr>
+                                      @endforeach
                                     @else
                                       @foreach($pros as $pro)
                                       <tr>
@@ -119,7 +154,7 @@
                                           <td>{{$pro->quantity}}</td>
                                           <td>{{$pro->views}}</td>
                                           <td class="list-btns">
-                                            <a class="btn btn-danger dl_prod" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_product')}}" data-words="{{__('app.Delete_product')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-danger delete dl_prod" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_product')}}" data-words="{{__('app.Delete_product')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
                                             <a class="btn btn-success" href="/admin/edit-product/{{$pro->id}}"><i class="fa fa-cog"></i></a>
                                             <a class="btn btn-primary" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal"><i class="fa fa-eye"></i></a>
                                           </td>
@@ -138,6 +173,9 @@
 </section>
 @endsection
 @section('foot')
+<script type="text/javascript">
+  var page = 'list';
+</script>
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
 <!-- <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script> -->
@@ -155,92 +193,5 @@
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/tables/jquery-datatable.js"></script>
 <script src="/adm/js/demo.js"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-    $("#copy_to_tfoot").siblings("tfoot").html($("#copy_to_tfoot").html())
-  });
-  $(document.body).on("click",".list-btns > .dl_prod",function(){
-    let wrds = $(this).data("words").split(",");
-    let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a href='/admin/delete-product/"+$(this).data("id")+"' class='btn btn-danger'>"+wrds[1]+"</a></div></div></div>";
-    $("#promodal").html(html);
-  });
-  $(document.body).on("click",".list-btns > .dl_page",function(){
-    let wrds = $(this).data("words").split(",");
-    let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a data-id='"+$(this).data("id")+"' class='btn btn-danger pg_dl_btn'>"+wrds[1]+"</a></div></div></div>";
-    $("#promodal").html(html);
-  });
-  $(document.body).on("click",".read_more",function(){
-    let wrds = $(this).data("words").split(",");
-    let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[1]+"</a></div></div></div>";
-    $("#promodal").html(html);
-  });
 
-
-  $(document.body).on("click",".list-btns > .edit_page_modal",function(){
-    let wrds = $(this).data("words").split(",");
-    let id = $(this).data("id");
-    $.ajax({
-      type: 'GET',
-      url: '/admin/get-page-details-for-edit',
-      data:{id:id},
-      success:function(data){
-        let inp0 = "<label>"+wrds[6]+"</label><select class='form-control' id='pg_parent'><option>---";
-        for (var i = 0; i < data.pages.length; i++) {
-          if (data.page['parent_id'] == data.pages[i]['id']) {
-            inp0 += "<option value='"+data.pages[i]['id']+"' selected>"+data.pages[i]['shortname']+"</option>";
-          }else{
-            inp0 += "<option value='"+data.pages[i]['id']+"'>"+data.pages[i]['shortname']+"</option>";
-          }
-        }
-        inp0 += "</select>";
-        let inp1 = "<br><label>"+wrds[4]+"</label><input class='form-control' id='pg_slug' type='text' value='"+data.page['slug']+"'>";
-        let inp2 = "<br><label>"+wrds[8]+"</label><input class='form-control' id='pg_shortname' type='text' value='"+data.page['shortname']+"'>";
-        let inp3 = "<br><label>"+wrds[5]+"</label><input class='form-control' id='pg_title' type='text' value='"+data.page['title']+"'>";
-        let inp4 = "<br><label>"+wrds[7]+"</label><textarea class='form-control' id='pg_body' type='text'>"+data.page['body']+"</textarea>";
-        let inputs = inp0 + inp1 + inp2 + inp3 + inp4;
-        let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'>"+inputs+"</div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a class='btn btn-primary upt_pg' data-id='"+id+"'>"+wrds[3]+"</a></div></div></div>";
-        $("#promodal").html(html);
-        console.log(data);
-      }
-    });
-  });
-  $(document.body).on("click",".upt_pg",function(){
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    $.ajax({
-      url: '/admin/update-page',
-      type: 'POST',
-      data:{id:$(this).data("id"),parent_id:$("#pg_parent").val(),slug:$("#pg_slug").val(),shortname: $("#pg_shortname").val(), title: $("#pg_title").val(),body:$("#pg_body").val()},
-      success:function(data){
-        $('#promodal').modal('hide');
-        notify(data.success,"success");
-      }
-    });
-  });
-  $(document.body).on("click",".pg_dl_btn",function(){
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    $.ajax({
-      url: '/admin/delete-page',
-      type: 'DELETE',
-      data:{id:$(this).data("id")},
-      success:function(data){
-        $('#promodal').modal('hide');
-        notify(data.message,"danger");
-      }
-    });
-  });
-
-
-  $(document.body).on("change",".page-list-rd-btns input",function(){
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    $.ajax({
-      url: '/admin/update-pg-head-foot',
-      type: 'POST',
-      data:{page:$(this).data("page"),tp:$(this).parents("label").siblings("input").attr("name"),tp_val: $(this).parents("label").siblings("input").val()},
-      success:function(data){
-        console.log(data);
-      }
-    });
-    console.log($(this).parents("label").siblings("input").attr("name"));
-  });
-</script>
 @endsection

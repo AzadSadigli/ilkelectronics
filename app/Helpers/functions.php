@@ -6,7 +6,7 @@ function make_slug($word){
   $word = str_replace(array("Ş","ş"),"sh",$word);
   $word = str_replace(array("Ç","ç"),"ch",$word);
   $word = str_replace("İ","i",$word);
-  $word = str_slug($word)."-".rand(100000,99999);
+  $word = str_slug($word)."-".rand(100000,999999);
   return $word;
 }
 function unregistered_user(){
@@ -213,7 +213,7 @@ function minimizeJS($javascript){
 }
 function conf($key){
   $data = App\Config::where('config',$key)->first();
-  if ($data) {
+  if ($data && json_decode($data->value)[0] !== null) {
     return json_decode($data->value)[0];
   }else{
     return "";
@@ -222,6 +222,19 @@ function conf($key){
 function get($data){
   return Session::get($data);
 }
+function url_exists($url) {
+    if (!$fp = curl_init($url)) return false;
+    return true;
+}
+// function arr_cut($arr, $min,$max){
+//   $new_arr = [];
+//   for ($i=$min; $i <= $max; $i++) {
+//     if ($max <= count($arr)) {
+//       $new_arr[] = $arr[$i];
+//     }
+//   }
+//   return $new_arr;
+// }
 function testing_json(){
   // $conf = [
   //   "admin_title" => ["Ilkelectronics Panel","text_input"],
@@ -242,6 +255,4 @@ function testing_json(){
   // }
   // return array_keys($conf);
 }
-
-
 ?>

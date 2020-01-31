@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProtabTable extends Migration
+class CreateOtpTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateProtabTable extends Migration
      */
     public function up()
     {
-        Schema::create('protab', function (Blueprint $table) {
+        Schema::create('otp', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('prod_id')->nullable()->references('id')->on('products');
-            $table->text('title');
-            $table->text('description');
-            $table->integer('order')->default(0);
+            $table->string('email');
+            $table->integer('user_id');
+            $table->integer('otp_code');
+            $table->string('token')->unique();
+            $table->integer('status')->default(0); // 0 means "not used yet", 1 means "used"
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateProtabTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('protab');
+        Schema::dropIfExists('otp');
     }
 }

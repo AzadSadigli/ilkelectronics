@@ -14,16 +14,20 @@
 								<div class="row">
 									<div class="col-md-4">
 										<ul class="list-links">
-											@foreach(App\Category::whereRaw('MOD(id, 2) = 0')->where('parent_id',$ct->id)->get() as $sub_ct)
-											<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
+											@foreach(App\Category::where('parent_id',$ct->id)->get() as $k => $sub_ct)
+												@if($k%2 === 0)
+												<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
+												@endif
 											@endforeach
 										</ul>
 										<hr class="hidden-md hidden-lg">
 									</div>
 									<div class="col-md-4">
 										<ul class="list-links">
-											@foreach(App\Category::whereRaw('MOD(id, 2) != 0')->where('parent_id',$ct->id)->get() as $sub_ct)
-											<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
+											@foreach(App\Category::where('parent_id',$ct->id)->get() as $k => $sub_ct)
+												@if($k%2 !== 0)
+													<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
+												@endif
 											@endforeach
 										</ul>
 										<hr class="hidden-md hidden-lg">

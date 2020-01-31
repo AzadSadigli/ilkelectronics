@@ -15,7 +15,6 @@ class AdminController extends Controller
     public function create_user(){
 
     }
-
     public function add_category_view(){return view('admin.add_product');}
 
     public function add_category(Request $req){
@@ -99,7 +98,7 @@ class AdminController extends Controller
       }
       $data = $start.$body.$end;
       $data = file_put_contents(burl().'/resources/lang/'.$req->folder.'/'.$req->file,$data);
-      return response()->json(['message' => 'ok']);
+      return response()->json(['message' => Lang::get('app.Translation_added')]);
     }
     public function development_page(){
       $view = 'admin.dev';

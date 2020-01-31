@@ -1,5 +1,13 @@
 @extends('layouts.ms')
 @section('head')
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property=”og:title” content=””/>
+<meta property=”og:url” content=””/>
+<meta property=”og:site_name” content=””/>
+<meta property=”og:image” content=””/>
+<meta property=”og:type” content=””/>
+<meta property=”og:description” content=””/>
 <title>{{$pro->productname}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
@@ -20,9 +28,9 @@
 			<div class="row">
 				<div class="product product-details clearfix">
 					<div class="col-md-6">
-						<div id="product-main-view">
-							@php($imgs = App\Images::where('prod_id',$pro->id)->get())
-							@if(!empty($imgs))
+						@php($imgs = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->get())
+						<div @if(count($imgs) !== 0) id="product-main-view" @endif>
+							@if(count($imgs) !== 0)
 								@foreach($imgs as $img)
 									<div class="product-view">
 										<img src="/uploads/pro/{{$img->image}}" alt="{{$pro->productname}}">
@@ -30,23 +38,19 @@
 								@endforeach
 							@else
 							<div class="product-view">
-								<img src="/img/default.png" alt="{{$pro->productname}}">
+								<img class="pro-default" src="/uploads/pro/default.png" alt="{{$pro->productname}}">
 							</div>
 							@endif
 						</div>
+						@if(count($imgs) !== 0)
 						<div id="product-view">
-							@if(!empty($imgs))
-								@foreach($imgs as $img)
-									<div class="product-view">
-										<img src="/uploads/pro/small/{{$img->image}}" alt="{{$pro->productname}}">
-									</div>
-								@endforeach
-							@else
-							<div class="product-view">
-								<img src="/img/default.png" alt="{{$pro->productname}}">
-							</div>
-							@endif
+							@foreach($imgs as $img)
+								<div class="product-view">
+									<img src="/uploads/pro/small/{{$img->image}}" alt="{{$pro->productname}}">
+								</div>
+							@endforeach
 						</div>
+						@endif
 					</div>
 					<div class="col-md-6">
 						<div class="product-body">
@@ -57,9 +61,9 @@
 							<h2 class="product-name">{{$pro->productname}}</h2>
 
 							<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del> @endif</h3>
-							<div>
-								<div class="product-rating" id="un_product_rating"></div>
-								<a href="#">3 Review(s) / Add Review</a>
+							<div id="un_product_rating">
+								<div class="product-rating"></div>
+								<a href="#reviews">{{__('app.Review_s')}} / {{__('app.Add_review')}}</a>
 							</div>
 							<p><strong>{{__('app.Availability')}}:</strong> @if($pro->quantity > 0) <span class="in_stock">{{__('app.In_stock')}}</span> @else <span class="not_in_stock">{{__('app.Not_in_stock')}}</span> @endif</p>
 							<p><strong>{{__('app.Product_ID')}}:</strong> {{$pro->prod_id}}</p>
@@ -86,7 +90,7 @@
 									<span class="text-uppercase">{{__('app.Quantity')}}: </span>
 									<input class="input quantity" type="number" value="1">
 								</div>
-								<a class="primary-btn add-to-cart" id="{{$pro->id}}"><i class="fa fa-shopping-cart"></i></a>
+								<a class="primary-btn add-to-cart" data-id="{{$pro->id}}"><i class="fa fa-shopping-cart"></i></a>
 								<!-- <div class="pull-right">
 									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
 									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
@@ -121,12 +125,7 @@
 										<div class="col-md-6">
 											<div class="product-reviews" id="prod_review_list" data-id="{{$pro->id}}">
 												<p class="no_review" style="display:none;">{{__('app.No_review_here')}}</p>
-												<!-- <ul class="reviews-pages">
-													<li class="active">1</li>
-													<li><a href="#">2</a></li>
-													<li><a href="#">3</a></li>
-													<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
-												</ul> -->
+												<ul class="reviews-pages" id="rev_pg_pro"></ul>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -189,9 +188,6 @@
 							@else
 							<img src="/img/default.png" alt="{{$pr->productname}}">
 							@endif
-						</div>
-						<div class="product-body">
-							<h3 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h3>
 							<div class="product-rating">
 								@for($k=1;$k<=5;$k++)
 									@if($k <= $pr->rating)
@@ -201,7 +197,10 @@
 									@endif
 								@endfor
 							</div>
-							<h2 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{$pr->productname}}</a></h2>
+						</div>
+						<div class="product-body">
+							<h3 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{$pr->productname}}</a></h3>
+							<h2 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h2>
 							<div class="product-btns">
 								<a class="primary-btn add-to-cart" data-id="{{$pr->id}}" title=""><i class="fa fa-shopping-cart"></i></a>
 							</div>

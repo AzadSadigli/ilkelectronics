@@ -19,6 +19,8 @@
 <title>{{__('app.Change_order')}}</title>
 @elseif(Request::is('admin/products-tabs/*'))
 <title>{{__('app.Add_product_tabs')}} - {{conf("admin_title")}}</title>
+@elseif(!empty($page))
+<title>{{__('app.Page_tabs')}} - {{conf("admin_title")}}</title>
 @else
 <title>{{__('app.Add_new_product')}} - {{conf("admin_title")}}</title>
 @endif
@@ -44,9 +46,11 @@
                             {{__('app.Change_order')}}
                             @elseif(!empty($pro))
                             {{__('app.Edit_product')}}
-                            <small><a href='/admin/change-image-order/{{$pro->slug}}'>{{__('app.Update_image_order')}}</a> |
+                            <small><a href='/admin/change-image-order/product/{{$pro->slug}}'>{{__('app.Update_image_order')}}</a> |
                               <a href="/admin/products-tabs/{{$pro->slug}}"> {{__('app.Add_product_tabs')}}</a>
                             </small>
+                            @elseif(!empty($page))
+                            {{__('app.Page_tabs')}}
                             @elseif(Request::is('admin/products-tabs/*'))
                             {{__('app.Add_product_tabs')}}
                             <small></small>
@@ -98,13 +102,7 @@
                         <div class="card">
                           <div class="body table-responsive">
                               <table class="table">
-                                  <thead>
-                                      <tr>
-                                          <th>{{__('app.Category')}}</th>
-                                          <th>{{__('app.Parent_category')}}</th>
-                                          <th>X</th>
-                                      </tr>
-                                  </thead>
+                                  <thead><tr><th>{{__('app.Category')}}</th><th>{{__('app.Parent_category')}}</th><th>X</th></tr></thead>
                                   <tbody>
                                       @foreach(App\Category::all() as $ct)
                                       <tr>
@@ -116,22 +114,32 @@
                                   </tbody>
                               </table>
                           </div>
-                      </div>
+                        </div>
                       @endif
                       @elseif(Request::is('admin/change-image-order/*'))
+                      @if(!empty($pro))
                       <span>{{$pro->prod_id}}: {{$pro->productname}}</span>
+                      @endif
                       <a href="#" class="btn btn-primary my-btn pull-right">{{__('app.Reorder')}}</a><br><br>
                       <hr>
                       <ul class="image-list">
                           @foreach($images as $key => $img)
                           <li data-id="{{$key}}">
                             <b>{{$key + 1}}. </b>
-                            <img src="/uploads/pro/small/{{$img->image}}" data-id="{{$img->id}}">
+                            <img src="{{$url}}{{$img->image}}" data-id="{{$img->id}}">
+                            <a class="btn btn-danger delete_image" data-id="{{$img->id}}" data-toggle="modal"
+                              data-target="#delete_img" data-text="{{__('app.Are_you_sure_to_delete_image')}}"
+                              data-words="{{__('app.Delete_image')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
                           </li>
                           @endforeach
                       </ul>
-                      @elseif(Request::is('admin/products-tabs/*'))
+                      <div id="delete_img" class="modal fade" role="dialog"></div>
+                      @elseif(Request::is('admin/products-tabs/*') | !empty($page))
                       <div class="body table-responsive">
+                        <h5>@if(empty($page)) {{$pro->prod_id}}: {{$pro->productname}} @else
+                          {{$page->shortname}}: {{$page->title}}
+                          @endif
+                        </h5>
                         <table class="table table-bordered" id="tab_table">
                           <thead>
                             <tr>
@@ -140,15 +148,7 @@
                               <th>#</th>
                             </tr>
                           </thead>
-                          <tbody data-id="{{$pro->id}}" data-words="{{__('app.Title')}},{{__('app.Details')}}">
-                            @foreach($pro_tabs as $pt)
-                            <tr data-id={{$pt->id}}>
-                              <td><input type="text" class="tab_inputs" placeholder="{{__('app.Title')}}..." value="{{$pt->title}}"> </td>
-                              <td><input type="text" class="tab_inputs" placeholder="{{__('app.Details')}}..." value="{{$pt->description}}"> </td>
-                              <td><a class="btn btn-danger tab_input_delete"><i class="fa fa-trash"></i></a> </td>
-                            </tr>
-                            @endforeach
-                          </tbody>
+                          <tbody @if(!empty($page)) data-page-id="{{$page->id}}" @else data-id="{{$pro->id}}" @endif data-words="{{__('app.Title')}},{{__('app.Details')}}"></tbody>
                         </table>
                         <div class="pull-right">
                           <a id="add_new_tab" class="btn btn-primary"><i class="fa fa-plus"></i></a>
@@ -219,7 +219,8 @@
                                   </div>
                                   <div class="demo-switch">
                                       <div class="switch">
-                                          <label>{{__('app.Used')}}<input type="checkbox" name="condition" checked value="1"><span class="lever"></span>{{__('app.New')}}</label>
+                                          <input type="hidden" name="condition" @if(empty($pro)) value="1" @else value="{{$pro->condition}}" @endif>
+                                          <label>{{__('app.Used')}}<input type="checkbox" @if(!empty($pro)) @if($pro->condition == 1) checked @endif @else checked @endif><span class="lever"></span>{{__('app.New')}}</label>
                                       </div>
                                   </div><br>
                                   <div class="form-group">
@@ -242,7 +243,8 @@
                           </div>
                           <div class="demo-switch">
                               <div class="switch">
-                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" @if(!empty($pro)) @if($pro->status != 1) checked @endif @endif value="1"><span class="lever"></span>{{__('app.Active')}}</label>
+                                  <input type="hidden" name="status" @if(empty($pro)) value="1" @else value="{{$pro->status}}" @endif>
+                                  <label>{{__('app.Not_active')}}<input type="checkbox" @if(!empty($pro)) @if($pro->status == 1) checked @endif @else checked @endif><span class="lever"></span>{{__('app.Active')}}</label>
                               </div>
                           </div>
                           <div class="form-group">
@@ -250,7 +252,7 @@
                           </div>
                         </form>
                       @endif
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -258,7 +260,13 @@
 </section>
 @endsection
 @section('foot')
+<script type="text/javascript">
+  var page = 'add_product';
+</script>
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
+@if(Request::is('*/change-image-order/*') || Request::is('*/products-tabs/*'))
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+@endif
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
 <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
@@ -270,135 +278,4 @@
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/forms/basic-form-elements.js"></script>
 <script src="/adm/js/demo.js"></script>
-<script type="text/javascript">
-$("#pcat").on("change",function(e){
-  change_subcat($(this).val());
-});
-$(document).ready(function(){
-  change_subcat($("#pcat").data("select"));
-
-  let tbd = "#tab_table > tbody";
-  $("#add_new_tab").on("click",function(){
-    $(tbd).append("<tr>"+$("#tab_table > tbody > tr").html()+"</tr>");
-    setCookie("number_of_tr",$("#tab_table > tbody > tr").length,7);
-  });
-  let new_input = "<tr><td><input type='text' class='tab_inputs' placeholder='"+$(tbd).data("words").split(',')[0]+"...'> </td><td><input type='text' class='tab_inputs' placeholder='"+$(tbd).data("words").split(',')[1]+"...'> </td><td><a class='btn btn-danger tab_input_delete'><i class='fa fa-trash'></i></a> </td></tr>";
-  if (getCookie("number_of_tr") !== null) {
-    for (var i = 0; i < getCookie("number_of_tr"); i++) {
-      $(tbd).append(new_input);
-      $(tbd+" > tr:eq("+i+") > td:eq(0) > input").val(getCookie($(tbd).data("id") + "val0" + "_" + i));
-      $(tbd+" > tr:eq("+i+") > td:eq(1) > input").val(getCookie($(tbd).data("id") + "val1" + "_" + i));
-    }
-  }
-  $(document.body).on("click",".tab_input_delete",function(){
-    setCookie("number_of_tr",(getCookie("number_of_tr") - 1),7);
-    $(tbd+" > tr:eq("+getCookie("number_of_tr")+")").remove();
-  });
-  let arr = [];
-  $(document.body).on("input","#tab_table > tbody input",function(){
-    let k = $(this).parents("td").index() + "_" +$(this).parents("tr").index();
-    let v = $(this).val();
-    setCookie($(tbd).data("id") + "val" + k,v,10);
-    console.log(getCookie($(tbd).data("id") + "val" + k));
-  });
-  $("#save_new_tabs").on("click",function(){
-    let tab_list = [];
-    for (var i = 0; i < $(tbd + " > tr").length; i++) {
-      let title = $(tbd + " > tr:eq("+i+") > td:eq(0) > input").val();
-      let desc = $(tbd + " > tr:eq("+i+") > td:eq(1) > input").val();
-      tab_list.push({
-        title,desc
-      });
-    }
-    let th = this;
-    $(th).html('<i class="fa fa-refresh fa-spin"></i>')
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    $.ajax({
-      url: '/admin/update-products-tabs',
-      type: 'POST',
-      data:{list:tab_list,prod:$(tbd).data("id")},
-      success:function(data){
-        console.log(data);
-      },complete:function(){
-        $(th).html('<i class="fa fa-save"></i>')
-      }
-    });
-  });
-});
-
-const change_subcat = function(id){
-  if (id !== "" && id !== null) {
-    // e.preventDefault();
-    $.ajax({
-      url: '/admin/change-subcategory/' + id,
-      type: 'GET',
-      cache: false,
-      success:function(data){
-        let html = "<option selected disabled>-- "+$("#psubcat").data('default')+" --</option>";
-        for (var i = 0; i < data.length; i++) {
-          let sl = "";
-          if (data[i].id == $("#psubcat").data("select")) {sl = "selected"}
-          html += "<option value='"+data[i].id+"' "+sl+">"+data[i].name+"</option>";
-        }
-        $("#psubcat").html(html).selectpicker('refresh');
-        $("#psubcat option[value='"+$("#psubcat").data("select")+"']").prop("selected",true);
-        // $("#psubcat");
-      }
-    });
-  }
-}
-$("input[name='status'],input[name='condition']").change(function(){
-  if ($(this).val() == 1) {
-    $(this).val(0)
-  }else{
-    $(this).val(1)
-  }
-});
-$(document.body).on("change","#psubcat",function(){
-  $("input#hidden_sub").val($(this).val());
-  console.log();
-});
-</script>
-@if(Request::is('admin/change-image-order/*'))
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script>
-$(document.body).on("click",".my-btn",function(){
-  reorder();
-  var arr = [];
-  for (var i=0; i < $("ul.image-list li").length; i++) {
-    let img_id = $("ul.image-list li:eq("+i+") img").data("id");
-    arr.push(img_id);
-  }
-  $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-  $.ajax({
-    type: 'POST',
-    url: '/admin/change-images-order',
-    data:{list:arr},
-    success:function(data){notify(data.success,"success");}
-  });
-});
-function reorder(){
-  for (var i = 0; i < $("ul.image-list li").length; i++) {
-    $("ul.image-list li:eq("+i+") b").html((i + 1) + ".");
-  }
-}
-$(function() {
-    var isDragging = false;
-    $("ul.image-list li")
-    .mousedown(function() {
-        reorder();
-        isDragging = false;
-    })
-    .mouseup(function() {
-        reorder();
-        var wasDragging = isDragging;
-        isDragging = false;
-        if (!wasDragging) {
-            $("#throbble").toggle();
-        }
-    });
-    $("ul").sortable();
-});
-</script>
-@endif
 @endsection

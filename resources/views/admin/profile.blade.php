@@ -22,7 +22,6 @@
                             </div>
                             <div class="content-area">
                                 <h3>{{Auth::user()->name}} {{Auth::user()->surname}}</h3>
-                                <!-- <p>Web Software Developer</p> -->
                                 <p>
                                   @if(Auth::user()->role_id == 2) Admin
                                   @elseif(Auth::user()->role_id == 3)
@@ -105,7 +104,7 @@
                                                 <label for="OldPassword" class="col-sm-3 control-label">{{__('app.Old_password')}}</label>
                                                 <div class="col-sm-9">
                                                     <div class="form-line">
-                                                        <input type="password" class="form-control" name="password" placeholder="{{__('app.Old_password')}}..." autocomplete="off" required>
+                                                        <input type="password" class="form-control" name="password" id="current-password" placeholder="{{__('app.Old_password')}}..." autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,7 +112,7 @@
                                                 <label for="NewPassword" class="col-sm-3 control-label">{{__('app.New_password')}}</label>
                                                 <div class="col-sm-9">
                                                     <div class="form-line">
-                                                        <input type="password" class="form-control" id="password" name="new_password" placeholder="{{__('app.New_password')}}..." autocomplete="off" required>
+                                                        <input type="password" class="form-control" id="new_password" name="new_password" placeholder="{{__('app.New_password')}}..." autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -121,7 +120,7 @@
                                                 <label for="NewPasswordConfirm" class="col-sm-3 control-label">{{__('app.New_password')}} ({{__('app.Confirm')}})</label>
                                                 <div class="col-sm-9">
                                                     <div class="form-line">
-                                                        <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="{{__('app.Confirm')}}..." autocomplete="off" required>
+                                                        <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="{{__('app.Confirm')}}..." autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,43 +162,15 @@
     </section>
 @endsection
 @section('foot')
-    <script src="/adm/plugins/jquery/jquery.min.js"></script>
-    <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
-    <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-    <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-    <script src="/adm/plugins/node-waves/waves.js"></script>
-    <script src="/adm/js/admin.js"></script>
-    <script src="/adm/js/pages/examples/profile.js"></script>
-    <script src="/adm/js/demo.js"></script>
-    <script type="text/javascript">
-      $(".nav-tabs > li > a").on("click",function(){window.location.hash = $(this).attr("href");});
-      $(document).ready(function(){
-          if (!window.location.hash) {
-            window.location.hash = $(".profile-set-section > li:eq(0) > a").attr("href");
-          }
-          var pg = window.location.hash;
-          var index = $(".profile-set-section > li > a[href='"+pg+"']").parent().index();
-          $(".nav-tabs > li:eq("+index+")").addClass("active");
-          $(".nav-tabs > li:not(:eq("+index+"))").removeClass("active");
-          $(pg).addClass("active");
-          $("#img_up_form").on("submit",function(e){
-            e.preventDefault();
-            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-            $.ajax({
-              url: '/change-user-profile',
-              type: 'POST',dataType:'JSON',
-              contentType: false,
-              cache: false,
-              processData: false,
-              data:new FormData(this),
-              success:function(data){notify(data.success,"success");
-              for (var i = 0; i < $(".pimg img").length; i++) {
-                $(".pimg:eq("+i+") img").data("src",data.image);
-              }
-              change_pimg();}
-            })
-          });
-      });
-
-    </script>
+<script type="text/javascript">
+  var page = 'profile';
+</script>
+<script src="/adm/plugins/jquery/jquery.min.js"></script>
+<script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
+<script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<script src="/adm/plugins/node-waves/waves.js"></script>
+<script src="/adm/js/admin.js"></script>
+<script src="/adm/js/pages/examples/profile.js"></script>
+<script src="/adm/js/demo.js"></script>
 @endsection

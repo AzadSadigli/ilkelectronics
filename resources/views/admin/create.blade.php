@@ -11,21 +11,28 @@
 <link href="/adm/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
-<title>{{__('app.Add_news')}} - {{conf("admin_title")}}</title>
+@if(Request::is("admin/slide-and-poster"))
+@else
+<title>@if(!empty($news)) {{$news->title}} @else {{__('app.Add_news')}} @endif - {{conf("admin_title")}}</title>
+@endif
 @endsection
 @section('body')
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
-            <h2>{{__('app.Add')}}</h2>
+            <h2>@if(!empty($news)) {{__('app.Edit')}} @else {{__('app.Add')}} @endif</h2>
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            {{__('app.Add_news')}}
+                          @if(Request::is("admin/slide-and-poster"))
+                            {{__('app.Slide_control')}}
+                          @else
+                            @if(!empty($news)) {{__('app.Edit_news')}} @else {{__('app.Add_news')}} @endif
                             <small><a href="/admin/news-list">{{__('app.News_list')}}</a> </small>
+                          @endif
                         </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -40,21 +47,23 @@
                         </ul>
                     </div>
                     <div class="body">
-                      <form @if(Request::is('admin/news-edit/*')) action="/admin/edit-news/{{$news->id}}" @else action="/admin/add-new-news" @endif method="POST" enctype="multipart/form-data">
+                      @if(Request::is("admin/slide-and-poster"))
+                      @else
+                      <form @if(!empty($news)) action="/admin/edit-news/{{$news->id}}" @else action="/admin/add-new-news" @endif method="POST" enctype="multipart/form-data">
                           @csrf
                           <div class="row clearfix">
                               <div class="col-sm-12">
                                   <div class="form-group">
                                     <label for="product_name">{{__('app.News_slug')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="slug" class="form-control" @if(Request::is('admin/news-edit/*')) value="{{$news->slug}}" @endif placeholder="{{__('app.News_slug')}}" />
+                                        <input type="text" name="slug" class="form-control" @if(!empty($news)) value="{{$news->slug}}" @endif placeholder="{{__('app.News_slug')}}" />
                                     </div>
                                   </div>
                                   <br>
                                   <div class="form-group">
                                     <label for="description">{{__('app.News_title')}}</label>
                                     <div class="form-line">
-                                        <input type="text" name="title" @if(Request::is('admin/news-edit/*')) value="{{$news->title}}" @endif class="form-control" placeholder="{{__('app.News_title')}}">
+                                        <input type="text" name="title" @if(!empty($news)) value="{{$news->title}}" @endif class="form-control" placeholder="{{__('app.News_title')}}">
                                     </div>
                                   </div>
                               </div>
@@ -67,17 +76,19 @@
                           </div>
                           <div class="form-group">
                             <label for="images">{{__('app.Images')}}</label>
-                            <input type="file" name="images[]" class="form-control" multiple @if(!Request::is('admin/news-edit/*')) required @endif>
+                            <input type="file" name="images[]" class="form-control" multiple @if(empty($news)) required @endif>
                           </div>
                           <div class="demo-switch">
                               <div class="switch">
-                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" @if(Request::is('admin/news-edit/*')) @if($news->status != 1)  value="0" @else checked value="1" @endif @else value="0" @endif><span class="lever"></span>{{__('app.Active')}}</label>
+                                  <input type="hidden" name="status" @if(!empty($news)) @if($news->status != 1)  value="0" @else value="1" @endif @else value="0" @endif>
+                                  <label>{{__('app.Not_active')}}<input type="checkbox" @if(!empty($news) && $news->status != 1) checked @endif><span class="lever"></span>{{__('app.Active')}}</label>
                               </div>
                           </div>
                           <div class="form-group">
-                            <button type="submit" class="btn btn-primary pull-right">@if(Request::is('admin/news-edit/*')) {{__('app.Update')}}  @else {{__('app.Add')}} @endif</button>
+                            <button type="submit" class="btn btn-primary pull-right">@if(!empty($news)) {{__('app.Update')}}  @else {{__('app.Add')}} @endif</button>
                           </div>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -86,6 +97,9 @@
 </section>
 @endsection
 @section('foot')
+<script type="text/javascript">
+  var page = 'create';
+</script>
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
 <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
@@ -98,13 +112,4 @@
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/forms/basic-form-elements.js"></script>
 <script src="/adm/js/demo.js"></script>
-<script type="text/javascript">
-$("input[name='status']").change(function(){
-  if ($(this).val() == 1) {
-    $(this).val(0)
-  }else{
-    $(this).val(1)
-  }
-});
-</script>
 @endsection

@@ -325,7 +325,7 @@
     <script src="/adm/plugins/jquery/jquery.min.js"></script>
     <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
     <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-    <!-- <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script> -->
+    <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
     <script src="/adm/plugins/node-waves/waves.js"></script>
     <script src="/adm/plugins/jquery-countto/jquery.countTo.js"></script>
     <script src="/adm/plugins/raphael/raphael.min.js"></script>

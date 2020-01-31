@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProtabTable extends Migration
+class CreateSubscribeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateProtabTable extends Migration
      */
     public function up()
     {
-        Schema::create('protab', function (Blueprint $table) {
+        Schema::create('subscribe', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('prod_id')->nullable()->references('id')->on('products');
-            $table->text('title');
-            $table->text('description');
-            $table->integer('order')->default(0);
+            $table->integer('user_id')->nullable();
+            $table->string('email')->unique();
+            $table->integer('status')->default(1); // 1 means active, 0 means not active anymore
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateProtabTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('protab');
+        Schema::dropIfExists('subscribe');
     }
 }

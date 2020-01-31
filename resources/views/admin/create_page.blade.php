@@ -107,7 +107,8 @@
                           </div>
                           <div class="demo-switch">
                               <div class="switch">
-                                  <label>{{__('app.Not_active')}}<input type="checkbox" name="status" checked value="1"><span class="lever"></span>{{__('app.Active')}}</label>
+                                  <input type="hidden" name="status" value="0">
+                                  <label>{{__('app.Not_active')}}<input type="checkbox" checked><span class="lever"></span>{{__('app.Active')}}</label>
                               </div>
                           </div>
                           <div class="form-group">

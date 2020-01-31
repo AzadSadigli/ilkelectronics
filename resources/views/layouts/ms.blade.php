@@ -9,6 +9,9 @@
   @show
 	<link type="text/css" rel="stylesheet" href="/css/ms.css" />
 	<link rel="shortcut icon" type="image/x-icon" href="/img/icon.png" />
+	@if(!empty(conf('Mob_browser_color')))
+	<meta name="theme-color" content="{{conf('Mob_browser_color')}}" />
+	@endif
 	@include('layouts.google')
 </head>
 <body>
@@ -34,15 +37,16 @@
 								<li><a href="#">Spanish (Es)</a></li>
 							</ul>
 						</li> -->
+						@if(!empty(conf("currencies")))
 						<li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">@if(empty(get("currency"))) AZN @else {{get("currency")}} @endif <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
-								<li><a href="/currency/AZN">AZN</a></li>
-								<li><a href="/currency/USD">USD</a></li>
-								<li><a href="/currency/RUB">RUB</a></li>
-								<li><a href="/currency/TRY">TRY</a></li>
+								@for($k=0;$k<count(explode(',',conf("currencies")));$k++)
+								<li><a href="/currency/{{explode(',',conf("currencies"))[$k]}}">{{explode(',',conf("currencies"))[$k]}}</a></li>
+								@endfor
 							</ul>
 						</li>
+						@endif
 					</ul>
 				</div>
 			</div>
@@ -62,7 +66,7 @@
 							<select class="input search-categories" name="category_id">
 								<option value="0">{{__('app.All_categories')}}</option>
                 @foreach(App\Category::all() as $ct)
-                <option value="{{$ct->id}}">{{$ct->name}}</option>
+                <option @if(Request::is("search-result/search*")) @if($cat_id == $ct->id) selected @endif @endif value="{{$ct->id}}">{{$ct->name}}</option>
                 @endforeach
 							</select>
 							<button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
@@ -71,12 +75,33 @@
 				</div>
 				<div class="pull-right">
 					<ul class="header-btns">
+						@if(Auth::check())
+						<li class="header-cart dropdown default-dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+								<div class="header-btns-icon">
+									<i class="fa fa-shopping-cart"></i>
+									<span class="qty wish_count"></span>
+								</div>
+								<strong>{{__('app.My_wishlist')}}:</strong>
+								<br>
+								<span class="wish_total"></span>
+							</a>
+							<div class="custom-menu wish_head_list">
+								<div id="shopping-cart">
+									<div class="shopping-cart-list" id="wishlist_head"></div>
+									<div class="shopping-cart-btns">
+										<a class="primary-btn pull-right" href="/wishlist">{{__('app.More')}} <i class="fa fa-arrow-circle-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</li>
+						@endif
 						<li class="header-account dropdown default-dropdown">
 							<div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>
 								</div>
-								<strong class="text-uppercase">@if(Auth::check()) {{Auth::user()->name}} @else {{__('app.My_account')}} @endif <i class="fa fa-caret-down"></i></strong>
+								<strong>@if(Auth::check()) {{Auth::user()->name}} @else {{__('app.My_account')}} @endif <i class="fa fa-caret-down"></i></strong>
 							</div>
 							@guest <a href="#" class="text-uppercase">{{__('app.Join')}}</a> @endif
 							<ul class="custom-menu">
@@ -96,27 +121,6 @@
 								@endif
 							</ul>
 						</li>
-						@if(Auth::check())
-						<li class="header-cart dropdown default-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-								<div class="header-btns-icon">
-									<i class="fa fa-shopping-cart"></i>
-									<span class="qty wish_count"></span>
-								</div>
-								<strong class="text-uppercase">My Cart:</strong>
-								<br>
-								<span class="wish_total"></span>
-							</a>
-							<div class="custom-menu wish_head_list">
-								<div id="shopping-cart">
-									<div class="shopping-cart-list" id="wishlist_head"></div>
-									<div class="shopping-cart-btns">
-										<a class="primary-btn pull-right" href="/wishlist">{{__('app.More')}} <i class="fa fa-arrow-circle-right"></i></a>
-									</div>
-								</div>
-							</div>
-						</li>
-						@endif
 						<li class="nav-toggle">
 							<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
 						</li>
@@ -147,11 +151,21 @@
 						</div>
 						<p>{{conf('Footer_slogan')}}</p>
 						<ul class="footer-social">
-							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#"><i class="fa fa-instagram"></i></a></li>
-							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+							@if(conf('fa-facebook') !== "")
+							<li><a href="{{conf('fa-facebook')}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+							@endif
+							@if(conf('fa-twitter') !== "")
+							<li><a href="{{conf('fa-twitter')}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+							@endif
+							@if(conf('fa-instagram') !== "")
+							<li><a href="{{conf('fa-instagram')}}" target="_blank"><i class="fa fa-instagram"></i></a></li>
+							@endif
+							@if(conf('fa-google-plus') !== "")
+							<li><a href="{{conf('fa-google-plus')}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+							@endif
+							@if(conf('fa-pinterest') !== "")
+							<li><a href="{{conf('fa-pinterest')}}" target="_blank"><i class="fa fa-pinterest"></i></a></li>
+							@endif
 						</ul>
 					</div>
 				</div>
@@ -197,7 +211,7 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center">
 					<div class="footer-copyright">
-						Copyright &copy; {{date('Y')}}
+						{!! conf("footer_copyright") !!}
 					</div>
 				</div>
 			</div>

@@ -56,15 +56,69 @@
 								<div class="form-group row mb-0">
 										<div class="col-md-8 offset-md-4">
 												<button type="submit" class="cust-btn">{{ __('app.Login') }}</button>
-												@if (Route::has('password.request'))
-														<a class="btn btn-link" href="{{ route('password.request') }}">
-																{{ __('Forgot Your Password?') }}
-														</a>
-												@endif
+												<a class="btn btn-link" href="/account?action=password-reset">
+														{{__('app.Forgot_password')}}
+												</a>
 										</div>
 								</div>
 							</div>
 						</form>
+					@elseif($_GET['action'] === 'password-reset')
+						<div class="col-md-6">
+							<div class="billing-details">
+								<div class="section-title">
+									<h3 class="title">{{__('app.Reset_password')}} </h3>
+								</div>
+							</div>
+							@if(!isset($_GET['email']) || empty($_GET['email']))
+							<form action="/forgot-password" method="POST">
+								@csrf
+								<div class="form-group">
+									<input id="email" type="email" name="email" placeholder="{{__('app.E_mail')}}..." required autocomplete="email" autofocus class="input">
+								</div>
+								<div class="form-group row mb-0">
+									<div class="col-md-8 offset-md-4">
+										<button type="submit" class="cust-btn">{{ __('app.Send_code') }}</button>
+									</div>
+								</div>
+							</form>
+							@else
+								@if(isset($_GET['access_token']) && !empty($_GET['access_token']))
+								<form action="/enter-new-password" method="POST">
+									@csrf
+									<input type="hidden" name="email" value="{{$_GET['email']}}">
+									<input type="hidden" name="access_token" value="{{$_GET['access_token']}}">
+									<div class="form-group">
+										<input id="password" type="password" name="password" placeholder="{{__('app.Password')}}..." required autofocus class="input">
+										@error('password')
+												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+										@enderror
+									</div>
+									<div class="form-group">
+										<input id="confirm-password" type="password" name="password_confirmation" placeholder="{{__('app.Confirm_password')}}..." required autofocus class="input">
+									</div>
+									<div class="form-group row mb-0">
+										<div class="col-md-8 offset-md-4">
+											<button type="submit" class="cust-btn">{{ __('app.Reset') }}</button>
+										</div>
+									</div>
+								</form>
+								@else
+								<form action="/check-otp-code-availability" method="POST">
+									@csrf
+									<input type="hidden" name="email" value="{{$_GET['email']}}">
+									<div class="form-group">
+										<input id="code" type="number" name="code" placeholder="{{__('app.Code')}}..." required autofocus class="input">
+									</div>
+									<div class="form-group row mb-0">
+										<div class="col-md-8 offset-md-4">
+											<button type="submit" class="cust-btn">{{ __('app.Reset') }}</button>
+										</div>
+									</div>
+								</form>
+								@endif
+							@endif
+							</div>
 					@else
 					<form method="POST" action="{{ route('register') }}">
 							@csrf
@@ -104,13 +158,13 @@
 										@enderror
 								</div>
 								<div class="form-group row">
-										<input id="password" type="password" placeholder="{{ __('Password') }}" class="input @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+										<input id="password" type="password" placeholder="{{ __('app.Password') }}" class="input @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 										@error('password')
 												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
 										@enderror
 								</div>
 								<div class="form-group row">
-										<input id="password-confirm" type="password" placeholder="{{ __('Confirm Password') }}" class="input" name="password_confirmation" required autocomplete="new-password">
+										<input id="password-confirm" type="password" placeholder="{{ __('app.Confirm_password') }}" class="input" name="password_confirmation" required autocomplete="new-password">
 								</div>
 								<div class="form-group row mb-0">
 										<button type="submit" class="cust-btn">{{ __('app.Register') }}</button>

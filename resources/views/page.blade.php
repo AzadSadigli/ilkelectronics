@@ -1,8 +1,24 @@
 @extends('layouts.ms')
 @section('head')
 @if(empty($page))
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property=”og:title” content=””/>
+<meta property=”og:url” content=””/>
+<meta property=”og:site_name” content=””/>
+<meta property=”og:image” content=””/>
+<meta property=”og:type” content=””/>
+<meta property=”og:description” content=””/>
 <title>{{__('app.Page')}} - {{conf("Site_title")}}</title>
 @else
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta property=”og:title” content=””/>
+<meta property=”og:url” content=””/>
+<meta property=”og:site_name” content=””/>
+<meta property=”og:image” content=””/>
+<meta property=”og:type” content=””/>
+<meta property=”og:description” content=””/>
 <title>{{$page->shortname}} - {{conf("Site_title")}}</title>
 @endif
 @endsection
@@ -64,9 +80,9 @@
 							<p>{!!$page->body!!}</p>
 						</div>
 						@if(App\Protab::where('page_id',$page->id)->count() != 0)
-							@foreach(App\Protab::where('page_id',$page->id)->count() as $pt)
+							@foreach(App\Protab::where('page_id',$page->id)->orderBy('order','ASC')->get() as $key => $pt)
 							<div class="pg-tabs">
-								<a class="accordion">{{$pt->title}}</a>
+								<a class="accordion" href="#tab_{{$key}}">{{$pt->title}} <i class="fa fa-chevron-down"></i> </a>
 								<div class="panel">
 								  <p>{!! $pt->description !!}</p>
 								</div>

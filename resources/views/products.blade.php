@@ -1,9 +1,26 @@
 @extends('layouts.ms')
 @section('head')
-<title>@if(Request::is('search-result/*')) {{$search}} - {{conf("Site_title")}}
+	@if(Request::is('search-result/*'))
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta property=”og:title” content=””/>
+	<meta property=”og:url” content=””/>
+	<meta property=”og:site_name” content=””/>
+	<meta property=”og:image” content=””/>
+	<meta property=”og:type” content=””/>
+	<meta property=”og:description” content=””/>
+	<title>{{$search}} - {{conf("Site_title")}}</title>
 	@else
-	{{$cat->name}} - {{conf("Site_title")}}
-	@endif</title>
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta property=”og:title” content=””/>
+	<meta property=”og:url” content=””/>
+	<meta property=”og:site_name” content=””/>
+	<meta property=”og:image” content=””/>
+	<meta property=”og:type” content=””/>
+	<meta property=”og:description” content=””/>
+	<title>{{$cat->name}} - {{conf("Site_title")}}</title>
+	@endif
 @endsection
 @section('body')
 	<div id="breadcrumb">
@@ -15,7 +32,7 @@
 				<li class="active">{{$search}} ({{$count}})</li>
 				@else
 				<li><a>{{__('app.Category')}}</a> </li>
-				<li class="active">{{$cat->name}} ({{$count}})</li>
+				<li class="active">{{$cat->name}} (<span class="prd_cnt">{{$count}}</span>)</li>
 				@endif
 			</ul>
 		</div>
@@ -51,34 +68,24 @@
 				</div>
 				<div id="main" class="col-md-9">
 					<div class="store-filter clearfix">
-						<div class="pull-left">
+						<div class="pull-right">
 							<div class="sort-filter">
 								<span class="text-uppercase">{{__('app.Sort_By')}}:</span>
 								<select class="input sortby_value">
 										<option value="0">{{__('app.Latest_products')}}</option>
 										<option value="1">{{__('app.First_cheaper')}}</option>
 										<option value="2">{{__('app.First_expensive')}}</option>
+										<option value="3">{{__('app.High_rated_products')}}</option>
 									</select>
-								<a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
-							</div>
-						</div>
-						<div class="pull-right">
-							<div class="page-filter">
-								<span class="text-uppercase">{{__('app.Show')}}:</span>
-								<select class="input show_num_prod">
-										<option value="10">10</option>
-										<option value="20">20</option>
-										<option value="30">30</option>
-									</select>
+								<a class="main-btn icon-btn sortby_value_btn"><i class="fa fa-arrow-down"></i></a>
 							</div>
 						</div>
 					</div>
 					<div class="product-list">
-						<div class="row" id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}}">
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}}">
 							<div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
 							</div>
-							<!-- <div class="clearfix visible-md visible-lg"></div> -->
 						</div>
 					</div>
 					@if($count > 9)

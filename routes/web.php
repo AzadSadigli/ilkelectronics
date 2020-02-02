@@ -43,13 +43,14 @@ Route::post('/order-product','ProductController@order_now');
 
 Route::group(['prefix' => 'admin'], function(){
   Route::group(['middleware' => 'admin'],function(){
-    Route::view('/','admin.index');
+    Route::get('/','AdminController@index');
     Route::view('/profile','admin.profile');
     Route::get('/get-notification','DataController@get_notification_for_admin');
     Route::get('/add-loan/{slug}','ProductController@add_loan_view');
     Route::post('/add-new-loan','ProductController@add_new_loan');
     Route::post('/update-loan/{id}','ProductController@add_new_loan');
     Route::get('/delete-loan-type/{id}','ProductController@delete_loan');
+    Route::get('/comment-list','AdminController@comment_list');
     // Route::get('/create-page','AdminController@create_page_view');
 
 

@@ -317,7 +317,7 @@
                             <span>{{__('app.Slide_and_poster')}}</span>
                         </a>
                     </li>
-                    <li @if(in_array(Request::path(),array('admin/product-list','admin/user-list','admin/page-list','admin/news-list'))) class="active" @endif>
+                    <li @if(in_array(Request::path(),array('admin/product-list','admin/user-list','admin/page-list','admin/news-list','admin/comment-list'))) class="active" @endif>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">format_list_bulleted</i>
                             <span>{{__('app.List')}}</span>
@@ -337,6 +337,9 @@
                             </li>
                             <li @if(Request::is('admin/user-list')) class="active" @endif>
                                 <a href="/admin/user-list">{{__('app.User_list')}}</a>
+                            </li>
+                            <li @if(Request::is('admin/comment-list')) class="active" @endif>
+                                <a href="/admin/comment-list">{{__('app.Comment_list')}}</a>
                             </li>
                         </ul>
                     </li>

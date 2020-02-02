@@ -271,4 +271,6 @@ Qeyd: Kateqoriyanı sildiyiniz təqdirdə kateqoriyalar və məhsullarda silinə
     'Contact_number' => 'Əlaqə nömrəsi',
     'Your_name' => 'Adınız',
     'Your_surname' => 'Soyadınız',
+    'Comment_list' => 'Rəy siyahısı',
+    'Rating' => 'Reytinqi',
 ];

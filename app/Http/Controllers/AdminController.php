@@ -12,9 +12,12 @@ use App\Config;
 use App\Products;
 class AdminController extends Controller
 {
-    // public function panel_home(){return view('admin.index');}
-    public function create_user(){
-
+    public function index(){
+      $cat_list = DB::select("SELECT name,id,slug,created_at,IF(ISNULL(c.parent_id),(SELECT SUM(price) FROM `products` p WHERE p.category IN (SELECT id FROM `category` ct WHERE ct.parent_id = c.id)),(SELECT SUM(price) FROM `products` p WHERE p.category = c.id)) as numbs FROM `category`c ORDER BY numbs DESC LIMIT ".conf("Limit_of_most_category_stat"));
+      return view('admin.index',compact('cat_list'));
+    }
+    public function comment_list(){
+      return view('admin.list');
     }
     public function add_category_view(){return view('admin.add_product');}
 

@@ -140,18 +140,20 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>{{__('app.Category')}}</th>
-                                            <th>{{__('app.Number_of_products')}}</th>
-                                            <th>{{__('app.Rating')}}</th>
+                                            <th>{{__('app.Creation_date')}}</th>
+                                            <th>{{__('app.Views')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(App\Category::orderBy('views','DESC')->take(conf("Limit_of_most_category_stat"))->get() as $pr)
-                                        <tr>
-                                            <td>{{$pr->prod_id}}</td>
-                                            <td><a href="/product/{{$pr->slug}}">{{$pr->productname}}</a> </td>
-                                            <td>{{$pr->created_at}}</td>
-                                            <td>{{$pr->views}} {{__('app.times')}}</td>
-                                        </tr>
+                                        @foreach($cat_list as $ct)
+                                          @if(!empty($ct->numbs))
+                                          <tr>
+                                              <td>{{$ct->id}}</td>
+                                              <td><a href="/category/{{$ct->slug}}" target="_blank">{{$ct->name}}</a> </td>
+                                              <td>{{\Carbon\Carbon::parse($ct->created_at)->format('d M,Y')}}</td>
+                                              <td>{{$ct->numbs}} {{__('app.times')}}</td>
+                                          </tr>
+                                          @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -173,11 +175,11 @@
     <script src="/adm/plugins/raphael/raphael.min.js"></script>
     <script src="/adm/plugins/morrisjs/morris.js"></script>
     <script src="/adm/plugins/chartjs/Chart.bundle.js"></script>
-    <script src="/adm/plugins/flot-charts/jquery.flot.js"></script>
-    <script src="/adm/plugins/flot-charts/jquery.flot.resize.js"></script>
+    <!-- <script src="/adm/plugins/flot-charts/jquery.flot.js"></script> -->
+    <!-- <script src="/adm/plugins/flot-charts/jquery.flot.resize.js"></script>
     <script src="/adm/plugins/flot-charts/jquery.flot.pie.js"></script>
     <script src="/adm/plugins/flot-charts/jquery.flot.categories.js"></script>
-    <script src="/adm/plugins/flot-charts/jquery.flot.time.js"></script>
+    <script src="/adm/plugins/flot-charts/jquery.flot.time.js"></script> -->
     <script src="/adm/plugins/jquery-sparkline/jquery.sparkline.js"></script>
     <script src="/adm/js/admin.js"></script>
     <script src="/adm/js/pages/index.js"></script>

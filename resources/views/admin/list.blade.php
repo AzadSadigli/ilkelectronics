@@ -12,6 +12,8 @@
 <title>{{__('app.Page_list')}} - {{conf("admin_title")}}</title>
 @elseif(Request::is('admin/news-list'))
 <title>{{__('app.News_list')}} - {{conf("admin_title")}}</title>
+@elseif(Request::is('admin/comment-list'))
+<title>{{__('app.Comment_list')}} - {{conf("admin_title")}}</title>
 @else
 <title>{{__('app.Product_list')}} - {{conf("admin_title")}}</title>
 @endif
@@ -28,6 +30,8 @@
                       {{__('app.Page_list')}}
                       @elseif(Request::is('admin/news-list'))
                       {{__('app.News_list')}}
+                      @elseif(Request::is('admin/comment-list'))
+                      {{__('app.Comment_list')}}
                       @else
                       {{__('app.Product_list')}}
                       @endif
@@ -46,6 +50,15 @@
                                       <td>#</td>
                                     </tr>
                                   @elseif(Request::is('admin/news-list'))
+                                  <tr>
+                                    <td>ID</td>
+                                    <td>{{__('app.Title')}}</td>
+                                    <td>{{__('app.News_slug')}}</td>
+                                    <td>{{__('app.News')}}</td>
+                                    <td>{{__('app.Status')}}</td>
+                                    <td>{{__('app.Operations')}}</td>
+                                  </tr>
+                                  @elseif(Request::is('admin/comment-list'))
                                   <tr>
                                     <td>ID</td>
                                     <td>{{__('app.Title')}}</td>
@@ -145,6 +158,8 @@
                                         </td>
                                       </tr>
                                       @endforeach
+                                    @elseif(Request::is('admin/comment-list'))
+
                                     @else
                                       @foreach($pros as $pro)
                                       <tr>

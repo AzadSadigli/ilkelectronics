@@ -74,17 +74,17 @@ class ProductController extends Controller
       return redirect()->back()->with(['message' => Lang::get('app.Loan_deleted'),'type' => 'danger']);
     }
     public function order_now(Request $req){
-      $this->validate($req,[
-        'email' => 'required|email',
-        'name' => 'required|string|min:2',
-        'surname' => 'required|string|min:2',
-        'birthdate' => 'required|date',
-        'father_name' => 'required|string',
-        'gender' => 'required|integer',
-        'quantity' => 'required|integer',
-        'region' => 'required|string',
-        'city' => 'required|string',
-      ]);
+      // $this->validate($req,[
+      //   'email' => 'required|email',
+      //   'name' => 'required|string|min:2',
+      //   'surname' => 'required|string|min:2',
+      //   'birthdate' => 'required|date',
+      //   'father_name' => 'required|string',
+      //   'gender' => 'required|integer',
+      //   'quantity' => 'required|integer',
+      //   'region' => 'required|string',
+      //   'city' => 'required|string',
+      // ]);
       $pro = Products::where('prod_id',$req->product_id)->first();
       $loan = Loans::find($req->loan_id);
       if (!empty($pro)) {

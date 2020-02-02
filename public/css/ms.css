@@ -3823,9 +3823,10 @@ fieldset[disabled] .btn-default:hover {
 }
 
 .btn-primary {
+    border-radius: 0;
     color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4
+    background-color: #178df3;
+    border-color: #178df3
 }
 
 .btn-primary.focus,
@@ -11787,14 +11788,8 @@ hr {
 .primary-btn:hover,
 .primary-btn:focus {
     color: #FFF;
-    background-color: #1e1d19;
+    background-color: #a20e12;
 }
-
-
-/*----------------------------*\
- 	Inputs
- \*----------------------------*/
-
 .input {
     width: 100%;
     height: 40px;
@@ -13562,7 +13557,7 @@ textarea.input {
 
 .load-section a {
     margin: auto;
-    max-width: 10%;
+    /* max-width: 10%; */
     display: block;
     text-align: center;
 }
@@ -13849,6 +13844,12 @@ a {
         margin-bottom: 22px;
         min-height: 325px;
     }
+    .dropdown.default-dropdown.open>.custom-menu{
+      margin-left: 31px;
+    }
+    .wish_head_list{
+      margin-left: 72px;
+    }
 }
 
 
@@ -13982,6 +13983,9 @@ a {
     .slideshow-container .text {
         font-size: 11px
     }
+    .dropdown.default-dropdown.open>.custom-menu{
+      margin-left: 31px;
+    }
 }
 
 .pg-tabs {
@@ -14044,13 +14048,13 @@ a {
     margin-top: -82px;
 }
 
-.deals_of_day:hover {
+/* .deals_of_day:hover {
     position: static !important;
 }
 
 .deals_of_day:hover .nxt-sblng {
     margin-top: -130px !important;
-}
+} */
 
 #description table tbody tr td:first-child {
     font-weight: bold;
@@ -14162,6 +14166,17 @@ textarea.input {
   width: 74% !important;
   margin: auto;
   display: block;
+}
+.order-lding{
+  display: block;
+  width: 30%;
+  margin: auto;
+}
+#description .odd{
+  background: #f3f3f3;
+}
+.red{
+  color: #e31e25;
 }
 /* .product-price{
 

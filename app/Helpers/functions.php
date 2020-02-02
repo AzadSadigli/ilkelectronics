@@ -181,6 +181,14 @@ function nd($date){ //new date
     return false;
   }
 }
+function log_now($dt){
+  $file = burl().'/log.txt';
+  $data = file_get_contents($file);
+  $data = json_decode($data,true);
+  $data[] = ['date' => date("Y/m/d H:i:s"), 'error' => $dt];
+  $data = json_encode($data,true);
+  file_put_contents($file,$data);
+}
 function currency($val = null){
   if ($val !== null) {
     if (empty(get("currency_value"))) {

@@ -396,6 +396,12 @@
                         </a>
                     </li>
                     @endif
+                    <li>
+                        <a href="/">
+                            <i class="material-icons">arrow_back</i>
+                            <span>{{__('app.Back_to_store')}}</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="legal">

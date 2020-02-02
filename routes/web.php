@@ -22,6 +22,7 @@ Route::get('/currency/{currency}','Controller@change_currency');
 
 Route::get('/search-result/search={request}','DataController@searchedproducts');
 Route::get('/get-search-result','DataController@searchedproducts_ajax');
+Route::post('/subscribe','DataController@subscribe');
 
 Route::get('/category/{slug}','DataController@category_page');
 Route::get('/get-category-products','DataController@category_page_ajax'); // ajax
@@ -38,13 +39,17 @@ Route::post('/send-message','UserController@send_message');
 Route::post('/add-new-comment','UserController@add_comment');
 Route::get('/get-review-list','UserController@get_comments');
 
-
+Route::post('/order-product','ProductController@order_now');
 
 Route::group(['prefix' => 'admin'], function(){
   Route::group(['middleware' => 'admin'],function(){
     Route::view('/','admin.index');
     Route::view('/profile','admin.profile');
     Route::get('/get-notification','DataController@get_notification_for_admin');
+    Route::get('/add-loan/{slug}','ProductController@add_loan_view');
+    Route::post('/add-new-loan','ProductController@add_new_loan');
+    Route::post('/update-loan/{id}','ProductController@add_new_loan');
+    Route::get('/delete-loan-type/{id}','ProductController@delete_loan');
     // Route::get('/create-page','AdminController@create_page_view');
 
 
@@ -123,6 +128,8 @@ Route::group(['prefix' => 'admin'], function(){
 });
 
 Route::group(['middleware' => 'auth'],function(){
+  Route::get('/order-product/{slug}','ProductController@order_product_view');
+  Route::delete('/delete-comment','UserController@delete_comment');
   Route::get('/profile', 'HomeController@index')->name('home');
   Route::get('/wishlist', 'UserController@wishlist');
   Route::post('/update-profile-data','UserController@update_profile');

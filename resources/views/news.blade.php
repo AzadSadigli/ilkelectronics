@@ -100,7 +100,7 @@
 						</div>
 						<div class="news-commenting" data-id="{{$news_unique->id}}">
 							<div class="product-reviews">
-								<ul class="reviews-pages" id="review_pages"></ul>
+								<ul class="reviews-pages" id="review_pages" style="display:none;"></ul>
 							</div>
 							<hr>
 							<div class="review-form">

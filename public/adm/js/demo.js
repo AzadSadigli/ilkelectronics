@@ -206,7 +206,11 @@ $(document).mousemove(function (e) {
     $("body").removeClass("lock-scroll");
   }
 });
-
+$db.on("click",".dlt_category",function(){
+  let wrds = $(this).data("words").split(",");
+  let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a href='/admin/delete-category/"+$(this).data("id")+"' class='btn btn-danger'>"+wrds[1]+"</a></div></div></div>";
+  $("#deletemodal").html(html);
+});
 if (typeof page !== 'undefined') {
   if (page === 'slide_control') {
     function reorder(){
@@ -1081,8 +1085,18 @@ if (typeof page !== 'undefined') {
       // });
       $db.on("change","#psubcat",function(){
         $("input#hidden_sub").val($(this).val());
-        console.log();
       });
     }
   }
 }
+$('form').on('focus', 'input[type=number]', function (e) {
+  $(this).on('wheel.disableScroll', function (e) {
+    e.preventDefault()
+  })
+})
+$('form').on('blur', 'input[type=number]', function (e) {
+  $(this).off('wheel.disableScroll')
+})
+// $("#submit_loans").on("click",function(){
+//   $(".new_loan_form").submit();
+// });

@@ -5918,15 +5918,15 @@ $(document).ready(function(){
             html += "<div class='product product-widget'><div class='product-thumb'>"+img+"</div><div class='product-body'><h3 class='product-price'>"+vl['price']+" "+data.currency+"<span class='qty'> x "+vl["wquantity"]+"</span></h3><h2 class='product-name'><a href='/product/"+vl["slug"]+"'>"+vl["productname"]+"</a></h2></div><a class='wdelete cancel-btn' data-id='"+vl["id"]+"'><i class='fa fa-trash'></i></a></div>";
           }
           $("#wishlist_head").html(html);
-          $(".wish_total").html(data.total +data.currency);
+          // $(".wish_total").html(data.total +data.currency);
           $(".wish_count").html(data.count);
         }else{
           let html = "";let pc = 0;
           for (var i = 0; i < data.list.length; i++) {
             let vl = data.list[i];
-            pc += parseFloat(vl['price'].replace(',',''))*vl['wquantity'];
+            pc += vl['price']*vl['wquantity'];
             let img = "/uploads/pro/small/" + vl['image'];
-            html += "<tr><td class='thumb'><img src='"+img+"' alt=''></td><td class='details'><a href='/product/"+vl['slug']+"'>"+vl['productname']+"</a></td><td class='price text-center'><strong>"+vl['price']+data.currency+"</strong><br><del class='font-weak'><small>"+vl['old_price']+data.currency+"</small></del></td><td class='qty text-center'><input class='input' type='number' data-id='"+vl['pid']+"' value='"+vl['wquantity']+"'></td><td class='total text-center'><strong class='primary-color'>"+(parseFloat(vl['price'].replace(',',''))*vl['wquantity'])+data.currency+"</strong></td><td class='text-right'><a class='main-btn icon-btn wdelete' data-id='"+vl['id']+"'><i class='fa fa-close'></i></a></td></tr>"
+            html += "<tr><td class='thumb'><img src='"+img+"' alt=''></td><td class='details'><a href='/product/"+vl['slug']+"'>"+vl['productname']+"</a></td><td class='price text-center'><strong>"+vl['price']+data.currency+"</strong><br><del class='font-weak'><small>"+vl['old_price']+data.currency+"</small></del></td><td class='qty text-center'><input class='input' type='number' data-id='"+vl['pid']+"' value='"+vl['wquantity']+"'></td><td class='total text-center'><strong class='primary-color'>"+(parseFloat(vl['price'])*vl['wquantity'])+data.currency+"</strong></td><td class='text-right'><a class='main-btn icon-btn wdelete' data-id='"+vl['id']+"'><i class='fa fa-close'></i></a></td></tr>"
           }
           $("#wsh_total").html(pc+data.currency);
           $("#wishlist_tbody").html(html);
@@ -5962,6 +5962,7 @@ $(document).ready(function(){
   if ($("#wishlist_head").length > 0) {wishlist_head(0);}
   $db.on("focusout",".qty > input",function(){
     add_wishls($(this).val(),$(this).data("id"));
+    wishlist_head(0);wishlist_head(1);
   });
 
   $db.on("click",".wdelete",function(){
@@ -6030,26 +6031,34 @@ $(document).ready(function(){
 				type: 'GET',
 				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct")},
 				success:function(data){
-					let html = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1];
-					for (var i = 0; i < data['pros'].length; i++) {
-						let val = data['pros'][i],star = "";
+					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
+					for (var i = 0; i < data.pros.length; i++) {
+						let val = data.pros[i],star = "";
             let img = "src='/uploads/pro/small/"+val['image']+"'";
             let new_case = "",discount = "",old_price = "";
             for (var k = 1; k <= 5; k++) {
               if (k <= parseInt(val['rating'])) {star += "<i class='fa fa-star'></i>";}else{star += "<i class='fa fa-star-o empty'></i>";}
             }
-            if (time_diff(val['created_at']) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
-            if (val['old_price'] !== "" && val['old_price'] !== null) {
-              discount = "<span class='sale'>"+disc(val['price'],val['old_price'])+"%</span>";
-              old_price = "<del class='product-old-price'>"+val['old_price']+" AZN</del>";
+            if ($(".wish_head_list").length > 0) {
+              product_btns = "<div class='product-btns'><a class='primary-btn add-to-cart' data-id='"+val.id+"'><i class='fa fa-shopping-cart'></i></a> <a href='/order-product/"+val.slug+"' class='main-btn'>"+orn+"</a></div>";
             }
-            if (pro_numb > data['pros'].length) {$(".load-section").css("display","none");}
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val['slug']+"' target='_blank'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val['productname']+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val['slug']+"'>"+val['productname']+"</a></h3><h2 class='product-price'>"+val['price']+" AZN " + old_price+" </h2><div class='product-btns'><button class='primary-btn add-to-cart' data-id='"+val['id']+"'><i class='fa fa-shopping-cart'></i></button></div></div></div></div>";
+            if (time_diff(val.date) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
+            if (val.old_price !== "" && val.old_price !== null) {
+              discount = "<span class='sale'>"+disc(val.price,val.old_price)+"%</span>";
+              old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
+            }
+            if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val.slug+"' target='_blank'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+val.productname+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
-          $(".prd_cnt").html(data.pros.length);
+          $(".prd_cnt").html(data.count);
           if (data.pros.length == 0) {
             $(id).html("<center class='no-prod-found'>"+data.empty+"</center>")
+          }
+          if (data.count > pro_numb) {
+            $(".load-section").css("display","");
+          }else{
+            $(".load-section").css("display","none");
           }
           console.log(data);
 				},complete:function(){
@@ -6057,6 +6066,7 @@ $(document).ready(function(){
         }
 			});
 		}
+    $(".load-section a").css("width","");
     // , .filt-by-brands span,
 		$db.on("change",input +":eq(0)",function(){
       let fb = ".filt-by-brands b";
@@ -6078,7 +6088,7 @@ $(document).ready(function(){
 		});
 		get_prods(pro_numb);
   }
-  if (ucheck("product/") | ucheck("news/")) {
+  if (ucheck("/product/") | ucheck("news/")) {
     $db.on("click",".pages-body > ul > li",function(){
       window.location = $(this).data("url");
     });
@@ -6093,11 +6103,17 @@ $(document).ready(function(){
           let h = ""; let pgg = "";
           for (var i = 0; i < data.comments.length; i++) {
             let v = data.comments[i];
-            h += `<div class='single-review'><div class='review-heading'><div><i class='fa fa-user-o'></i> ${v['name']}</div><div><i class='fa fa-clock-o'></i> ${v['time']}</div></div><div class='review-body'><p>${v['comment']}</p></div></div>`;
+            let dlt_btn = v['owner'] == 1 ? "<a class='dlt_comment' data-id='"+v['id']+"'><i class='fa fa-trash'></i></a>" : "";
+            h += `<div class='single-review'><div class='review-heading'><div><i class='fa fa-user-o'></i> ${v['name']}</div><div><i class='fa fa-clock-o'></i> ${v['time']} ${dlt_btn}</div></div><div class='review-body'><p>${v['comment']}</p></div></div>`;
           }
           for (var pg_index = 0; pg_index < Math.ceil(data.count/6); pg_index++) {
             let fr = ""; if (pg_index == (data.page - 1)) {fr = "class='active'"}
             pgg += "<li "+fr+" data-page='"+(pg_index + 1)+"'>"+(pg_index + 1)+"</li>";
+          }
+          if (data.count>6) {
+            $("#review_pages").css("display","");
+          }else{
+            $("#review_pages").css("display","none");
           }
           // console.log(data);
           $(rg).html('<li><i class="fa fa-caret-left"></i></li>' + pgg +'<li><i class="fa fa-caret-right"></i></li>');
@@ -6149,9 +6165,9 @@ $(document).ready(function(){
     });
     if ($(rg).length > 0) {get_news_comments(news_id,view_page);}
     $(".share_comment").on("click",function(){
-      let th = this;let id;let tp;
-      if ($("#prod_review_list").length > 0) {
-        id = $("#prod_review_list").data("id");tp="prod";
+      let th = this, id, tp,prl="#prod_review_list";
+      if ($(prl).length > 0) {
+        id = $(prl).data("id");tp="prod";
       }else{
         id = $(".news-commenting").data("id");tp="news";
       }
@@ -6166,7 +6182,7 @@ $(document).ready(function(){
             if ($(".custom-menu > #shopping-cart").length == 0) {$("#commenter_name, #commenter_email").val("");}
             $("#comment_section").val("");
             notify(data.success,"success");
-            if ($("#prod_review_list").length > 0) {get_reviews(view_page);}
+            if ($(prl).length > 0) {get_reviews(view_page);}
             if ($(rg).length > 0) {get_news_comments(news_id,view_page);}
           },complete:function(){$(th).html('<i class="fa fa-arrow-right"></i>');}
         });
@@ -6187,13 +6203,14 @@ $(document).ready(function(){
         type: 'GET',
         data:{prod_id:$("#prod_review_list").data("id"),view_page:view_page},
         success:function(data){
-          let html = "";let pgg = "";
+          let html = "", pgg = "";
           for (var i = 0; i < data.comments.length; i++) {
-            let vl = data.comments[i],star = "";
+            let vl = data.comments[i],star = "",dt = new Date(vl['time']),dlt_btn = "";
             for (var k = 1; k <= 5; k++) {
               if (k > parseInt(vl['rating'])) {star += "<i class='fa fa-star-o empty'></i>";}else{star += "<i class='fa fa-star'></i>";}
             }
-            html += "<div class='single-review'><div class='review-heading'><div><a href='#'><i class='fa fa-user-o'></i> "+vl['name']+"</a></div><div><a href='#'><i class='fa fa-clock-o'></i> "+vl['time']+"</a></div><div class='review-rating pull-right'>"+star+"</div></div><div class='review-body'><p>"+vl['comment']+"</p></div></div>"
+            dlt_btn = vl['owner'] == 1 ? "<a class='dlt_comment' data-id='"+vl['id']+"'><i class='fa fa-trash'></i></a>" : "";
+            html += "<div class='single-review'><div class='review-heading'><div><a href='#'><i class='fa fa-user-o'></i> "+vl['name']+"</a></div><div><a href='#'><i class='fa fa-clock-o'></i> "+dt.toLocaleDateString() +"</a> "+dlt_btn+"</div><div class='review-rating pull-right'>"+star+"</div></div><div class='review-body'><p>"+vl['comment']+"</p></div></div>"
           }
           let str = "";
           for (var z = 1; z <= 5; z++) {if (z > data.rating) {str += "<i class='fa fa-star-o empty'></i>";}else{str += "<i class='fa fa-star'></i>";}}
@@ -6209,10 +6226,26 @@ $(document).ready(function(){
               pgg += "<li "+fr+" data-page='"+(pg_index + 1)+"'>"+(pg_index + 1)+"</li>";
             }
             $("#rev_pg_pro").html('<li><i class="fa fa-caret-left"></i></li>' + pgg +'<li><i class="fa fa-caret-right"></i></li>');
-          }
+          }else{$(".no_review").css("display","none");}
         }
       });
     }
+    $db.on("click",".dlt_comment",function(){
+      $header;
+      $.ajax({
+        url: '/delete-comment',
+        type: 'DELETE',
+        data:{id:$(this).data("id")},
+        success:function(t){
+          notify(t.mess,"danger");
+          if (ucheck("news/")) {
+            get_news_comments(news_id,view_page);
+          }else{
+            get_reviews(view_page);
+          }
+        }
+      });
+    });
     if (!ucheck("news/")) {
       get_reviews(view_page);
     }
@@ -6286,7 +6319,23 @@ $(document).ready(function(){
       cprt.innerHTML = dtty;
   }
 
-
+  $("#subscribe_button").on("click",function(){
+    let email = "#subscribe_input";
+    $header;
+    if (isEmail($(email).val())) {
+      $.ajax({
+        url: '/subscribe',
+        type: 'POST',
+        data:{email: $(email).val()},
+        success:function(t){
+          notify(t.mess,"success");
+          isValidInput($(email));$(email).val('');
+        }
+      });
+    }else{
+      inNotValidInput($(email))
+    }
+  });
   $db.on("click",".hc-news,.news-item,.product-single > img",function(){
     console.log("ok");
     window.location.href = $(this).find("a").attr("href");
@@ -6326,6 +6375,26 @@ $(document).ready(function(){
       }
     });
   }
+  $("#order_product").on("click",function(){
+    // $("#order_form").html("<img class='order-lding' src='/img/loading.gif'>");
+    let loan_id = $("#order_type").val() ? $("#order_type").val() : 0;
+    console.log(loan_id)
+    $header;
+    $.ajax({
+      url: '/order-product',
+      type: 'POST',
+      data:{
+        loan_id:loan_id,product_id:$("#product_id").val(),name:$("#name").val(),
+        email:$("#email").val(),surname:$("#surname").val(),birthdate:$("#birthdate").val(),
+        gender:$("#gender").val(),father_name:$("#fathername").val(),quantity:$("#quantity").val(),
+        address:$("#address").val(),city: $("#region").val(),contact_number:$("#contact_number").val(),
+      },
+      success:function(t){
+        console.log(t);
+      },complete:function(){
+      }
+    });
+  });
 
   // if(ucheck('not-found')){
   //   let e_a = ".error-page > p > a";

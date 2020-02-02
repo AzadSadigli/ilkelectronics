@@ -82,9 +82,8 @@
 									<i class="fa fa-shopping-cart"></i>
 									<span class="qty wish_count"></span>
 								</div>
-								<strong>{{__('app.My_wishlist')}}:</strong>
-								<br>
-								<span class="wish_total"></span>
+								<strong>{{__('app.My_wishlist')}}</strong>
+								@if(false)<br><span class="wish_total"></span>@endif
 							</a>
 							<div class="custom-menu wish_head_list">
 								<div id="shopping-cart">
@@ -101,9 +100,9 @@
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>
 								</div>
-								<strong>@if(Auth::check()) {{Auth::user()->name}} @else {{__('app.My_account')}} @endif <i class="fa fa-caret-down"></i></strong>
+								<strong>@if(Auth::check()) {{Auth::user()->name}} @else {{__('app.My_account')}} @endif <i class="fa fa-caret-down"></i></strong><br>
 							</div>
-							@guest <a href="#" class="text-uppercase">{{__('app.Join')}}</a> @endif
+							@guest <a href="#">{{__('app.Join')}}</a> @endif
 							<ul class="custom-menu">
 								@if(Auth::check())
 								<li><a href="/profile"><i class="fa fa-user-o"></i> {{__('app.My_account')}}</a></li>
@@ -198,12 +197,10 @@
 					<div class="footer">
 						<h3 class="footer-header">{{__('app.Stay_connected')}}</h3>
 						<p>{{__('app.Stay_connected_details')}}</p>
-						<form>
-							<div class="form-group">
-								<input class="input" placeholder="{{__('app.E_mail')}}...">
-							</div>
-							<button class="primary-btn">{{__('app.Subscribe')}}</button>
-						</form>
+						<div class="form-group">
+							<input class="input" placeholder="{{__('app.E_mail')}}..." id="subscribe_input">
+						</div>
+						<a class="primary-btn" id="subscribe_button">{{__('app.Subscribe')}}</a>
 					</div>
 				</div>
 			</div>

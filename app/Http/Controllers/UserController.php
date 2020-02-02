@@ -87,11 +87,16 @@ class UserController extends Controller
       return response()->json(['success' => $res]);
     }
     public function get_comments(Request $req){
-      $stars = "";
+      $stars = "";$id = 0;
+      if (Auth::check()) {
+        $id = Auth::user()->id;
+      }
       if (isset($req->prod_id)) {
         $cm  = DB::select("SELECT
+                              IF(c.user_id=".$id.", c.id, 0) as id,
                               c.rating,c.comment,c.created_at as time,
-                              COALESCE(NULLIF(c.name, ''), u.name) AS `name`
+                              COALESCE(NULLIF(c.name, ''), u.name) AS `name`,
+                              IF(c.user_id=".$id.", ".$id.", 0) as owner
                           FROM
                               `comments` c
                           LEFT JOIN `users` u ON u.id = c.user_id
@@ -100,13 +105,15 @@ class UserController extends Controller
         $stars = round(Comments::where('prod_id',$req->prod_id)->avg('rating'));
       }else{
         $sql = "SELECT
+                    IF(c.user_id=".$id.", c.id, 0) as id,
                     c.rating,c.comment,c.created_at as time,
-                    COALESCE(NULLIF(c.name, ''), u.name) AS `name`
+                    COALESCE(NULLIF(c.name, ''), u.name) AS `name`,
+                    IF(c.user_id=".$id.", ".$id.", 0) as owner
                 FROM
                     `comments` c
                 LEFT JOIN `users` u ON u.id = c.user_id
                 WHERE c.news_id = ".$req->news_id."
-                ORDER BY `time` ASC";
+                ORDER BY `time` DESC";
         $cm = DB::select($sql);
       }
       $count = count($cm);
@@ -115,6 +122,18 @@ class UserController extends Controller
       $min =  $max >= 6 ? ($max - 6) : 0;
       $cm = $count >= 6 ? array_slice($cm, $min, 6) : $cm;
       return response()->json(['comments' => $cm,'rating' => $stars,'count' => $count,'page' => $page,'range_min'=>$min,'range_max' => $max]);
+    }
+    public function delete_comment(Request $req){
+      $this->validate($req,[
+        'id' => 'required|integer'
+      ]);
+      $cm = Comments::find($req->id);
+      if (Auth::check()) {
+        if (!empty($cm) && $cm->user_id == Auth::user()->id) {
+          $cm->delete();
+        }
+      }
+      return response()->json(['mess' => Lang::get('app.Your_comment_deleted')]);
     }
     public function add_wishlist(Request $req){
       $pro = Products::find($req->prod_id);

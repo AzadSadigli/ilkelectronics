@@ -29,10 +29,10 @@
 				<li><a href="/">{{__('app.Home')}}</a></li>
 				@if(Request::is('search-result/*'))
 				<li><a>{{__('app.Search_result')}}</a> </li>
-				<li class="active">{{$search}} ({{$count}})</li>
+				<li class="active">{{$search}} (<span class="prd_cnt"></span>)</li>
 				@else
 				<li><a>{{__('app.Category')}}</a> </li>
-				<li class="active">{{$cat->name}} (<span class="prd_cnt">{{$count}}</span>)</li>
+				<li class="active">{{$cat->name}} (<span class="prd_cnt"></span>)</li>
 				@endif
 			</ul>
 		</div>
@@ -77,22 +77,20 @@
 										<option value="2">{{__('app.First_expensive')}}</option>
 										<option value="3">{{__('app.High_rated_products')}}</option>
 									</select>
-								<a class="main-btn icon-btn sortby_value_btn"><i class="fa fa-arrow-down"></i></a>
+								<a class="main-btn icon-btn sortby_value_btn filter-btn"><i class="fa fa-arrow-down"></i></a>
 							</div>
 						</div>
 					</div>
 					<div class="product-list">
-						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}}">
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}}">
 							<div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
 							</div>
 						</div>
 					</div>
-					@if($count > 9)
-					<div class="load-section">
+					<div class="load-section" style="display:none">
 							<a class="cust-btn">{{__('app.Load_more')}}</a>
 					</div>
-					@endif
 				</div>
 			</div>
 		</div>

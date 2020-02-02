@@ -10,23 +10,29 @@ use DB;
 use Image;
 use Auth;
 use Lang;
+use App\Subscribe;
 class DataController extends Controller
 {
     public function searchedproducts(Request $req){
       $tp_pros = $this->top_prods();
       $search = $req->search;
       $cat_id = $req->category_id;
+      if ($cat_id != 0) {
+        $ct_parent = Category::find($cat_id)->parent_id;
+        if (empty($ct_parent) || $ct_parent == 0) {
+          $ct_list = Category::where('parent_id',$cat_id)->pluck('id')->toArray();
+          $ct_query = " IN (".implode(',',$ct_list).") ";
+        }else{
+          $ct_query = " = ".$cat_id;
+        }
+      }else{$ct_query = "= 0";}
       Session::put('search',$search);
-      // Session::put('cat_id',$cat_id);
-      $pros = Products::whereRaw('IF (`category` = '.$cat_id.', `category` = '.$cat_id.',`category` LIKE "%")')->where(function ($query) use ($search) {
+      $pros = Products::whereRaw('IF (`category` '.$ct_query.', `category` '.$ct_query.',`category` LIKE "%")')->where(function ($query) use ($search) {
                             $query->where('productname','LIKE','%' .$search. '%')
                                   ->orWhere('description','LIKE','%' .$search. '%')
                                   ->orWhere('description_title','LIKE','%' .$search. '%')
                                   ->orWhere('prod_id','LIKE','%' .$search. '%');
                         })->orderBy('created_at','desc')->get();
-
-      // print_r($pros);exit();
-      $count = count($pros);
       $max = $pros->max("price");
       if (empty($max) | !isset($max)) {$min = 1;$max = 100;}else{$min = $pros->min("price");}
       if ($max == $min) {$max = $max + 100;}
@@ -35,19 +41,26 @@ class DataController extends Controller
       $brands = [];
       foreach($pros as $pro) {$brands[] = $pro->brand;}
       $brands = array_values(array_unique($brands));
-      return view('products',compact("pros","cat_id","search","count","max","min","currency","brands","tp_pros"));
+      return view('products',compact("pros","cat_id","search","max","min","currency","brands","tp_pros"));
     }
     public function searchedproducts_ajax(Request $req){
       $k = Session::get('search');
-      $list = $req->filter;$pros="";$count = 0;
+      $list = $req->filter;$pros="";$c = "";
       if (isset($list) && is_array($list)) {
         $arr = "";$brand_query="";$cat_section = "";$order = "ORDER BY created_at DESC";
         if (isset($list[4]) && !empty($list[4])) {
           for ($i=0; $i < count($list[4]); $i++) {if ($i != (count($list[4]) - 1)) {$arr .= "'".$list[4][$i]."',";}else{$arr .= "'".$list[4][$i]."'";}}
           $brand_query = "AND brand IN (".$arr.")";
         }
-        if (isset($req->category) && !empty($req->category) && $req->category != 0) {
-          $cat_section = " AND category = ".$req->category;
+        $ct_id = $req->category;
+        if (isset($ct_id) && !empty($ct_id) && $ct_id != 0) {
+          $ct_parent = Category::find($ct_id)->parent_id;
+          if (empty($ct_parent) || $ct_parent == 0) {
+            $ct_list = Category::where('parent_id',$ct_id)->pluck('id')->toArray();
+            $cat_section = " AND category IN (".implode(',',$ct_list).") ";
+          }else{
+            $cat_section = " AND category = ".$req->category;
+          }
         }
         if ($list[0] == 2) {
           $order = "ORDER BY price DESC";
@@ -56,10 +69,10 @@ class DataController extends Controller
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
-        $sql = "SELECT *,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,(SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb;
-        $pros = DB::select($sql);
+        $pros = DB::select("SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,(SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
+        $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
       }
-      return response()->json(['pros' => $pros,'count' => $count,'empty' => Lang::get('app.No_product_found')]);
+      return response()->json(['pros' => $pros,'count' => $c[0]->count,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
     }
     public function category_page($slug){
       $tp_pros = $this->top_prods();
@@ -77,19 +90,19 @@ class DataController extends Controller
         $max = $pros->max("price");
         if (empty($max) | !isset($max)) {$min = 1;$max = 100;}else{$min = $pros->min("price");}
         if ($max == $min) {$max = $max + 100;}
-        $count = count($pros);$currency = currency();
+        $currency = currency();
         $brands = [];
         foreach($pros as $pro) {$brands[] = $pro->brand;}
         $brands = array_values(array_unique($brands));
-        return view('products',compact("pros","cat","count","max","min","currency","brands","tp_pros"));
+        return view('products',compact("pros","cat","max","min","currency","brands","tp_pros"));
       }else{
         return redirect('/');
       }
     }
     public function category_page_ajax(Request $req){
       $ct = Session::get('category_id');
-      $ct_parent = Category::find($ct)->id;
-      $list = $req->filter;$pros="";$count = 0;
+      $ct_parent = Category::find($ct)->parent_id;
+      $list = $req->filter;$pros="";$c = "";
       if (isset($list) && is_array($list)) {
         $arr = "";$brand_query="";$order = "ORDER BY created_at DESC";
         if (isset($list[4]) && !empty($list[4])) {
@@ -109,10 +122,11 @@ class DataController extends Controller
         }else{
           $ct_query = " = ".$ct;
         }
-        $sql = "SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at,p.price/".currency(0)." as price,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb;
-        $pros = DB::select($sql);
+        $pros = DB::select("SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
+        $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
+
       }
-      return response()->json(['pros' => $pros,'empty' => Lang::get('app.No_product_found'),'count' => $count]);
+      return response()->json(['pros' => $pros,'count'=>$c[0]->count,'empty' => Lang::get('app.No_product_found')]);
     }
 
     public function get_all_categories(){
@@ -152,9 +166,27 @@ class DataController extends Controller
       $data = array_slice($data,0,$range);
       return response()->json(['data' => $data]);
     }
+    public function subscribe(Request $req){
+      $this->validate($req,[
+        'email' => 'required|email'
+      ]);
+      $sb = new Subscribe;
+      if (Auth::check()) {
+        $sb->user_id = Auth::user()->id;
+      }
+      $sb->email = $req->email;
+      $sb_exist = Subscribe::where('email',$req->email)->first();
+      if (empty($sb_exist)) {
+        $sb->save();
+      }
+      return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
+    }
     public function testing(Request $req){
-      $ct_list = Category::all()->pluck('id')->toArray();
-      $pro = DB::select("SELECT * FROM products WHERE category IN (".implode(',',$ct_list).")");
-      return $pro;
+      $ct = Category::findOrFail(1);
+      $cats = DB::select("SELECT * FROM category WHERE parent_id = ".$ct->id);
+      foreach ($cats as $key => $c) {
+        echo $c->id."<br>";
+      }
+      print_r($cats) ;
     }
 }

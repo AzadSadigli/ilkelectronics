@@ -44,8 +44,32 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        return parent::render($request, $exception);
+        // return parent::render($request, $e);
+        // if($this->isHttpException($e)){
+        //   switch ($e->getStatusCode()) {
+        //     case 404:
+        //       // return redirect('/page-not-found');
+        //       log_now($e);
+        //       echo $e;exit();
+        //       return parent::render($request, $e);
+        //       // break;
+        //
+        //     case 500:
+        //       return redirect('/page-not-found');
+        //     // return parent::render($request, $e);
+        //       break;
+        //
+        //     default:
+        //       return redirect('/page-not-found');
+        //       // return  $this->renderHttpException($e);
+        //       // return parent::render($request, $e);
+        //       break;
+        //   }
+        // }else{
+          // return redirect('/page-not-found');
+          return parent::render($request, $e);
+        // }
     }
 }

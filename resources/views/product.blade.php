@@ -1,6 +1,6 @@
 @extends('layouts.ms')
 @section('head')
-<meta name="description" content="">
+<meta name="description" content="{{$pro->description}}">
 <meta name="keywords" content="">
 <meta property=”og:title” content=””/>
 <meta property=”og:url” content=””/>
@@ -68,21 +68,8 @@
 							<p><strong>{{__('app.Availability')}}:</strong> @if($pro->quantity > 0) <span class="in_stock">{{__('app.In_stock')}}</span> @else <span class="not_in_stock">{{__('app.Not_in_stock')}}</span> @endif</p>
 							<p><strong>{{__('app.Product_ID')}}:</strong> {{$pro->prod_id}}</p>
 							<p><strong>{{__('app.Brand')}}:</strong> {{$pro->brand}}</p>
-							<p>{{$pro->description}}</p>
 							<div class="product-options">
-								<!-- <ul class="size-option">
-									<li><span class="text-uppercase">Size:</span></li>
-									<li class="active"><a href="#">S</a></li>
-									<li><a href="#">XL</a></li>
-									<li><a href="#">SL</a></li>
-								</ul>
-								<ul class="color-option">
-									<li><span class="text-uppercase">Color:</span></li>
-									<li class="active"><a href="#" style="background-color:#475984;"></a></li>
-									<li><a href="#" style="background-color:#8A2454;"></a></li>
-									<li><a href="#" style="background-color:#BF6989;"></a></li>
-									<li><a href="#" style="background-color:#9A54D8;"></a></li>
-								</ul> -->
+
 							</div>
 
 							<div class="product-btns">
@@ -91,11 +78,7 @@
 									<input class="input quantity" type="number" value="1">
 								</div>
 								<a class="primary-btn add-to-cart" data-id="{{$pro->id}}"><i class="fa fa-shopping-cart"></i></a>
-								<!-- <div class="pull-right">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-share-alt"></i></button>
-								</div> -->
+								<a href="/order-product/{{$pro->slug}}" class="main-btn">{{__('app.Order_now')}}</a>
 							</div>
 						</div>
 					</div>
@@ -107,10 +90,54 @@
 							</ul>
 							<div class="tab-content">
 								<div id="description" class="tab-pane fade in active">
+									@if(count($lns) > 0)
+									<table class="table">
+										<thead>
+											<tr>
+												<th></th>
+												<th>{{__('app.Duration')}}</th>
+												<th>{{__('app.Monthly_payment')}}</th>
+											</tr>
+										</thead>
+								    <tbody>
+											@foreach($lns as $k => $ln)
+								      <tr @if($k%2 == 0) class="odd" @endif>
+												<td><img src="/uploads/icon/{{$ln->card_icon}}" > </td>
+								        <td>{{$ln->duration}} ay</td>
+								        <td> @if($ln->rate == 0)<b class="red">{{$ln->rate}}%</b> @endif {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
+												<td> <a href="/order-product/{{$pro->slug}}?loan_type={{$ln->id}}&rate={{$ln->rate}}&duration={{$ln->duration}}" class="btn btn-primary">{{__('app.Order_now')}}</a> </td>
+								      </tr>
+											@endforeach
+								    </tbody>
+								  </table>
+									<hr>
+									@endif
+									@if(count($loans) > 0)
+									<h5>{{__('app.Internal_loan')}}</h5>
+									<table class="table">
+										<thead>
+											<tr>
+												<th>{{__('app.Duration')}}</th>
+												<th>{{__('app.Monthly_payment')}}</th>
+												<th>{{__('app.Total_will_pay')}}</th>
+											</tr>
+										</thead>
+								    <tbody>
+											@foreach($loans as $k => $ln)
+								      <tr @if($k%2 == 0) class="odd" @endif>
+								        <td>{{$ln->duration}} ay</td>
+								        <td> @if($ln->rate == 0)<b class="red">{{$ln->rate}}%</b> @endif {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
+												<td>{{number_format(((($ln->price * $ln->rate)/100) + $ln->price)/currency(0),2)}}{{currency()}}</td>
+								      </tr>
+											@endforeach
+								    </tbody>
+								  </table>
+									<hr>
+									@endif
 									<table class="table">
 								    <tbody>
-											@foreach($prod_tabs as $pt)
-								      <tr>
+											@foreach($prod_tabs as $k => $pt)
+								      <tr @if($k%2 == 0) class="odd" @endif>
 								        <td>{{$pt->title}}</td>
 								        <td>{{$pt->description}}</td>
 								      </tr>
@@ -202,7 +229,14 @@
 							<h3 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{$pr->productname}}</a></h3>
 							<h2 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h2>
 							<div class="product-btns">
-								<a class="primary-btn add-to-cart" data-id="{{$pr->id}}" title=""><i class="fa fa-shopping-cart"></i></a>
+								@if(Auth::check())
+									@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pr->id)->first()))
+									<a class="primary-btn add-to-cart" data-id="{{$pr->id}}" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></a>
+									@else
+									<a class="primary-btn" title="{{__('app.Added')}}"><i class="fa fa-check"></i></a>
+									@endif
+									<a href="/order-product/{{$pr->slug}}" class="main-btn">{{__('app.Order_now')}}</a>
+								@endif
 							</div>
 						</div>
 					</div>

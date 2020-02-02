@@ -204,11 +204,12 @@
 						<h2 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h2>
 						<div class="product-btns">
 							@if(Auth::check())
-							@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pro->id)->first()))
-							<a class="primary-btn add-to-cart" data-id="{{$pro->id}}" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></a>
-							@else
-							<a class="primary-btn" title="{{__('app.Added')}}"><i class="fa fa-check"></i></a>
-							@endif
+								@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pro->id)->first()))
+								<a class="primary-btn add-to-cart" data-id="{{$pro->id}}" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></a>
+								@else
+								<a class="primary-btn" title="{{__('app.Added')}}"><i class="fa fa-check"></i></a>
+								@endif
+								<a href="/order-product/{{$pro->slug}}" class="main-btn">{{__('app.Order_now')}}</a>
 							@endif
 						</div>
 					</div>
@@ -216,115 +217,7 @@
 			</div>
 			@endforeach
 		</div>
-		<div class="row">
-			@foreach(App\Posters::inRandomOrder()->where('type',1)->where('status',1)->take(1)->get() as $ps)
-			<div class="col-md-3 col-sm-6 col-xs-6">
-				<div class="banner banner-2">
-					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
-					<div class="banner-caption">
-						<h2 class="white-color">{!! $ps->title !!}</h2>
-						@if(isset($ps->button) && !empty($ps))
-						@php($arr = ['#2da8ff','#45e645','#e31e25','#e8cd09','#d0d0d0'])
-						 <a href="{{$ps->button_href}}" class="primary-btn" style="background:{{$arr[$ps->button_type]}}" target='_blank'>{{$ps->button}}</a>
-						@endif
-					</div>
-				</div>
-			</div>
-			@endforeach
-
-			<!-- Product Single -->
-			<div class="col-md-3 col-sm-6 col-xs-6">
-				<div class="product product-single">
-					<div class="product-thumb">
-						<div class="product-label">
-							<span>New</span>
-							<span class="sale">-20%</span>
-						</div>
-						<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-						<img src="/img/product07.jpg" alt="">
-						<div class="product-rating">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star-o empty"></i>
-						</div>
-					</div>
-					<div class="product-body">
-						<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-						<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-						<div class="product-btns">
-							<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-							<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-							<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Product Single -->
-
-			<!-- Product Single -->
-			<div class="col-md-3 col-sm-6 col-xs-6">
-				<div class="product product-single">
-					<div class="product-thumb">
-						<div class="product-label">
-							<span>New</span>
-							<span class="sale">-20%</span>
-						</div>
-						<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-						<img src="/img/product06.jpg" alt="">
-						<div class="product-rating">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star-o empty"></i>
-						</div>
-					</div>
-					<div class="product-body">
-						<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-						<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-						<div class="product-btns">
-							<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-							<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-							<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Product Single -->
-
-			<!-- Product Single -->
-			<div class="col-md-3 col-sm-6 col-xs-6">
-				<div class="product product-single">
-					<div class="product-thumb">
-						<div class="product-label">
-							<span>New</span>
-							<span class="sale">-20%</span>
-						</div>
-						<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-						<img src="/img/product05.jpg" alt="">
-						<div class="product-rating">
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star"></i>
-							<i class="fa fa-star-o empty"></i>
-						</div>
-					</div>
-					<div class="product-body">
-						<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-						<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-						<div class="product-btns">
-							<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-							<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-							<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Product Single -->
-		</div>
+		@include('layouts.most_viewed_products')
 		@include('layouts.news')
 	</div>
 </div>

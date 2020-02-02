@@ -12,12 +12,110 @@ use Lang;
 use DB;
 use App\Images;
 use Image;
+use App\Orders;
+use App\Loans;
+use File;
 class ProductController extends Controller
 {
     public function index(){
         $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
-        // return $pros;
-        return view('index',compact('pros'));
+        $mv_pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY views DESC LIMIT 4");
+        return view('index',compact('pros','mv_pros'));
+    }
+    public function order_product_view($slug){
+      $pro = Products::where('slug',$slug)->first();
+      return view('contact_us',compact('pro'));
+    }
+    public function add_loan_view($slug){
+      $product = Products::where('slug',$slug)->first();
+      $pro_loans = Loans::where('prod_id',$product->id)->get();
+      return view('admin.add_product',compact('product','pro_loans'));
+    }
+    public function add_new_loan(Request $req,$id = null){
+      $this->validate($req,[
+        'duration' => 'required|integer',
+        'rate' => 'required'
+      ]);
+      $pro = Products::find($req->prod_id);
+      if (!empty($id) && $id !== null) {
+        $ln = Loans::find($id);
+      }else{
+        $ln = new Loans;
+      }
+      $ln->prod_id = $req->prod_id;
+      $ln->duration = $req->duration;
+      $ln->rate = $req->rate;
+      $ln->price = $pro->price;
+      if ($req->hasFile('images')) {
+        $ln->type = 1;
+        $folder = 'uploads/icon/';
+        $picture = $req->images;
+        $ext=$picture->getClientOriginalExtension();
+        if($ext=='jpg' || $ext=='png' || $ext=='jpeg' || $ext=='bmp')  {
+            $filename=time()+random_int(1, 100000000).'.'.$picture->getClientOriginalExtension();
+            $picture->move(public_path($folder),$filename);
+            resize($folder.$filename, $folder.$filename, 80, 89);
+        }
+        $ln->card_icon = $filename;
+      }else{
+        $ln->type = 0;
+      }
+      if (!empty($id) && $id !== null) {
+        $ln->update();
+      }else{
+        $ln->save();
+      }
+      return redirect()->back()->with(['message' => Lang::get('app.Loan_added'),'type' => 'success']);
+    }
+    public function delete_loan($id){
+      $ln = Loans::find($id);
+      if(File::exists('uploads/icon/'.$ln->card_icon)) {File::delete('uploads/icon/'.$ln->card_icon);}
+      $ln->delete();
+      return redirect()->back()->with(['message' => Lang::get('app.Loan_deleted'),'type' => 'danger']);
+    }
+    public function order_now(Request $req){
+      $this->validate($req,[
+        'email' => 'required|email',
+        'name' => 'required|string|min:2',
+        'surname' => 'required|string|min:2',
+        'birthdate' => 'required|date',
+        'father_name' => 'required|string',
+        'gender' => 'required|integer',
+        'quantity' => 'required|integer',
+        'region' => 'required|string',
+        'city' => 'required|string',
+      ]);
+      $pro = Products::where('prod_id',$req->product_id)->first();
+      $loan = Loans::find($req->loan_id);
+      if (!empty($pro)) {
+        $o = new Orders;
+        $o->prod_id = $pro->id;
+        if(Auth::check()){
+          $o->user_id = Auth::user()->id;
+          $o->name = Auth::user()->name;
+          $o->email = Auth::user()->email;
+          $o->surname = Auth::user()->surname;
+          $o->birthdate = Auth::user()->birthdate;
+          $o->gender = Auth::user()->gender;
+        }else{
+          $o->name = $req->name;
+          $o->birthdate = $req->birthdate;
+          $o->email = $req->email;
+          $o->gender = $req->gender;
+          $o->surname = $req->surname;
+        }
+        $o->father_name = $req->father_name;
+        $o->quantity = $req->quantity;
+        $o->contact_number = $req->contact_number;
+        $o->region = $req->region;
+        $o->city = $req->city;
+        if (!empty($loan)) {
+          $o->loan_id = $loan->id;
+        }else{$o->loan_id = 0;}
+        $o->save();
+      }
+      return response()->json(['mess' => Lang::get('app.We_will_contact_you_for_order'),'prod' => $pro->id]);
+
     }
     public function get_product_details($slug){
       $pro = Products::select(DB::raw("*,FORMAT(price/".currency(0).",2) as price,FORMAT(old_price/".currency(0).",2) as old_price"))->where('slug',$slug)->first();
@@ -26,7 +124,9 @@ class ProductController extends Controller
         $pro->update();
         $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
         $prod_tabs = Protab::where('prod_id',$pro->id)->orderBy('order','ASC')->get();
-        return view('product',compact('pro','pros','prod_tabs'));
+        $loans = Loans::where('prod_id',$pro->id)->where('type',0)->orderBy('duration','ASC')->get();
+        $lns = Loans::where('prod_id',$pro->id)->where('type',1)->orderBy('duration','ASC')->get();
+        return view('product',compact('pro','pros','prod_tabs','loans','lns'));
       }else{
         return Lang::get('app.Product_you_looking_not_found');
       }

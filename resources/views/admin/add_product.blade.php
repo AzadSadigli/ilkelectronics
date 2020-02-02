@@ -42,12 +42,15 @@
                         <h2>
                             @if(Request::is('admin/add-category')) {{__('app.Add_new_category')}}
                             <small><a href="/admin/add-product">{{__('app.Add_new_product')}}</a> </small>
+                            @elseif(Request::is('admin/add-loan/*'))
+                            {{__('app.Add_new_loan')}}
                             @elseif(Request::is('admin/change-image-order/*'))
                             {{__('app.Change_order')}}
                             @elseif(!empty($pro))
                             {{__('app.Edit_product')}}
                             <small><a href='/admin/change-image-order/product/{{$pro->slug}}'>{{__('app.Update_image_order')}}</a> |
-                              <a href="/admin/products-tabs/{{$pro->slug}}"> {{__('app.Add_product_tabs')}}</a>
+                              <a href="/admin/products-tabs/{{$pro->slug}}"> {{__('app.Add_product_tabs')}}</a> |
+                              <a href="/admin/add-loan/{{$pro->slug}}">{{__('app.Add_new_loan')}}</a>
                             </small>
                             @elseif(!empty($page))
                             {{__('app.Page_tabs')}}
@@ -58,17 +61,6 @@
                             <small><a href="/admin/add-category">{{__('app.Add_new_category')}}</a> </small>
                             @endif
                         </h2>
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="javascript:void(0);">{{__('app.Reset')}}</a></li>
-                                    <li><a href="javascript:void(0);">{{__('app.Refresh')}}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
                     </div>
                     <div class="body">
                       @if(Request::is('admin/add-category'))
@@ -88,7 +80,7 @@
                                 <div class="form-group">
                                   <label for="product_name">{{__('app.Category')}}</label>
                                   <div class="form-line">
-                                      <input type="text" name="category_name" class="form-control" placeholder="{{__('app.Category')}}" />
+                                      <input type="text" name="name" class="form-control" placeholder="{{__('app.Category')}}" required/>
                                   </div>
                                 </div>
                               </div>
@@ -102,17 +94,25 @@
                         <div class="card">
                           <div class="body table-responsive">
                               <table class="table">
-                                  <thead><tr><th>{{__('app.Category')}}</th><th>{{__('app.Parent_category')}}</th><th>X</th></tr></thead>
+                                  <thead><tr><th>{{__('app.Category')}}</th><th>{{__('app.Parent_category')}}</th><th>{{__('app.Number_of_products')}}</th><th>X</th></tr></thead>
                                   <tbody>
                                       @foreach(App\Category::all() as $ct)
                                       <tr>
                                           <th scope="row">{{$ct->name}}</th>
                                           <td>@if(!empty($ct->parent_id)) {{App\Category::find($ct->parent_id)->name}} @endif</td>
-                                          <td><a href="/admin/delete-category/{{$ct->id}}" class="btn btn-danger">X</a> </td>
+                                          <td>@if(!empty($ct->parent_id)) {{App\Products::where('category',$ct->id)->count()}} @else
+                                             @php($ids = [])
+                                             @foreach(App\Category::where('parent_id',$ct->id)->get() as $cts)
+                                             @php($ids[] = $cts->id)
+                                             @endforeach
+                                             {{App\Products::whereIn('category',$ids)->count()}}
+                                             @endif</td>
+                                          <td><a data-id="{{$ct->id}}" data-text="{{__('app.Are_you_sure_to_delete_category')}}" data-toggle="modal" data-target="#deletemodal" class="btn btn-danger dlt_category" data-words="{{__('app.Delete_Category')}},{{__('app.Delete')}},{{__('app.Close')}}">X</a> </td>
                                       </tr>
                                       @endforeach
                                   </tbody>
                               </table>
+                              <div id="deletemodal" class="modal fade" role="dialog"></div>
                           </div>
                         </div>
                       @endif
@@ -134,6 +134,49 @@
                           @endforeach
                       </ul>
                       <div id="delete_img" class="modal fade" role="dialog"></div>
+                      @elseif(Request::is('admin/add-loan/*'))
+                      <div class="body table-responsive">
+                        <h5>{{$product->prod_id}}: {{$product->productname}}
+                        </h5>
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>{{__('app.Duration')}}</th>
+                              <th>{{__('app.Rate')}}</th>
+                              <th>{{__('app.Image')}}</th>
+                              <th>#</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @foreach($pro_loans as $pl)
+                            <form action="/admin/update-loan/{{$pl->id}}" method="POST" class="new_loan_form" enctype="multipart/form-data">
+                              @csrf @php($pp = App\Products::where('slug',$product->slug)->first())
+                              <input type="hidden" name="prod_id" value="{{$pp->id}}">
+                              <tr>
+                                  <td><input type="number" class="tab_inputs" name="duration" value="{{$pl->duration}}" placeholder="{{__('app.Duration')}}..." required> </td>
+                                  <td><input type="number" class="tab_inputs" name="rate" value="{{$pl->rate}}" placeholder="{{__('app.Rate')}}..." required> </td>
+                                  <td><input type="file" name="images"> </td>
+                                  <td><a href="/admin/delete-loan-type/{{$pl->id}}" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                                  </td>
+                              </tr>
+                            </form>
+                            @endforeach
+                            <tr>
+                              <form action="/admin/add-new-loan" method="POST" enctype="multipart/form-data">
+                                @csrf @php($pp = App\Products::where('slug',$product->slug)->first())
+                                <input type="hidden" name="prod_id" value="{{$pp->id}}">
+                                <td><input type="number" class="tab_inputs" name="duration" placeholder="{{__('app.Duration')}}..." required> </td>
+                                <td><input type="number" class="tab_inputs" name="rate" placeholder="{{__('app.Rate')}}..." required> </td>
+                                <td><input type="file" name="images"> </td>
+                                <td><a href="#" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
+                                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                                 </td>
+                              </form>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                       @elseif(Request::is('admin/products-tabs/*') | !empty($page))
                       <div class="body table-responsive">
                         <h5>@if(empty($page)) {{$pro->prod_id}}: {{$pro->productname}} @else
@@ -264,7 +307,7 @@
   var page = 'add_product';
 </script>
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
-@if(Request::is('*/change-image-order/*') || Request::is('*/products-tabs/*'))
+@if(Request::is('*/change-image-order/*') || Request::is('*/products-tabs/*') || Request::is('*/page-tabs/*'))
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 @endif
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>

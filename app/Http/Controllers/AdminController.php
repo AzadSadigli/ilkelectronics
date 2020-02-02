@@ -9,6 +9,7 @@ use DB;
 use App\Pages;
 use Auth;
 use App\Config;
+use App\Products;
 class AdminController extends Controller
 {
     // public function panel_home(){return view('admin.index');}
@@ -18,15 +19,15 @@ class AdminController extends Controller
     public function add_category_view(){return view('admin.add_product');}
 
     public function add_category(Request $req){
-      // $this->validate($req,[
-      //   'category_name' => 'unique|required'
-      // ]);
+      $this->validate($req,[
+        'name' => 'required|unique:category'
+      ]);
       $ct = new Category;
       if (isset($req->parent) && !empty($req->parent)) {
         $ct->parent_id = $req->parent;
       }
       $ct->token = md5(microtime());
-      $ct->name = $req->category_name;
+      $ct->name = $req->name;
       if (empty($req->slug)) {
         $ct->slug = make_slug($req->category_name);
       }
@@ -36,8 +37,23 @@ class AdminController extends Controller
     }
     public function delete_category($id){
       $ct = Category::findOrFail($id);
-      $ct->delete();
-      DB::select("DELETE FROM category WHERE parent_id = ".$id);
+      if(!empty($ct->parent_id) && $ct->parent_id !== null){
+        $pros = Products::where('category',$id)->get();
+        foreach ($pros as $p) {
+          $this->delete_product($p->id);
+        }
+        DB::select("DELETE FROM category WHERE parent_id = ".$id);
+      }else{
+        $cats = DB::select("SELECT * FROM category WHERE parent_id = ".$ct->id);
+        foreach ($cats as $ct) {
+          $pros = Products::where('category',$ct->id)->get();
+          foreach ($pros as $p) {
+            $this->delete_product($p->id);
+          }
+        }
+        DB::select("DELETE FROM category WHERE parent_id = ".$id);
+      }
+      DB::select('DELETE FROM category WHERE id = '.$id);
       update_sitemap();
       return redirect()->back()->with(['message' => Lang::get('app.Category_deleted'),'type' => 'danger']);
     }

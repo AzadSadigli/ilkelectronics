@@ -76,7 +76,7 @@
 				<div class="pull-right">
 					<ul class="header-btns">
 					<li class="nav-toggle">
-						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
+						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-align-left"></i></button>
 					</li>
 						@if(Auth::check())
 						<li class="header-cart dropdown default-dropdown">

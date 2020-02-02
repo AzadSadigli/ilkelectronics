@@ -650,6 +650,14 @@ if (typeof page !== 'undefined') {
       let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a href='/admin/"+url+"/"+$(this).data("id")+"' class='btn btn-danger'>"+wrds[1]+"</a></div></div></div>";
       $md.html(html);
     });
+    $db.on("click",".list-btns > .boost_it",function(){
+      let wrds = $(this).data("words").split(","),
+      form = "<div class='form-group'><label>"+wrds[5]+"</label><div class='form-line'><input type='number' class='form-control' name='discount_amount' step='0.01' max='"+$(this).data("max")+"' placeholder='"+wrds[5]+"' required></div></div><div class='form-group'><label>"+wrds[4]+"</label><div class='form-line'><input type='datetime-local' name='start_date' class='form-control' required></div></div><div class='form-group'><label>"+wrds[3]+"</label><div class='form-line'><input type='datetime-local' name='end_date' class='form-control' required></div></div>",
+      token = $(this).siblings("input[name='_token']").val();
+      console.log(token);
+      let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><form action='/admin/boost-table' method='POST'><div class='modal-body'><input type='hidden' name='_token' value='"+token+"'><input type='hidden' name='prod_id' value='"+$(this).data("id")+"'>"+form+"</div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><button class='btn btn-primary' type='submit'>"+wrds[1]+"</button></div></form></div></div>";
+      $md.html(html);
+    });
     $db.on("click",".list-btns > .dl_page",function(){
       let wrds = $(this).data("words").split(",");
       let html = "<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>"+wrds[0]+"</h4></div><div class='modal-body'><p>"+$(this).data("text")+"</p></div><div class='modal-footer'><a class='btn btn-default' data-dismiss='modal'>"+wrds[2]+"</a><a data-id='"+$(this).data("id")+"' class='btn btn-danger pg_dl_btn'>"+wrds[1]+"</a></div></div></div>";

@@ -49,7 +49,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="section-title">
-					<h2 class="title">Deals Of The Day</h2>
+					<h2 class="title">{{__('app.Deals_of_the_day')}}</h2>
 					<div class="pull-right">
 						<div class="product-slick-dots-1 custom-dots"></div>
 					</div>
@@ -69,98 +69,47 @@
 			<div class="col-md-9 col-sm-6 col-xs-6">
 				<div class="row">
 					<div id="product-slick-1" class="product-slick">
+						@foreach($bpro as $bp)
 						<div class="product product-single deals_of_day">
 							<div class="product-thumb">
 								<div class="product-label">
-									<span>New</span>
-									<span class="sale">-20%</span>
+									@if(!empty($bp->old_price)) <span class="sale">{{discount($bp->old_price,$bp->price)}} %</span> @endif
 								</div>
-								<ul class="product-countdown">
-									<li><span>00 H</span></li>
-									<li><span>00 M</span></li>
-									<li><span>00 S</span></li>
+								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
+									<li><span></span></li><li><span></span></li><li><span></span></li><li><span></span></li>
 								</ul>
-								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-								<img src="/img/product01.jpg" alt="">
+								<a href="/product/{{$bp->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
+								@if(App\Images::where('prod_id',$bp->id)->count() == 0)
+								<img src="/img/default.png" alt="{{$bp->productname}}">
+								@else @php($img = App\Images::where('prod_id',$bp->id)->orderBy('order','asc')->first())
+								<img src="/uploads/pro/small/{{$img->image}}" alt="{{$bp->productname}}">
+								@endif
 								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
+									@for($k=1;$k<=5;$k++)
+										@if($k <= $bp->rating)
+											<i class="fa fa-star"></i>
+										@else
+											<i class="fa fa-star-o empty"></i>
+										@endif
+									@endfor
 								</div>
 							</div>
 							<div class="product-body">
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
+								<h3 class="product-name"><a href="/product/{{$bp->slug}}">{{str_limit($bp->productname,$limit = 28,$end="...")}}</a></h3>
+								<h2 class="product-price">{{$bp->price}} {{currency()}} @if(!empty($bp->old_price)) <del class="product-old-price">{{$bp->old_price}} {{currency()}}</del>@endif</h2>
 								<div class="product-btns">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-									<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+									@if(Auth::check())
+										@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$bp->id)->first()))
+										<a class="primary-btn add-to-cart" data-id="{{$bp->id}}" title="{{__('app.Add_to_wishlist')}}"><i class="fa fa-shopping-cart"></i></a>
+										@else
+										<a class="primary-btn" title="{{__('app.Added')}}"><i class="fa fa-check"></i></a>
+										@endif
+										<a href="/order-product/{{$bp->slug}}" class="main-btn">{{__('app.Order_now')}}</a>
+									@endif
 								</div>
 							</div>
 						</div>
-						<div class="product product-single deals_of_day">
-							<div class="product-thumb">
-								<div class="product-label">
-									<span class="sale">-20%</span>
-								</div>
-								<ul class="product-countdown">
-									<li><span>00 H</span></li>
-									<li><span>00 M</span></li>
-									<li><span>00 S</span></li>
-								</ul>
-								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-								<img src="/img/product07.jpg" alt="">
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
-								</div>
-							</div>
-							<div class="product-body">
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-								<div class="product-btns">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-									<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-								</div>
-							</div>
-						</div>
-						<div class="product product-single deals_of_day">
-							<div class="product-thumb">
-								<div class="product-label">
-									<span>New</span>
-									<span class="sale">-20%</span>
-								</div>
-								<ul class="product-countdown">
-									<li><span>00 H</span></li>
-									<li><span>00 M</span></li>
-									<li><span>00 S</span></li>
-								</ul>
-								<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-								<img src="/img/product06.jpg" alt="">
-								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o empty"></i>
-								</div>
-							</div>
-							<div class="product-body">
-								<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-								<h3 class="product-price">$32.50 <del class="product-old-price">$45.00</del></h3>
-								<div class="product-btns">
-									<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-									<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-									<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-								</div>
-							</div>
-						</div>
+						@endforeach
 					</div>
 				</div>
 			</div>

@@ -182,11 +182,6 @@ class DataController extends Controller
       return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
     }
     public function testing(Request $req){
-      $ct = Category::findOrFail(1);
-      $cats = DB::select("SELECT * FROM category WHERE parent_id = ".$ct->id);
-      foreach ($cats as $key => $c) {
-        echo $c->id."<br>";
-      }
-      print_r($cats) ;
+      echo secondsToTime(1000);
     }
 }

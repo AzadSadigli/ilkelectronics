@@ -1,4 +1,4 @@
-<div class="section nxt-sblng">
+<div class="section most-vw">
 	<div class="container">
     <div class="row">
       <div class="col-md-12">

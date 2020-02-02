@@ -13833,6 +13833,9 @@ a {
       display: block;
       width: 92%;
     }
+    .nav-toggle .main-btn{
+      font-size: 21px;
+    }
 }
 #order_form{
   width: 94%;
@@ -14204,9 +14207,16 @@ textarea.input {
 .red{
   color: #e31e25;
 }
-/* .product-price{
-
+.most-vw{
+  margin-top: 20px;
 }
-.product-price .product-old-price{
-
-} */
+.pro-discount{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: red;
+  border-radius: 10%;
+  padding: 14px;
+  color: white;
+  font-size: 16px;
+}

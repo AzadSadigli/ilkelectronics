@@ -169,9 +169,11 @@
                                           <td>{{$pro->quantity}}</td>
                                           <td>{{$pro->views}}</td>
                                           <td class="list-btns">
+                                            @csrf
                                             <a class="btn btn-danger delete dl_prod" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal" data-text="{{__('app.Are_you_sure_to_delete_product')}}" data-words="{{__('app.Delete_product')}},{{__('app.Delete')}},{{__('app.Close')}}"><i class="fa fa-trash"></i></a>
                                             <a class="btn btn-success" href="/admin/edit-product/{{$pro->id}}"><i class="fa fa-cog"></i></a>
                                             <a class="btn btn-primary" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-warning boost_it" data-max="{{$pro->price}}" data-id="{{$pro->id}}" data-toggle="modal" data-target="#promodal" data-words="{{__('app.Boost_product')}},{{__('app.Boost')}},{{__('app.Close')}},{{__('app.End_date')}},{{__('app.Start_date')}},{{__('app.Discount_amount')}}"><i class="fa fa-heart"></i> </a>
                                           </td>
                                       </tr>
                                       @endforeach

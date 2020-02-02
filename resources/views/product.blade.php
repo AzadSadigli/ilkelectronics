@@ -42,6 +42,7 @@
 							</div>
 							@endif
 						</div>
+						@if(!empty($pro->old_price)) <span class="pro-discount">{{number_format(($pro->old_price - $pro->price)/$pro->price * 100,2)}}% <br> <small>{{__('app.Discount')}}</small> </span> @endif
 						@if(count($imgs) !== 0)
 						<div id="product-view">
 							@foreach($imgs as $img)
@@ -96,6 +97,7 @@
 											<tr>
 												<th></th>
 												<th>{{__('app.Duration')}}</th>
+												<th>{{__('app.Rate')}}</th>
 												<th>{{__('app.Monthly_payment')}}</th>
 											</tr>
 										</thead>
@@ -104,7 +106,8 @@
 								      <tr @if($k%2 == 0) class="odd" @endif>
 												<td><img src="/uploads/icon/{{$ln->card_icon}}" > </td>
 								        <td>{{$ln->duration}} ay</td>
-								        <td> @if($ln->rate == 0)<b class="red">{{$ln->rate}}%</b> @endif {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
+												<td><b @if($ln->rate == 0) class="red" @endif>{{$ln->rate}}%</b></td>
+								        <td> @if($ln->rate == 0) @endif {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
 												<td> <a href="/order-product/{{$pro->slug}}?loan_type={{$ln->id}}&rate={{$ln->rate}}&duration={{$ln->duration}}" class="btn btn-primary">{{__('app.Order_now')}}</a> </td>
 								      </tr>
 											@endforeach
@@ -118,6 +121,7 @@
 										<thead>
 											<tr>
 												<th>{{__('app.Duration')}}</th>
+												<th>{{__('app.Rate')}}</th>
 												<th>{{__('app.Monthly_payment')}}</th>
 												<th>{{__('app.Total_will_pay')}}</th>
 											</tr>
@@ -126,7 +130,8 @@
 											@foreach($loans as $k => $ln)
 								      <tr @if($k%2 == 0) class="odd" @endif>
 								        <td>{{$ln->duration}} ay</td>
-								        <td> @if($ln->rate == 0)<b class="red">{{$ln->rate}}%</b> @endif {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
+												<td><b @if($ln->rate == 0) class="red" @endif>{{$ln->rate}}%</b> </td>
+								        <td> {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
 												<td>{{number_format(((($ln->price * $ln->rate)/100) + $ln->price)/currency(0),2)}}{{currency()}}</td>
 								      </tr>
 											@endforeach

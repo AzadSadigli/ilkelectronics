@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('/update-loan/{id}','ProductController@add_new_loan');
     Route::get('/delete-loan-type/{id}','ProductController@delete_loan');
     Route::get('/comment-list','AdminController@comment_list');
+    Route::post('/boost-table','ProductController@boost_product');
     // Route::get('/create-page','AdminController@create_page_view');
 
 

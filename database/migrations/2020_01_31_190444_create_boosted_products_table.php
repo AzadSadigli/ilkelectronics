@@ -19,8 +19,8 @@ class CreateBoostedProductsTable extends Migration
             $table->float('old_price');
             $table->integer('order')->default(0);
             $table->integer('status')->default(1); //1 is active
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->timestamps();
         });
     }

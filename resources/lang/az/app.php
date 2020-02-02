@@ -273,4 +273,10 @@ Qeyd: Kateqoriyanı sildiyiniz təqdirdə kateqoriyalar və məhsullarda silinə
     'Your_surname' => 'Soyadınız',
     'Comment_list' => 'Rəy siyahısı',
     'Rating' => 'Reytinqi',
+    'Deals_of_the_day' => 'Günün endirimləri',
+    'Boost_product' => 'Məhsulu yüksəlt',
+    'Boost' => 'Yüksəlt',
+    'Discount_amount' => 'Endirim məbləği',
+    'Product_boosted' => 'Məhsul yüksəldildi',
+    'Discount' => 'Endirim',
 ];

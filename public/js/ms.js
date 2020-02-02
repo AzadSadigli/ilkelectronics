@@ -6396,6 +6396,28 @@ $(document).ready(function(){
     });
   });
 
+  var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+  const pc_tm = ".pro_countdown";
+
+    var cntdown = setInterval(function() {
+        for (var tm_index = 0; tm_index < $(pc_tm).length; tm_index++) {
+          let tm = new Date($(pc_tm+":eq("+tm_index+")").data("date")).getTime();
+          var now = new Date().getTime();
+          var distance = tm - now;
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          $(pc_tm+":eq("+tm_index+") li:eq(0) span").html(days + " D")
+          $(pc_tm+":eq("+tm_index+") li:eq(1) span").html(hours + " H")
+          $(pc_tm+":eq("+tm_index+") li:eq(2) span").html(minutes + " M")
+          $(pc_tm+":eq("+tm_index+") li:eq(3) span").html(seconds + " S")
+          if (distance < 0) {
+            clearInterval(cntdown);
+            $(pc_tm+":eq("+tm_index+")").parents(".deals_of_day").remove();
+          }
+        }
+    }, 1000);
   // if(ucheck('not-found')){
   //   let e_a = ".error-page > p > a";
   //   let e_h = ".error-page > h2";

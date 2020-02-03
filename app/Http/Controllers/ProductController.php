@@ -16,6 +16,7 @@ use App\Orders;
 use App\Loans;
 use File;
 use App\Boostedpros;
+use Auth;
 class ProductController extends Controller
 {
     public function index(){
@@ -137,14 +138,15 @@ class ProductController extends Controller
         $o->father_name = $req->father_name;
         $o->quantity = $req->quantity;
         $o->contact_number = $req->contact_number;
-        $o->region = $req->region;
+        $o->address = $req->address;
         $o->city = $req->city;
         if (!empty($loan)) {
-          $o->loan_id = $loan->id;
-        }else{$o->loan_id = 0;}
+          $o->loan_type = $loan->id;
+        }else{$o->loan_type = 0;}
         $o->save();
       }
-      return response()->json(['mess' => Lang::get('app.We_will_contact_you_for_order'),'prod' => $pro->id]);
+      // return redirect()->back()->with(['message' => 'MEssage here','type'=>'success']);
+      return response()->json(['mess' => Lang::get('app.We_will_contact_you_for_order')]);
 
     }
     public function get_product_details($slug){

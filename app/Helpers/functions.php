@@ -263,4 +263,10 @@ function testing_json(){
   // }
   // return array_keys($conf);
 }
+
+class Test {
+  public function test_for_class(){
+    return "ok";
+  }
+}
 ?>

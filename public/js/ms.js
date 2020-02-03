@@ -6376,9 +6376,8 @@ $(document).ready(function(){
     });
   }
   $("#order_product").on("click",function(){
-    // $("#order_form").html("<img class='order-lding' src='/img/loading.gif'>");
     let loan_id = $("#order_type").val() ? $("#order_type").val() : 0;
-    console.log(loan_id)
+    $("#order_form").html("<img class='order-lding' src='/img/loading.gif'>");
     $header;
     $.ajax({
       url: '/order-product',
@@ -6390,13 +6389,14 @@ $(document).ready(function(){
         address:$("#address").val(),city: $("#region").val(),contact_number:$("#contact_number").val(),
       },
       success:function(t){
-        console.log(t);
+        notify(t.mess,'success');
       },complete:function(){
+        $("#order_form img").attr('src','/img/confirmed.png').after("<p class='success-text'>Text here</p>");
       }
     });
   });
 
-  var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+  // var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
   const pc_tm = ".pro_countdown";
 
     var cntdown = setInterval(function() {

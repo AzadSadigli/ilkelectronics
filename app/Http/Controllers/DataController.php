@@ -182,6 +182,7 @@ class DataController extends Controller
       return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
     }
     public function testing(Request $req){
-      echo secondsToTime(1000);
+      $test = new Test();
+      echo $this->test_for_class();
     }
 }

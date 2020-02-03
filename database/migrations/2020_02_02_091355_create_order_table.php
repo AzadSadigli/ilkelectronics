@@ -25,7 +25,7 @@ class CreateOrderTable extends Migration
             $table->string('id_number')->nullable();
             $table->string('id_pin')->nullable();
             $table->string('contact_number');
-            $table->date('gender')->nullable();
+            $table->integer('gender')->nullable();
             $table->date('birthdate');
             $table->integer('quantity')->default(1);
             $table->integer('loan_type')->references('id')->on('loans');

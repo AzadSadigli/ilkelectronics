@@ -64,7 +64,7 @@
 							<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del> @endif</h3>
 							<div id="un_product_rating">
 								<div class="product-rating"></div>
-								<a href="#reviews">{{__('app.Review_s')}} / {{__('app.Add_review')}}</a>
+								<a href="#reviews">{{__('app.Reviews')}} / {{__('app.Add_review')}}</a>
 							</div>
 							<p><strong>{{__('app.Availability')}}:</strong> @if($pro->quantity > 0) <span class="in_stock">{{__('app.In_stock')}}</span> @else <span class="not_in_stock">{{__('app.Not_in_stock')}}</span> @endif</p>
 							<p><strong>{{__('app.Product_ID')}}:</strong> {{$pro->prod_id}}</p>
@@ -131,7 +131,7 @@
 								      <tr @if($k%2 == 0) class="odd" @endif>
 								        <td>{{$ln->duration}} ay</td>
 												<td><b @if($ln->rate == 0) class="red" @endif>{{$ln->rate}}%</b> </td>
-								        <td> {{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
+								        <td>{{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
 												<td>{{number_format(((($ln->price * $ln->rate)/100) + $ln->price)/currency(0),2)}}{{currency()}}</td>
 								      </tr>
 											@endforeach

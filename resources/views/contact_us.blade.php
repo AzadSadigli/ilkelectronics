@@ -83,7 +83,7 @@
 								</div>
 								<div class="form-group row">
 									<label for="fathername">{{__('app.Father_name')}}</label>
-									<input id="fathername" type="text"  placeholder="{{__('app.Father_name')}}..." class="input" required>
+									<input id="fathername" type="text" placeholder="{{__('app.Father_name')}}..." class="input" required>
 								</div>
 								<div class="form-group row">
 									<label for="birthdate">{{__('app.Birthdate')}}</label>
@@ -91,11 +91,11 @@
 								</div>
 								<div class="form-group row">
 									<label for="region">{{__('app.Region')}}</label>
-									<input id="region" type="text"  placeholder="{{__('app.Region')}}..." class="input" required>
+									<input id="region" type="text" placeholder="{{__('app.Region')}}..." class="input" required>
 								</div>
 								<div class="form-group row">
 									<label for="address">{{__('app.Living_address')}}</label>
-									<input id="address" type="text"  placeholder="{{__('app.Living_address')}}..." class="input" required>
+									<input id="address" type="text" placeholder="{{__('app.Living_address')}}..." class="input" required>
 								</div>
 								@if(Auth::guest())
 								<div class="form-group row">

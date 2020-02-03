@@ -13574,6 +13574,7 @@ textarea.input {
 
 .notify-success {
     background: #00adff;
+    max-width: 286px;
 }
 
 .notify-danger {
@@ -14219,4 +14220,11 @@ textarea.input {
   padding: 14px;
   color: white;
   font-size: 16px;
+}
+.success-text{
+  text-align: center;
+  margin-top: 20px;
+  font-size: 20px;
+  color: #1ea1f2;
+  font-weight: bold;
 }

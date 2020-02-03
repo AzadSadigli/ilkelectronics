@@ -59,22 +59,20 @@
 					@if(empty($page))
 					@else
 					<div class="news-details">
-						<div class="news-big-image">
-							@php($imgs = App\Images::where('page_id',$page->id)->orderBy('order','asc')->get())
-							@if(count($imgs) != 0)
-							<div class="slideshow-container">
-								@foreach($imgs as $i => $img)
-									<div class="mySlides" style="display:none;">
-								    <img src="/uploads/pages/{{$img->image}}" style="width:100%" alt="{{$page->title}}">
-								  </div>
-								@endforeach
-								<a class="prev">&#10094;</a>
-								<a class="next">&#10095;</a>
+						@php($imgs = App\Images::where('page_id',$page->id)->orderBy('order','asc')->get())
+						@if(count($imgs) != 0)
+							<div class="news-big-image">
+								<div class="slideshow-container">
+									@foreach($imgs as $i => $img)
+										<div class="mySlides" style="display:none;">
+									    <img src="/uploads/pages/{{$img->image}}" style="width:100%" alt="{{$page->title}}">
+									  </div>
+									@endforeach
+									<a class="prev">&#10094;</a>
+									<a class="next">&#10095;</a>
+								</div>
 							</div>
-							@else
-							<img src="/uploads/pages/default.png" alt="{{$page->title}}">
-							@endif
-						</div>
+						@endif
 						<div class="news-body-section">
 							<h3><a href="/page/{{$page->slug}}" title="{{$page->title}}">{{$page->title}}</a> </h3>
 							<p>{!!$page->body!!}</p>

@@ -6310,7 +6310,7 @@ $(document).ready(function(){
     }
   }
   $(".pg-tabs a.accordion").on("click",function(){
-    pg_tabs_click($(this).parent().index() - 2);
+    pg_tabs_click($(this).parent().index() - 1);
   });
   const cprt = document.getElementById("copyright_year");
   if(cprt){

@@ -45,6 +45,20 @@ function isAdmin(){
     return false;
   }
 }
+function isSecAdmin(){
+  if (Auth::user()->role_id >= 3) {
+    return true;
+  }else{
+    return false;
+  }
+}
+function isDev(){
+  if (Auth::user()->role_id == 4) {
+    return true;
+  }else{
+    return false;
+  }
+}
 
 function burl(){
   return substr(realpath(dirname(__FILE__)), 0, -11);

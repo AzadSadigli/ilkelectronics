@@ -361,12 +361,14 @@
                             <li @if(Request::is('admin/add-news')) class="active" @endif>
                                 <a href="/admin/add-news">{{__('app.Add_news')}}</a>
                             </li>
+                            @if(isDev())
                             <li @if(Request::is('admin/add-user')) class="active" @endif>
                                 <a href="/admin/add-user">{{__('app.Add_new_user')}}</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
-                    @if(Auth::user()->role_id == 4)
+                    @if(isSecAdmin())
                     <li @if(in_array(Request::path(),array('admin/translation','admin/configuration','admin/development'))) class="active" @endif>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">add_circle_outline</i>
@@ -383,15 +385,17 @@
                                   <span>{{__('app.Configuration')}}</span>
                                 </a>
                             </li>
+                            @if(isDev())
                             <li @if(Request::is('admin/development')) class="active" @endif>
                                 <a href="/admin/development">
                                   <span>Development</span>
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </li>
                     @endif
-                    @if(Auth::user()->role_id >= 3)
+                    @if(isSecAdmin())
                     <li @if(Request::is('admin/seo-improvement')) class="active" @endif>
                         <a href="/admin/seo-improvement">
                             <i class="material-icons">grade</i>

@@ -13834,6 +13834,21 @@ a {
       display: block;
       width: 92%;
     }
+    .header-btns strong{
+      display: none;
+    }
+    .header-btns > .default-dropdown{
+      float: right;
+    }
+    .header-btns .custom-menu{
+      margin-left: -81px !important;
+    }
+    .header-btns > .default-dropdown:last-child{
+      margin-right: -142px;
+    }
+    .header-btns > .default-dropdown:nth-child(2){
+      margin-right: 81px;
+    }
     .nav-toggle .main-btn{
       font-size: 21px;
     }
@@ -13874,9 +13889,9 @@ a {
         margin-bottom: 22px;
         min-height: 325px;
     }
-    .dropdown.default-dropdown.open>.custom-menu{
+    /* .dropdown.default-dropdown.open>.custom-menu{
       margin-left: 31px;
-    }
+    } */
     .wish_head_list{
       margin-left: 81px !important;
     }

@@ -6377,7 +6377,8 @@ $(document).ready(function(){
   }
   $("#order_product").on("click",function(){
     let loan_id = $("#order_type").val() ? $("#order_type").val() : 0;
-    $("#order_form").html("<img class='order-lding' src='/img/loading.gif'>");
+    $("#order_form div").css("display","none");
+    $("#order_form").append("<img class='order-lding' src='/img/loading.gif'>");
     $header;
     $.ajax({
       url: '/order-product',
@@ -6389,9 +6390,8 @@ $(document).ready(function(){
         address:$("#address").val(),city: $("#region").val(),contact_number:$("#contact_number").val(),
       },
       success:function(t){
-        notify(t.mess,'success');
+        $("#order_form img").attr('src','/img/confirmed.png').after("<p class='success-text'>"+t.mess+"</p>");
       },complete:function(){
-        $("#order_form img").attr('src','/img/confirmed.png').after("<p class='success-text'>Text here</p>");
       }
     });
   });

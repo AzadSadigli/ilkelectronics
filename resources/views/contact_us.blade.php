@@ -62,12 +62,12 @@
 							<div id="order_form" class="profile-section">
 								<div class="form-group row">
 									<label for="product_id">ID</label>
-									<input id="product_id" type="text" value="{{$pro->prod_id}}" class="input" disabled required>
+									<input id="product_id" type="text" value="{{$pro->prod_id}}" class="input" readonly required>
 								</div>
 								@if(isset($_GET['loan_type'])) <input type="hidden" id="order_type" value="{{$_GET['loan_type']}}"> @endif
 								<div class="form-group row">
 									<label for="productname">{{__('app.Product')}}</label>
-									<input id="productname" type="text" value="{{$pro->productname}}" class="input" disabled required>
+									<input id="productname" type="text" value="{{$pro->productname}}" class="input" readonly required>
 								</div>
 								<div class="form-group row">
 									<label for="quantity">{{__('app.Quantity')}}</label>
@@ -75,11 +75,11 @@
 								</div>
 								<div class="form-group row">
 									<label for="name">{{__('app.Your_name')}}</label>
-									<input id="name" type="text" @if(Auth::check()) value="{{Auth::user()->name}}" disabled @else placeholder="{{__('app.Your_name')}}..." @endif class="input" required>
+									<input id="name" type="text" @if(Auth::check()) value="{{Auth::user()->name}}" readonly @else placeholder="{{__('app.Your_name')}}..." @endif class="input" required>
 								</div>
 								<div class="form-group row">
 									<label for="surname">{{__('app.Your_surname')}}</label>
-									<input id="surname" type="text" @if(Auth::check()) value="{{Auth::user()->surname}}" disabled @else placeholder="{{__('app.Your_surname')}}..." @endif class="input" required>
+									<input id="surname" type="text" @if(Auth::check()) value="{{Auth::user()->surname}}" readonly @else placeholder="{{__('app.Your_surname')}}..." @endif class="input" required>
 								</div>
 								<div class="form-group row">
 									<label for="fathername">{{__('app.Father_name')}}</label>

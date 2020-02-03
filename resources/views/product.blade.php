@@ -124,6 +124,7 @@
 												<th>{{__('app.Rate')}}</th>
 												<th>{{__('app.Monthly_payment')}}</th>
 												<th>{{__('app.Total_will_pay')}}</th>
+												<th></th>
 											</tr>
 										</thead>
 								    <tbody>
@@ -133,6 +134,7 @@
 												<td><b @if($ln->rate == 0) class="red" @endif>{{$ln->rate}}%</b> </td>
 								        <td>{{number_format((((($ln->price * $ln->rate)/100) + $ln->price)/$ln->duration)/currency(0),2)}}{{currency()}}</td>
 												<td>{{number_format(((($ln->price * $ln->rate)/100) + $ln->price)/currency(0),2)}}{{currency()}}</td>
+												<td> <a href="/order-product/{{$pro->slug}}?loan_type={{$ln->id}}&rate={{$ln->rate}}&duration={{$ln->duration}}" class="btn btn-primary">{{__('app.Order_now')}}</a> </td>
 								      </tr>
 											@endforeach
 								    </tbody>

@@ -13820,7 +13820,7 @@ a {
     header .container > .pull-right{
       margin-top: 0;
       position: absolute;
-      top: 10px;
+      /* top: 10px; */
       left: 0;
       box-shadow: 0 3px 6px -4px grey;
       display: block;
@@ -13847,10 +13847,10 @@ a {
     .header-btns .custom-menu{
       margin-left: -81px !important;
     }
-    .header-btns > .default-dropdown:last-child{
+    .header-btns > .default-dropdown.scnd{
       margin-right: -142px;
     }
-    .header-btns > .default-dropdown:nth-child(2){
+    .header-btns > .default-dropdown.frst{
       margin-right: 81px;
     }
     .nav-toggle .main-btn{

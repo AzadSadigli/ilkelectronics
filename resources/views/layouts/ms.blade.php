@@ -79,7 +79,7 @@
 						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-align-left"></i></button>
 					</li>
 						@if(Auth::check())
-						<li class="header-cart dropdown default-dropdown">
+						<li class="header-cart dropdown default-dropdown frst">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-shopping-cart"></i>
@@ -98,7 +98,7 @@
 							</div>
 						</li>
 						@endif
-						<li class="header-account dropdown default-dropdown">
+						<li class="header-account dropdown default-dropdown scnd">
 							<div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>

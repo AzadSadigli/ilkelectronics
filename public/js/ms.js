@@ -6395,10 +6395,8 @@ $(document).ready(function(){
       }
     });
   });
-
   // var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
   const pc_tm = ".pro_countdown";
-
     var cntdown = setInterval(function() {
         for (var tm_index = 0; tm_index < $(pc_tm).length; tm_index++) {
           let tm = new Date($(pc_tm+":eq("+tm_index+")").data("date")).getTime();
@@ -6418,9 +6416,12 @@ $(document).ready(function(){
           }
         }
     }, 1000);
-    $( function() {
-      $( "#birthdate" ).datetimepicker();
-    } );
+    if ($(".wish_head_list").length == 0) {
+      $(".header-btns > .default-dropdown.scnd").css("margin-right","0");
+    }
+    // $(function() {
+    //   $( "#birthdate" ).datetimepicker();
+    // });
   // if(ucheck('not-found')){
   //   let e_a = ".error-page > p > a";
   //   let e_h = ".error-page > h2";

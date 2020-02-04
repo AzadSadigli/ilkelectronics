@@ -27,7 +27,7 @@
 						<div class="col-md-6">
 							<div class="billing-details">
 								<div class="section-title">
-									<h3 class="title">{{__('app.Login')}} </h3>
+									<h4 class="title">{{__('app.Login')}} </h4>
 								</div>
 								<div class="acc_section">
 									<div class="form-group">
@@ -66,7 +66,7 @@
 						<div class="col-md-6">
 							<div class="billing-details">
 								<div class="section-title">
-									<h3 class="title">{{__('app.Reset_password')}} </h3>
+									<h4 class="title">{{__('app.Reset_password')}} </h4>
 								</div>
 								<div class="acc_section">
 									@if(!isset($_GET['email']) || empty($_GET['email']))
@@ -126,7 +126,7 @@
 						<div class="col-md-6">
 							<div class="billing-details">
 								<div class="section-title">
-									<h3 class="title">{{__('app.Registration')}} </h3>
+									<h4 class="title">{{__('app.Registration')}} </h4>
 								</div>
 								<div class="acc_section">
 									<div class="form-group row">
@@ -152,7 +152,7 @@
 									</div>
 									<div class="form-group row">
 											<label for="birthdate">{{__('app.Birthdate')}}</label>
-											<input id="birthdate" type="date" max="{{date('Y-m-d',strtotime('-13 year',time()))}}" class="input @error('birthdate') is-invalid @enderror" name="birthdate" required>
+											<input id="birthdate" type="date" max="{{date('Y-m-d',strtotime('-13 year',time()))}}" class="input @error('birthdate') is-invalid @enderror" name="birthdate">
 											@error('birthdate')
 												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
 											@enderror

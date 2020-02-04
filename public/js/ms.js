@@ -3312,78 +3312,78 @@ function(t) {
         i.call(r, s)
     })
 }(jQuery),
-function(t) {
-    "use strict";
-
-    function e(e) {
-        var i = e.attr("data-target");
-        i || (i = (i = e.attr("href")) && /#[A-Za-z]/.test(i) && i.replace(/.*(?=#[^\s]*$)/, ""));
-        var n = i && t(i);
-        return n && n.length ? n : e.parent()
-    }
-
-    function i(i) {
-        i && 3 === i.which || (t(n).remove(), t(o).each(function() {
-            var n = t(this),
-                o = e(n),
-                r = {
-                    relatedTarget: this
-                };
-            o.hasClass("open") && (i && "click" == i.type && /input|textarea/i.test(i.target.tagName) && t.contains(o[0], i.target) || (o.trigger(i = t.Event("hide.bs.dropdown", r)), i.isDefaultPrevented() || (n.attr("aria-expanded", "false"), o.removeClass("open").trigger(t.Event("hidden.bs.dropdown", r)))))
-        }))
-    }
-    var n = ".dropdown-backdrop",
-        o = '[data-toggle="dropdown"]',
-        r = function(e) {
-            t(e).on("click.bs.dropdown", this.toggle);
-        };
-    r.VERSION = "3.3.7", r.prototype.toggle = function(n) {
-        var o = t(this);
-        // if($(e.target).is('.wish_head_list')){
-        //     e.preventDefault();
-        //     return;
-        // }
-        if (!o.is(".disabled, :disabled")) {
-            var r = e(o),
-                s = r.hasClass("open");
-            if (i(), !s) {
-                "ontouchstart" in document.documentElement && !r.closest(".navbar-nav").length && t(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(t(this)).on("click", i);
-                var a = {
-                    relatedTarget: this
-                };
-                if (r.trigger(n = t.Event("show.bs.dropdown", a)), n.isDefaultPrevented()) return;
-                o.trigger("focus").attr("aria-expanded", "true"), r.toggleClass("open").trigger(t.Event("shown.bs.dropdown", a))
-            }
-            return !1
-        }
-    }, r.prototype.keydown = function(i) {
-        if (/(38|40|27|32)/.test(i.which) && !/input|textarea/i.test(i.target.tagName)) {
-            var n = t(this);
-            if (i.preventDefault(), i.stopPropagation(), !n.is(".disabled, :disabled")) {
-                var r = e(n),
-                    s = r.hasClass("open");
-                if (!s && 27 != i.which || s && 27 == i.which) return 27 == i.which && r.find(o).trigger("focus"), n.trigger("click");
-                var a = r.find(".dropdown-menu li:not(.disabled):visible a");
-                if (a.length) {
-                    var l = a.index(i.target);
-                    38 == i.which && l > 0 && l--, 40 == i.which && l < a.length - 1 && l++, ~l || (l = 0), a.eq(l).trigger("focus")
-                }
-            }
-        }
-    };
-    var s = t.fn.dropdown;
-    t.fn.dropdown = function(e) {
-        return this.each(function() {
-            var i = t(this),
-                n = i.data("bs.dropdown");
-            n || i.data("bs.dropdown", n = new r(this)), "string" == typeof e && n[e].call(i)
-        })
-    }, t.fn.dropdown.Constructor = r, t.fn.dropdown.noConflict = function() {
-        return t.fn.dropdown = s, this
-    }, t(document).on("click.bs.dropdown.data-api", i).on("click.bs.dropdown.data-api", ".dropdown form", function(t) {
-        t.stopPropagation()
-    }).on("click.bs.dropdown.data-api", o, r.prototype.toggle).on("keydown.bs.dropdown.data-api", o, r.prototype.keydown).on("keydown.bs.dropdown.data-api", ".dropdown-menu", r.prototype.keydown)
-}(jQuery),
+// function(t) {
+//     "use strict";
+//
+//     function e(e) {
+//         var i = e.attr("data-target");
+//         i || (i = (i = e.attr("href")) && /#[A-Za-z]/.test(i) && i.replace(/.*(?=#[^\s]*$)/, ""));
+//         var n = i && t(i);
+//         return n && n.length ? n : e.parent()
+//     }
+//
+//     function i(i) {
+//         i && 3 === i.which || (t(n).remove(), t(o).each(function() {
+//             var n = t(this),
+//                 o = e(n),
+//                 r = {
+//                     relatedTarget: this
+//                 };
+//             o.hasClass("open") && (i && "click" == i.type && /input|textarea/i.test(i.target.tagName) && t.contains(o[0], i.target) || (o.trigger(i = t.Event("hide.bs.dropdown", r)), i.isDefaultPrevented() || (n.attr("aria-expanded", "false"), o.removeClass("open").trigger(t.Event("hidden.bs.dropdown", r)))))
+//         }))
+//     }
+//     var n = ".dropdown-backdrop",
+//         o = '[data-toggle="dropdown"]',
+//         r = function(e) {
+//             t(e).on("click.bs.dropdown", this.toggle);
+//         };
+//     r.VERSION = "3.3.7", r.prototype.toggle = function(n) {
+//         var o = t(this);
+//         // if($(e.target).is('.wish_head_list')){
+//         //     e.preventDefault();
+//         //     return;
+//         // }
+//         if (!o.is(".disabled, :disabled")) {
+//             var r = e(o),
+//                 s = r.hasClass("open");
+//             if (i(), !s) {
+//                 "ontouchstart" in document.documentElement && !r.closest(".navbar-nav").length && t(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(t(this)).on("click", i);
+//                 var a = {
+//                     relatedTarget: this
+//                 };
+//                 if (r.trigger(n = t.Event("show.bs.dropdown", a)), n.isDefaultPrevented()) return;
+//                 o.trigger("focus").attr("aria-expanded", "true"), r.toggleClass("open").trigger(t.Event("shown.bs.dropdown", a))
+//             }
+//             return !1
+//         }
+//     }, r.prototype.keydown = function(i) {
+//         if (/(38|40|27|32)/.test(i.which) && !/input|textarea/i.test(i.target.tagName)) {
+//             var n = t(this);
+//             if (i.preventDefault(), i.stopPropagation(), !n.is(".disabled, :disabled")) {
+//                 var r = e(n),
+//                     s = r.hasClass("open");
+//                 if (!s && 27 != i.which || s && 27 == i.which) return 27 == i.which && r.find(o).trigger("focus"), n.trigger("click");
+//                 var a = r.find(".dropdown-menu li:not(.disabled):visible a");
+//                 if (a.length) {
+//                     var l = a.index(i.target);
+//                     38 == i.which && l > 0 && l--, 40 == i.which && l < a.length - 1 && l++, ~l || (l = 0), a.eq(l).trigger("focus")
+//                 }
+//             }
+//         }
+//     };
+//     var s = t.fn.dropdown;
+//     t.fn.dropdown = function(e) {
+//         return this.each(function() {
+//             var i = t(this),
+//                 n = i.data("bs.dropdown");
+//             n || i.data("bs.dropdown", n = new r(this)), "string" == typeof e && n[e].call(i)
+//         })
+//     }, t.fn.dropdown.Constructor = r, t.fn.dropdown.noConflict = function() {
+//         return t.fn.dropdown = s, this
+//     }, t(document).on("click.bs.dropdown.data-api", i).on("click.bs.dropdown.data-api", ".dropdown form", function(t) {
+//         t.stopPropagation()
+//     }).on("click.bs.dropdown.data-api", o, r.prototype.toggle).on("keydown.bs.dropdown.data-api", o, r.prototype.keydown).on("keydown.bs.dropdown.data-api", ".dropdown-menu", r.prototype.keydown)
+// }(jQuery),
 function(t) {
     "use strict";
 
@@ -5726,6 +5726,18 @@ function(t) {
     })
 }(jQuery);
 $(document).ready(function(){
+  // function myFunction() {
+  //   document.getElementById("myDropdown").classList.toggle("show");
+  // }
+  $(".dropdown").on("click",function(){
+    if ($(this).hasClass("open")) {
+      $(this).removeClass("open");
+    }else{
+      $(this).addClass("open");
+    }
+    $(".dropdown").not(this).removeClass("open");
+  });
+
   const $db = $(document.body);
   const isEmail = function(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -6419,6 +6431,12 @@ $(document).ready(function(){
     if ($(".wish_head_list").length == 0) {
       $(".header-btns > .default-dropdown.scnd").css("margin-right","0");
     }
+    $(".custom-menu li").on("click",function(){
+      window.location.href = $(this).child("a").attr("href");
+    });
+    $(".custom-menu").on("click",function(){
+      console.log("clicked");
+    });
     // $(function() {
     //   $( "#birthdate" ).datetimepicker();
     // });

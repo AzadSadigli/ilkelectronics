@@ -1,6 +1,8 @@
+@php($nws = App\News::where('status',1)->orderBy('created_at','desc')->take(3)->get())
+@if(count($nws) > 0)
 <div class="home-news-section">
   <div class="section-title"><h2 class="title">{{__('app.News')}}</h2></div>
-  @foreach(App\News::where('status',1)->orderBy('created_at','desc')->take(3)->get() as $news)
+  @foreach($nws as $news)
   <div class="hc-news">
     <div class="hcn-img">
       @php($img = App\Images::where('news_id',$news->id)->orderBy('order','asc')->first())
@@ -14,3 +16,4 @@
   </div>
   @endforeach
 </div>
+@endif

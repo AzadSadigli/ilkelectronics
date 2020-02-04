@@ -279,4 +279,5 @@ Qeyd: Kateqoriyanı sildiyiniz təqdirdə kateqoriyalar və məhsullarda silinə
     'Discount_amount' => 'Endirim məbləği',
     'Product_boosted' => 'Məhsul yüksəldildi',
     'Discount' => 'Endirim',
+    'Registration' => 'Qeydiyyat',
 ];

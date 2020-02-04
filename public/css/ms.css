@@ -13853,7 +13853,7 @@ a {
       font-size: 21px;
     }
 }
-#order_form{
+#order_form,.acc_section{
   width: 94%;
   margin: auto;
 }

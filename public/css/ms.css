@@ -13826,6 +13826,10 @@ a {
       display: block;
       width: 100%;
       padding-left: 13px;
+      height: 71px;
+    }
+    .header-account > a{
+      display: none;
     }
     header .container > .pull-left{
       position: absolute;

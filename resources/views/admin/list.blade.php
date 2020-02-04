@@ -14,6 +14,8 @@
 <title>{{__('app.News_list')}} - {{conf("admin_title")}}</title>
 @elseif(Request::is('admin/comment-list'))
 <title>{{__('app.Comment_list')}} - {{conf("admin_title")}}</title>
+@elseif(Request::is('admin/users-list'))
+<title>{{__('app.User_list')}} - {{conf("admin_title")}}</title>
 @else
 <title>{{__('app.Product_list')}} - {{conf("admin_title")}}</title>
 @endif
@@ -32,6 +34,8 @@
                       {{__('app.News_list')}}
                       @elseif(Request::is('admin/comment-list'))
                       {{__('app.Comment_list')}}
+                      @elseif(Request::is('admin/users-list'))
+                      {{__('app.User_list')}}
                       @else
                       {{__('app.Product_list')}}
                       @endif
@@ -64,6 +68,15 @@
                                     <td>{{__('app.Title')}}</td>
                                     <td>{{__('app.News_slug')}}</td>
                                     <td>{{__('app.News')}}</td>
+                                    <td>{{__('app.Status')}}</td>
+                                    <td>{{__('app.Operations')}}</td>
+                                  </tr>
+                                  @elseif(Request::is('admin/users-list'))
+                                  <tr>
+                                    <td>ID</td>
+                                    <td>{{__('app.Name')}}</td>
+                                    <td>{{__('app.Gender')}} / {{__('app.Age')}}</td>
+                                    <td>{{__('app.Email')}} / {{__('app.Contact_number')}}</td>
                                     <td>{{__('app.Status')}}</td>
                                     <td>{{__('app.Operations')}}</td>
                                   </tr>
@@ -159,7 +172,7 @@
                                       </tr>
                                       @endforeach
                                     @elseif(Request::is('admin/comment-list'))
-
+                                    @elseif(Request::is('admin/users-list'))
                                     @else
                                       @foreach($pros as $pro)
                                       <tr>

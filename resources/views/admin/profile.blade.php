@@ -25,16 +25,16 @@
                                 <p>
                                   @if(Auth::user()->role_id == 2) Admin
                                   @elseif(Auth::user()->role_id == 3)
-                                  İkinci dərəcəli admin
-                                  @else
                                   Baş admin
+                                  @else
+                                  Developer
                                   @endif
                                 </p>
                             </div>
                         </div>
-                        <div class="profile-footer">
+                        <!-- <div class="profile-footer">
                             <button class="btn btn-primary btn-lg waves-effect btn-block">FOLLOW</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-9">

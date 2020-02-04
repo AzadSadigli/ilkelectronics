@@ -5,6 +5,8 @@
 		<title>{{__('app.Login')}}</title>
 	@else
 		<title>{{__('app.Register')}}</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 	@endif
 @endif
 @endsection
@@ -208,3 +210,11 @@
 			</div>
 		</div>
 @endsection
+@section('foot')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ <script>
+ $( function() {
+	 $( "#birthdate" ).datepicker();
+ } );
+ </script>
+ @endsection

@@ -6418,6 +6418,9 @@ $(document).ready(function(){
           }
         }
     }, 1000);
+    $( function() {
+      $( "#birthdate" ).datetimepicker();
+    } );
   // if(ucheck('not-found')){
   //   let e_a = ".error-page > p > a";
   //   let e_h = ".error-page > h2";

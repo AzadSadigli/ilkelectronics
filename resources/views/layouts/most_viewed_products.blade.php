@@ -1,4 +1,4 @@
-@if($mv_pros > 0)
+@if(count($mv_pros) > 0)
 <div class="section most-vw">
     <div class="row">
       <div class="col-md-12">

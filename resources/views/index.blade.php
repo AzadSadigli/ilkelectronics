@@ -44,6 +44,7 @@
 		</div>
 	</div>
 </div>
+@if(count($bpro) > 0 | App\Posters::where('type',1)->where('status',1)->count() > 0)
 <div class="section">
 	<div class="container">
 		<div class="row">
@@ -116,6 +117,7 @@
 		</div>
 	</div>
 </div>
+@endif
 <div class="section nxt-sblng">
 	<div class="container">
 		<div class="row">

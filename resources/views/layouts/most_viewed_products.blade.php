@@ -1,5 +1,5 @@
+@if($mv_pros > 0)
 <div class="section most-vw">
-	<div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="section-title">
@@ -48,5 +48,5 @@
 			</div>
 			@endforeach
     </div>
-  </div>
 </div>
+@endif

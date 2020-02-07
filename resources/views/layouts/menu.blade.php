@@ -4,7 +4,7 @@
 				<div class="category-nav @if(!Request::is('/')) show-on-click @endif">
 					<span class="category-header">{{__('app.Categories')}} <i class="fa fa-list"></i></span>
 					<ul class="category-list">
-						@foreach(App\Category::whereNull('parent_id')->get() as $ct)
+						@foreach(App\Category::whereNull('parent_id')->orderBy('order','ASC')->get() as $ct)
 						<li class="dropdown side-dropdown">
 							@if(App\Category::where('parent_id',$ct->id)->count() > 0) <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"> @else <a href="/category/{{$ct->slug}}"> @endif
 								{{$ct->name}}
@@ -24,7 +24,7 @@
 									</div>
 									<div class="col-md-4">
 										<ul class="list-links">
-											@foreach(App\Category::where('parent_id',$ct->id)->get() as $k => $sub_ct)
+											@foreach(App\Category::where('parent_id',$ct->id)->orderBy('order','ASC')->get() as $k => $sub_ct)
 												@if($k%2 !== 0)
 													<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
 												@endif

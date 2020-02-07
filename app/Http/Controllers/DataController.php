@@ -130,7 +130,7 @@ class DataController extends Controller
     }
 
     public function get_all_categories(){
-      $cats = Category::whereNull('parent_id')->orderBy('views','desc')->get();
+      $cats = Category::whereNull('parent_id')->orderBy('order','ASC')->get();
       return view('pg_list',compact('cats'));
     }
     public function get_notification_for_admin(Request $req){

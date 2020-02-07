@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/uploads
+/resources/lang
 /public/currency.json
 /public/sitemap.xml
 /public/ids.txt

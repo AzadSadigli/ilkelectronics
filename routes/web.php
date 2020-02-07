@@ -127,7 +127,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/code-view/{file}','AdminController@code_view');
     Route::get('/development','AdminController@development_page');
 
-    Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
+    // Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
   });
 });
 

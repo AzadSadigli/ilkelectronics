@@ -179,12 +179,13 @@ class AdminController extends Controller
       return response()->json(['message' => Lang::get('app.Config_deleted')]);
     }
     public function update_all_category_slugs(){
-      $cts = Category::all();
-      foreach ($cts as $key => $ct) {
-        $ct_update = Category::find($ct->id);
-        $ct_update->slug = make_slug($ct_update->name);
-        $ct_update->update();
-      }
+      // $cts = Category::all();
+      // foreach ($cts as $key => $ct) {
+      //   $ct_update = Category::find($ct->id);
+      //   $ct_update->slug = make_slug($ct_update->name);
+      //   $ct_update->update();
+      // }
+      update_sitemap();
       echo "success";
     }
 

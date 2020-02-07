@@ -38,15 +38,11 @@
 									<tr>
 										<th class="empty" colspan="3"></th>
 										<th>{{__('app.Total')}}</th>
-										<th colspan="2" class="total" id="wsh_total">$97.50</th>
+										<th colspan="2" class="total" id="wsh_total"></th>
 									</tr>
 								</tfoot>
 							</table>
-							<!-- <div class="pull-right">
-								<button class="primary-btn">Place Order</button>
-							</div> -->
 						</div>
-
 					</div>
 				</form>
 			</div>

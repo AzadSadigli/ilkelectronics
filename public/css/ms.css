@@ -12704,7 +12704,7 @@ textarea.input {
     bottom: 0px;
     right: 0px;
     padding: 5px;
-    z-index: 1000000000;
+    /* z-index: 1000000000; */
     background: white;
 }
 

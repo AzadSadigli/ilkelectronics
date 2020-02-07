@@ -97,15 +97,13 @@
 									<label for="address">{{__('app.Living_address')}}</label>
 									<input id="address" type="text" placeholder="{{__('app.Living_address')}}..." class="input" required>
 								</div>
-								@if(Auth::guest())
-								<div class="form-group row">
+								<div class="form-group row" @if(Auth::check()) style="display:none" @endif>
 									<label for="gender">{{__('app.Gender')}}</label>
 									<select class="input" id="gender">
 										<option value="0">Male</option>
 										<option value="1">Female</option>
 									</select>
 								</div>
-								@endif
 								<div class="form-group row">
 									<label for="contact_number">{{__('app.Contact_number')}}</label>
 									<input id="contact_number" type="text" @if(Auth::check()) value="{{Auth::user()->phone}}" @endif class="input" placeholder="{{__('app.Contact_number')}}..." required>

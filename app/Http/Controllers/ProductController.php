@@ -110,10 +110,10 @@ class ProductController extends Controller
         'name' => 'required|string|min:2',
         'surname' => 'required|string|min:2',
         'birthdate' => 'required|date',
-        'father_name' => 'required|string',
+        'father_name' => 'required|string|min:2',
         'gender' => 'required|integer',
         'quantity' => 'required|integer',
-        'region' => 'required|string',
+        'address' => 'required|string',
         'city' => 'required|string',
       ]);
       $pro = Products::where('prod_id',$req->product_id)->first();

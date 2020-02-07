@@ -32,7 +32,9 @@ class AdminController extends Controller
       $ct->token = md5(microtime());
       $ct->name = $req->name;
       if (empty($req->slug)) {
-        $ct->slug = make_slug($req->category_name);
+        $ct->slug = make_slug($req->name);
+      }else{
+        $ct->slug = make_slug($req->slug);
       }
       $ct->save();
       update_sitemap();
@@ -176,6 +178,18 @@ class AdminController extends Controller
       $conf->delete();
       return response()->json(['message' => Lang::get('app.Config_deleted')]);
     }
+    public function update_all_category_slugs(){
+      $cts = Category::all();
+      foreach ($cts as $key => $ct) {
+        $ct_update = Category::find($ct->id);
+        $ct_update->slug = make_slug($ct_update->name);
+        $ct_update->update();
+      }
+      echo "success";
+    }
+
+
+
     public function configuration(Request $req){
       if (isset($_POST['list']) && !empty($_POST['list'])) {
         for ($i=0; $i < count($req->list); $i++) {

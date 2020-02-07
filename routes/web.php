@@ -13,7 +13,6 @@
 use App\Pages;
 use App\News;
 
-Route::get('/testing','DataController@testing');
 
 
 Route::get('/not-found','Controller@error_page');
@@ -122,10 +121,13 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/delete-product/{id}','Controller@delete_product');
   });
   Route::group(['middleware' => 'mainadmin'],function(){
+    Route::get('/testing','DataController@testing');
     Route::get('/get-file-data','AdminController@get_file_data');
     Route::post('/update-css-js','AdminController@update_css_js');
     Route::get('/code-view/{file}','AdminController@code_view');
     Route::get('/development','AdminController@development_page');
+
+    Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
   });
 });
 

@@ -5729,15 +5729,16 @@ $(document).ready(function(){
   // function myFunction() {
   //   document.getElementById("myDropdown").classList.toggle("show");
   // }
-  $(".dropdown").on("click",function(){
-    if ($(this).hasClass("open")) {
-      $(this).removeClass("open");
-    }else{
-      $(this).addClass("open");
+  $(".dropdown").click(function(e){
+    if (!$(e.target).is('.dropdown .custom-menu') && !$(e.target).is('.dropdown .fa-trash')) {
+      if ($(this).hasClass("open")) {
+        $(this).removeClass("open");
+      }else{
+        $(this).addClass("open");
+      }
+      $(".dropdown").not(this).removeClass("open");
     }
-    $(".dropdown").not(this).removeClass("open");
   });
-
   const $db = $(document.body);
   const isEmail = function(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -6388,7 +6389,21 @@ $(document).ready(function(){
     });
   }
   $("#order_product").on("click",function(){
-    let loan_id = $("#order_type").val() ? $("#order_type").val() : 0;
+    let ids = [
+      "#order_type",
+      "#product_id",
+      "#name",
+      "#email",
+      "#surname",
+      "#birthdate",
+      "#gender",
+      "#fathername",
+      "#quantity",
+      "#address",
+      "#region",
+      "#contact_number"
+    ];
+    let loan_id = $(ids[0]).val() ? $(ids[0]).val() : 0;
     $("#order_form div").css("display","none");
     $("#order_form").append("<img class='order-lding' src='/img/loading.gif'>");
     $header;
@@ -6396,10 +6411,10 @@ $(document).ready(function(){
       url: '/order-product',
       type: 'POST',
       data:{
-        loan_id:loan_id,product_id:$("#product_id").val(),name:$("#name").val(),
-        email:$("#email").val(),surname:$("#surname").val(),birthdate:$("#birthdate").val(),
-        gender:$("#gender").val(),father_name:$("#fathername").val(),quantity:$("#quantity").val(),
-        address:$("#address").val(),city: $("#region").val(),contact_number:$("#contact_number").val(),
+        loan_id:loan_id,product_id:$(ids[1]).val(),name:$(ids[2]).val(),
+        email:$(ids[3]).val(),surname:$(ids[4]).val(),birthdate:$(ids[5]).val(),
+        gender:$(ids[6]).val(),father_name:$(ids[7]).val(),quantity:$(ids[8]).val(),
+        address:$(ids[9]).val(),city: $(ids[10]).val(),contact_number:$(ids[11]).val(),
       },
       success:function(t){
         $("#order_form img").attr('src','/img/confirmed.png').after("<p class='success-text'>"+t.mess+"</p>");
@@ -6434,9 +6449,9 @@ $(document).ready(function(){
     $(".custom-menu li").on("click",function(){
       window.location.href = $(this).child("a").attr("href");
     });
-    $(".custom-menu").on("click",function(){
-      console.log("clicked");
-    });
+    // $(".custom-menu").on("click",function(){
+    //   console.log("clicked");
+    // });
     // $(function() {
     //   $( "#birthdate" ).datetimepicker();
     // });

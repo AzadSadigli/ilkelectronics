@@ -257,7 +257,16 @@ function url_exists($url) {
 //   }
 //   return $new_arr;
 // }
-function testing_json(){
+function LDAP_Test($username,$password){
+  $ldab_dn = "uid=".$username.",dc=example,dc=com";
+  $ldab_con = ldab_connect("ldap.forumsys.com ");
+  if (@ldab_bind($ldab_con,$ldab_dn,$password)) {
+    echo "success";
+  }else{
+    echo "Wrong credentials";
+  }
+}
+
   // $conf = [
   //   "admin_title" => ["Ilkelectronics Panel","text_input"],
   //   "Site_title" => ["Ilkelectronics","text_input"],
@@ -276,11 +285,5 @@ function testing_json(){
   //   }
   // }
   // return array_keys($conf);
-}
 
-class Test {
-  public function test_for_class(){
-    return "ok";
-  }
-}
 ?>

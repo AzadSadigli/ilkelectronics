@@ -5049,7 +5049,6 @@ function(t) {
         document.getElementsByClassName("filt_min")[0].value = a.replace(/[^0-9.,]+/,'');
         document.getElementsByClassName("filt_max")[0].value = b.replace(/[^0-9.,]+/,'');
       }
-      // console.log(a,b)
     }
     function M(e, o, l) {
         function c(t, e) {
@@ -6073,7 +6072,6 @@ $(document).ready(function(){
           }else{
             $(".load-section").css("display","none");
           }
-          console.log(data);
 				},complete:function(){
           $(".load-section a").html(ld_btn_txt)
         }

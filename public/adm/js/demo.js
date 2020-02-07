@@ -903,6 +903,48 @@ if (typeof page !== 'undefined') {
   }else if(page === 'create'){
 
   }else if(page === 'add_product'){
+    $(function() {
+        function reorder(){
+          for (var i = 0; i < $("#cat_list tr").length; i++) {
+            $("#cat_list tr:eq("+i+") th:eq(0)").html(i + ".");
+          }
+        }
+        var isDragging = false;
+        $("#cat_list tr")
+        .mousedown(function() {
+            reorder();
+            isDragging = false;
+        })
+        .mouseup(function() {
+            reorder();
+            var wasDragging = isDragging;
+            isDragging = false;
+            if (!wasDragging) {
+                $("#throbble").toggle();
+            }
+        });
+        $("#cat_list").sortable();
+        $("#update_cat_list").click(function(){
+          let arr = [];
+          for (var i = 0; i < $("#cat_list tr").length; i++) {
+            let key = $("#cat_list tr:eq("+i+")").data("id");
+            arr.push({key: key,val: i});
+          }
+          let $th = $(this);
+          $th.html('<i class="fa fa-refresh fa-spin"></i>');
+          $header;
+          $.ajax({
+            url: '/admin/update-category-order',
+            type: 'POST',
+            data: {arr: arr},
+            success:function(t){
+              notify(t.mess,"success");
+            },complete:function(){
+              $th.html('<i class="fa fa-save"></i>');
+            }
+          });
+        });
+    });
     if (ucheck('/change-image-order/')) {
       $db.on("click",".delete_image",function(){
         let wrds = $(this).data("words").split(",");
@@ -1105,49 +1147,7 @@ $('form').on('focus', 'input[type=number]', function (e) {
 $('form').on('blur', 'input[type=number]', function (e) {
   $(this).off('wheel.disableScroll')
 });
-$(function() {
-    function reorder(){
-      for (var i = 0; i < $("#cat_list tr").length; i++) {
-        $("#cat_list tr:eq("+i+") th:eq(0)").html(i + ".");
-      }
-    }
-    var isDragging = false;
-    $("#cat_list tr")
-    .mousedown(function() {
-        reorder();
-        isDragging = false;
-    })
-    .mouseup(function() {
-        reorder();
-        var wasDragging = isDragging;
-        isDragging = false;
-        if (!wasDragging) {
-            $("#throbble").toggle();
-        }
-    });
-    $("#cat_list").sortable();
 
-    $("#update_cat_list").click(function(){
-      let arr = [];
-      for (var i = 0; i < $("#cat_list tr").length; i++) {
-        let key = $("#cat_list tr:eq("+i+")").data("id");
-        arr.push({key: key,val: i});
-      }
-      let $th = $(this);
-      $th.html('<i class="fa fa-refresh fa-spin"></i>');
-      $header;
-      $.ajax({
-        url: '/admin/update-category-order',
-        type: 'POST',
-        data: {arr: arr},
-        success:function(t){
-          notify(t.mess,"success");
-        },complete:function(){
-          $th.html('<i class="fa fa-save"></i>');
-        }
-      });
-    });
-});
 // $("#submit_loans").on("click",function(){
 //   $(".new_loan_form").submit();
 // });

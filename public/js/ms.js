@@ -6443,7 +6443,7 @@ $(document).ready(function(){
       $(".header-btns > .default-dropdown.scnd").css("margin-right","0");
     }
     $(".custom-menu li").on("click",function(){
-      window.location.href = $(this).child("a").attr("href");
+      window.location.href = $(this).children("a").attr("href");
     });
     // $(".custom-menu").on("click",function(){
     //   console.log("clicked");

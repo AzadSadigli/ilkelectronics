@@ -6128,7 +6128,6 @@ $(document).ready(function(){
           }else{
             $("#review_pages").css("display","none");
           }
-          // console.log(data);
           $(rg).html('<li><i class="fa fa-caret-left"></i></li>' + pgg +'<li><i class="fa fa-caret-right"></i></li>');
           $(rg).siblings("div").remove();
           $(rg).before(h);
@@ -6350,7 +6349,6 @@ $(document).ready(function(){
     }
   });
   $db.on("click",".hc-news,.news-item,.product-single > img",function(){
-    console.log("ok");
     window.location.href = $(this).find("a").attr("href");
   });
   $("#un_product_rating > a").click(function() {

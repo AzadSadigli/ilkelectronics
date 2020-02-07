@@ -7,7 +7,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@section('head')
   @show
-	<link type="text/css" rel="stylesheet" href="/css/ms.css?v={{uniqid()}}" />
+	<link type="text/css" rel="stylesheet" href="/css/ms.min.css?v={{uniqid()}}" />
 	<link rel="shortcut icon" type="image/x-icon" href="/img/icon.png" />
 	@if(!empty(conf('Mob_browser_color')))
 	<meta name="theme-color" content="{{conf('Mob_browser_color')}}" />
@@ -214,7 +214,7 @@
 			</div>
 		</div>
 	</footer>
-	<script src="/js/ms.js?v={{uniqid()}}"></script>
+	<script src="/js/ms.min.js?v={{uniqid()}}"></script>
   @section('foot')
   @show
 </body>

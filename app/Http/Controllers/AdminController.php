@@ -10,6 +10,7 @@ use App\Pages;
 use Auth;
 use App\Config;
 use App\Products;
+use App\User;
 class AdminController extends Controller
 {
     public function index(){
@@ -178,6 +179,10 @@ class AdminController extends Controller
       $conf->delete();
       return response()->json(['message' => Lang::get('app.Config_deleted')]);
     }
+    public function user_list(){
+      $users = User::all();
+      return view('admin.list',compact('users'));
+    }
     public function update_all_category_slugs(){
       // $cts = Category::all();
       // foreach ($cts as $key => $ct) {
@@ -226,5 +231,20 @@ class AdminController extends Controller
         $dirs = 0;
         return view('admin.static');
       }
+    }
+
+
+    public function update_cat_order(Request $req){
+      $arr = $req->arr;
+      if (is_array($arr)) {
+        for ($i=0; $i < count($arr); $i++) {
+          $ct = Category::find($arr[$i]['key']);
+          if (!empty($ct)) {
+            $ct->order = $arr[$i]['val'];
+            $ct->update();
+          }
+        }
+      }
+      return response()->json(['mess' => Lang::get('app.Order_updated')]);
     }
 }

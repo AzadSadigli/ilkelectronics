@@ -75,7 +75,7 @@ Route::group(['prefix' => 'admin'], function(){
 
     Route::post('/add-new-category','AdminController@add_category');
     Route::get('/add-category','AdminController@add_category_view');
-
+    Route::post('/update-category-order','AdminController@update_cat_order');
 
     //page section
     Route::get('/create-page','PageController@create_page_vew');
@@ -118,6 +118,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('/save-tr-file','AdminController@save_tr_file');
   });
   Route::group(['middleware' => 'secondadmin'],function(){
+    Route::get('/users-list','AdminController@user_list');
     Route::get('/delete-product/{id}','Controller@delete_product');
   });
   Route::group(['middleware' => 'mainadmin'],function(){
@@ -127,7 +128,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/code-view/{file}','AdminController@code_view');
     Route::get('/development','AdminController@development_page');
 
-    // Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
+    Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
   });
 });
 

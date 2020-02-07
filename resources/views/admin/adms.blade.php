@@ -335,8 +335,8 @@
                             <li @if(Request::is('admin/news-list')) class="active" @endif>
                                 <a href="/admin/news-list">{{__('app.News_list')}}</a>
                             </li>
-                            <li @if(Request::is('admin/user-list')) class="active" @endif>
-                                <a href="/admin/user-list">{{__('app.User_list')}}</a>
+                            <li @if(Request::is('admin/users-list')) class="active" @endif>
+                                <a href="/admin/users-list">{{__('app.User_list')}}</a>
                             </li>
                             <li @if(Request::is('admin/comment-list')) class="active" @endif>
                                 <a href="/admin/comment-list">{{__('app.Comment_list')}}</a>

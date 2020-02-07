@@ -95,10 +95,11 @@
                           <div class="body table-responsive">
                               <table class="table">
                                   <thead><tr><th>{{__('app.Category')}}</th><th>{{__('app.Parent_category')}}</th><th>{{__('app.Number_of_products')}}</th><th>X</th></tr></thead>
-                                  <tbody>
-                                      @foreach(App\Category::all() as $ct)
-                                      <tr>
-                                          <th scope="row">{{$ct->name}}</th>
+                                  <tbody id="cat_list">
+                                      @foreach(App\Category::orderBy('order','ASC')->get() as $k => $ct)
+                                      <tr data-id="{{$ct->id}}">
+                                          <th scope="row">{{$k}}.</th>
+                                          <td>{{$ct->name}}</td>
                                           <td>@if(!empty($ct->parent_id)) {{App\Category::find($ct->parent_id)->name}} @endif</td>
                                           <td>@if(!empty($ct->parent_id)) {{App\Products::where('category',$ct->id)->count()}} @else
                                              @php($ids = [])
@@ -112,6 +113,7 @@
                                       @endforeach
                                   </tbody>
                               </table>
+                              <a id="update_cat_list" class="btn btn-primary pull-right"><i class="fa fa-save"></i></a>
                               <div id="deletemodal" class="modal fade" role="dialog"></div>
                           </div>
                         </div>
@@ -307,9 +309,7 @@
   var page = 'add_product';
 </script>
 <script src="/adm/plugins/jquery/jquery.min.js"></script>
-@if(Request::is('*/change-image-order/*') || Request::is('*/products-tabs/*') || Request::is('*/page-tabs/*'))
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-@endif
 <script src="/adm/plugins/bootstrap/js/bootstrap.js"></script>
 <script src="/adm/plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <script src="/adm/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>

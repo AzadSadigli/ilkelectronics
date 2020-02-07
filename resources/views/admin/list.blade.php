@@ -174,7 +174,16 @@
                                     @elseif(Request::is('admin/comment-list'))
                                     @elseif(Request::is('admin/users-list'))
 
-                                    
+                                    @foreach($users as $user)
+                                    <tr>
+                                      <td>{{$user->id}}</td>
+                                      <td>{{$user->name}} {{$user->surname}}</td>
+                                      <td>@if($user->name == 0) {{__('app.Male')}} @else {{__('app.Female')}} @endif / {{\Carbon\Carbon::parse($user->birthdate)->age}}</td>
+                                      <td>{{$user->email}} / {{$user->contact_number}}</td>
+                                      <td>---</td>
+                                      <td>---</td>
+                                    </tr>
+                                    @endforeach
 
                                     @else
                                       @foreach($pros as $pro)

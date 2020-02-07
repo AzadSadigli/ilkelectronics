@@ -6101,10 +6101,10 @@ $(document).ready(function(){
 		});
 		get_prods(pro_numb);
   }
+  $db.on("click",".pages-body > ul > li",function(){
+    window.location = $(this).data("url");
+  });
   if (ucheck("/product/") | ucheck("news/")) {
-    $db.on("click",".pages-body > ul > li",function(){
-      window.location = $(this).data("url");
-    });
     let view_page = 1;
     let rg = "#review_pages";
     const get_news_comments = (news_id,view_page) => {

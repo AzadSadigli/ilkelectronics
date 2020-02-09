@@ -6459,6 +6459,9 @@ $(document).ready(function(){
   //
   //   $(e_p).css("width",($(e_a).width()/$(e_h).width() * $(e_a).width()) + "px");
   // }
+  // $(".brand-image").on("click",function(){
+  //   window.location.href = $(this).children("img").data("href");
+  // });
 });
 
 // testing purposes

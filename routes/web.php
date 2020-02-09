@@ -27,6 +27,8 @@ Route::get('/category/{slug}','DataController@category_page');
 Route::get('/get-category-products','DataController@category_page_ajax'); // ajax
 Route::get('/categories','DataController@get_all_categories');
 
+// Route::get('/brand-list','BrandController@brand_list_store');
+
 Route::get('/product/{slug}','ProductController@get_product_details');
 Route::get('/page/{slug}','PageController@page_view');
 Route::get('/news/{slug}','PageController@news_view');
@@ -53,7 +55,9 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('/boost-table','ProductController@boost_product');
     // Route::get('/create-page','AdminController@create_page_view');
 
-
+    Route::get('/brands-list','BrandController@brand_list');
+    Route::post('/update-brand-image','BrandController@create_brand');
+    Route::post('/update-brand-status','BrandController@brand_status');
     // product control
     Route::post('/change-images-order','ProductController@change_im_order');
     Route::get('/edit-product/{id}','ProductController@add_product_view');
@@ -75,6 +79,7 @@ Route::group(['prefix' => 'admin'], function(){
 
     Route::post('/add-new-category','AdminController@add_category');
     Route::get('/add-category','AdminController@add_category_view');
+    Route::get('/categories-list','AdminController@add_category_view');
     Route::post('/update-category-order','AdminController@update_cat_order');
 
     //page section

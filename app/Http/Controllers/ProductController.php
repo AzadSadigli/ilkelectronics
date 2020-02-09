@@ -17,11 +17,12 @@ use App\Loans;
 use File;
 use App\Boostedpros;
 use Auth;
+use App\Brand;
 class ProductController extends Controller
 {
     public function index(){
         $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
-
+        $brands = Brand::where('status',1)->inRandomOrder()->take(6)->get();
         $bpro = DB::select("SELECT
                                 p.id,b.end_date,p.slug,
                                 (SELECT image FROM `images` i WHERE i.prod_id = b.prod_id ORDER BY `order` ASC LIMIT 1) as image,
@@ -37,7 +38,7 @@ class ProductController extends Controller
                             WHERE end_date >= '".date("Y-m-d H:i:s")."' AND start_date <= '".date("Y-m-d H:i:s")."'
                             ORDER BY end_date limit 3");
         $mv_pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY views DESC LIMIT 4");
-        return view('index',compact('pros','mv_pros','bpro'));
+        return view('index',compact('pros','mv_pros','bpro','brands'));
     }
     public function order_product_view($slug){
       $pro = Products::where('slug',$slug)->first();

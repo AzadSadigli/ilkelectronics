@@ -1148,6 +1148,55 @@ $('form').on('blur', 'input[type=number]', function (e) {
   $(this).off('wheel.disableScroll')
 });
 
+$(document).ready(function(){
+  for (var i = 0; i < $("#leftsidebar .menu .list > li").length; i++) {
+    if ($("#leftsidebar .menu .list > li:eq("+i+") > .ml-menu > li.active").length > 0) {
+      $("#leftsidebar .menu .list > li:eq("+i+") > a").addClass("toggled");
+      $("#leftsidebar .menu .list > li:eq("+i+") > .ml-menu").css("display","block");
+    }
+  }
+});
+function readURL(imgID,input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $(imgID).css("display","").attr('src', e.target.result);
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+$(".update_brand_stat").change(function(){
+  $header;
+  $.ajax({
+    url: '/admin/update-brand-status',
+    type: 'POST',
+    data:{id:$(this).data("id"),status:$(this).parents("label").siblings("input").val()},
+    success:function(){
+      // console.log("success");
+    }
+  });
+});
+$(".brand_image").change(function(){
+  readURL('.show_'+$(this).data("src"),this);
+  $header;
+  let fd = new FormData();
+  let files = $(this)[0].files[0];
+  fd.append('id',$(this).data("id"));
+  fd.append('brand',$(this).data("brand"));
+  fd.append('status',$(".stat_"+$(this).data("src")).val());
+  fd.append('file',files);
+  // console.log(".stat_"+$(this).data("src"));
+  $.ajax({
+    url: '/admin/update-brand-image',
+    type: 'POST',
+    data:fd,
+    contentType: false,
+    processData: false,
+    success:function(t){
+      // console.log(t);
+    }
+  });
+});
 // $("#submit_loans").on("click",function(){
 //   $(".new_loan_form").submit();
 // });

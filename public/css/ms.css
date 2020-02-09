@@ -13855,6 +13855,11 @@ a {
     .nav-toggle .main-btn{
       font-size: 21px;
     }
+    .brand-image{
+      max-width: 48%;
+      display: inline-block;
+      vertical-align: top;
+    }
 }
 #order_form,.acc_section{
   width: 94%;
@@ -14244,5 +14249,35 @@ textarea.input {
   margin-top: 20px;
   font-size: 20px;
   color: #1ea1f2;
+  font-weight: bold;
+}
+.brand-image{
+  box-shadow: 0 0 7px -1px #cccccc;
+  /* height: 120px; */
+  cursor: pointer;
+}
+.brand-image img{
+  max-height: 95%;
+  margin: auto;
+  display: block;
+}
+.information{
+  display: block;
+  margin-top: 40px;
+}
+.information div{
+  display: inline-block;
+  width: 50%;
+  border: 1px solid #efefef;
+  padding: 10px;
+  text-align: center;
+  min-height: 100px;
+}
+.information div img{
+  max-height: 80px;
+}
+.information div p{
+  font-size: 19px;
+  color: #e31e25;
   font-weight: bold;
 }

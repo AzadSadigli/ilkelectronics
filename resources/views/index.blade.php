@@ -45,6 +45,17 @@
 	</div>
 </div>
 <div class="section">
+		<div class="container">
+			<div class="row">
+				@foreach($brands as $brand)
+				<div class="col-md-2 col-sm-6 brand-image" title="{{$brand->brand}}">
+						<img src="/uploads/brands/{{$brand->image}}" @if(false) data-href="/brands/{{$brand->brand}}" @endif alt="{{$brand->brand}}">
+				</div>
+				@endforeach
+			</div>
+		</div>
+	</div>
+<div class="section">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -169,5 +180,8 @@
 		@include('layouts.most_viewed_products')
 		@include('layouts.news')
 	</div>
+</div>
+<div class="information">
+	<div><h3><img src="/img/shipping.png"></h3><p>{{conf("text_1")}}</p></div><div><h3><img src="/img/price.png"></h3><p>{{conf("text_2")}}</p></div>
 </div>
 @endsection

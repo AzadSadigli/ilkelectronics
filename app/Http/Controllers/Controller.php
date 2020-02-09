@@ -94,7 +94,7 @@ class Controller extends BaseController
       if (!empty($img)) {
         $img->delete();
       }
-      return response()->json(['mess'=>Lang::get('app.Message_deleted')]);
+      return response()->json(['mess'=>Lang::get('app.Image_deleted')]);
     }
     public function change_currency($currency){
       $val = file_get_contents(burl().'/public/currency.json');

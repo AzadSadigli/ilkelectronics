@@ -234,6 +234,10 @@
       .poster-list-img{
         width: 54px;
       }
+      .brand_img_display{
+        max-width: 100px;
+        margin-bottom: 10px;
+      }
     </style>
 </head>
 <body class="theme-red">
@@ -317,7 +321,7 @@
                             <span>{{__('app.Slide_and_poster')}}</span>
                         </a>
                     </li>
-                    <li @if(in_array(Request::path(),array('admin/product-list','admin/user-list','admin/page-list','admin/news-list','admin/comment-list'))) class="active" @endif>
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">format_list_bulleted</i>
                             <span>{{__('app.List')}}</span>
@@ -326,8 +330,8 @@
                             <li @if(Request::is('admin/product-list')) class="active" @endif>
                                 <a href="/admin/product-list">{{__('app.Product_list')}}</a>
                             </li>
-                            <li @if(Request::is('admin/add-category')) class="active" @endif>
-                                <a href="/admin/add-category">{{__('app.Category_list')}}</a>
+                            <li @if(Request::is('admin/categories-list')) class="active" @endif>
+                                <a href="/admin/categories-list">{{__('app.Category_list')}}</a>
                             </li>
                             <li @if(Request::is('admin/page-list')) class="active" @endif>
                                 <a href="/admin/page-list">{{__('app.Page_list')}}</a>
@@ -341,9 +345,12 @@
                             <li @if(Request::is('admin/comment-list')) class="active" @endif>
                                 <a href="/admin/comment-list">{{__('app.Comment_list')}}</a>
                             </li>
+                            <li @if(Request::is('admin/brands-list')) class="active" @endif>
+                              <a href="/admin/brands-list">{{__('app.Brand_list')}}</a>
+                            </li>
                         </ul>
                     </li>
-                    <li @if(in_array(Request::path(),array('admin/add-product','admin/add-category','admin/add-user'))) class="active" @endif>
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">add_circle_outline</i>
                             <span>{{__('app.Add')}}</span>
@@ -369,7 +376,7 @@
                         </ul>
                     </li>
                     @if(isSecAdmin())
-                    <li @if(in_array(Request::path(),array('admin/translation','admin/configuration','admin/development'))) class="active" @endif>
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">add_circle_outline</i>
                             <span>Static</span>
@@ -396,7 +403,7 @@
                     </li>
                     @endif
                     @if(isSecAdmin())
-                    <li @if(Request::is('admin/seo-improvement')) class="active" @endif>
+                    <li>
                         <a href="/admin/seo-improvement">
                             <i class="material-icons">grade</i>
                             <span>SEO</span>

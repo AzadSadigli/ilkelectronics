@@ -59,7 +59,6 @@ class SlideController extends Controller
       return response()->json(['data' => $data]);
     }
     public function add_new_poster(Request $req,$id = null){
-      echo "string";exit();
       $ps_s = Posters::find($id);
       if (!isset($ps_s) || empty($ps_s)) {
         $ps = new Posters;

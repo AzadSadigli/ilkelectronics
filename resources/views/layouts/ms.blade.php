@@ -148,7 +148,7 @@
 		            <img src="/img/logo.png" alt="{{config('settings.Site_title')}}">
 		          </a>
 						</div>
-						<p>{{conf('Footer_slogan')}}</p>
+						<p>{!! conf('Footer_slogan') !!}</p>
 						<ul class="footer-social">
 							@if(conf('fa-facebook') !== "")
 							<li><a href="{{conf('fa-facebook')}}" target="_blank"><i class="fa fa-facebook"></i></a></li>

@@ -148,16 +148,18 @@
 		            <img src="/img/logo.png" alt="{{config('settings.Site_title')}}">
 		          </a>
 						</div>
-						<p>{!! conf('Footer_slogan') !!}</p>
 						<ul class="footer-social">
 							@if(conf('fa-facebook') !== "")
 							<li><a href="{{conf('fa-facebook')}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
 							@endif
-							@if(conf('fa-twitter') !== "")
-							<li><a href="{{conf('fa-twitter')}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+							@if(conf('fa-whatsapp') !== "")
+							<li><a href="{{conf('fa-whatsapp')}}" target="_blank"><i class="fa fa-whatsapp"></i></a></li>
 							@endif
 							@if(conf('fa-instagram') !== "")
 							<li><a href="{{conf('fa-instagram')}}" target="_blank"><i class="fa fa-instagram"></i></a></li>
+							@endif
+							@if(conf('fa-youtube') !== "")
+							<li><a href="{{conf('fa-youtube')}}" target="_blank"><i class="fa fa-youtube"></i></a></li>
 							@endif
 							@if(conf('fa-google-plus') !== "")
 							<li><a href="{{conf('fa-google-plus')}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
@@ -165,29 +167,29 @@
 							@if(conf('fa-pinterest') !== "")
 							<li><a href="{{conf('fa-pinterest')}}" target="_blank"><i class="fa fa-pinterest"></i></a></li>
 							@endif
+							@if(conf('fa-twitter') !== "")
+							<li><a href="{{conf('fa-twitter')}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+							@endif
 						</ul>
+						<p>{!! conf('Footer_slogan') !!}</p>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<h3 class="footer-header">{{__('app.My_account')}}</h3>
+						<h3 class="footer-header">{{conf('footer_title_1')}}</h3>
 						<ul class="list-links">
-							@if(Auth::check())
-							<li><a href="/profile">{{__('app.My_account')}}</a></li>
-							<li><a href="/wishlist">{{__('app.Wishlist')}}</a></li>
-							@else
-							<li><a href="/account?action=login">{{__('app.Login')}}</a></li>
-							<li><a href="/account?action=register">{{__('app.Register')}}</a></li>
-							@endif
+							@foreach(App\Pages::where('footer',1)->where('footer_type',0)->get() as $pg)
+							<li><a href="/page/{{$pg->slug}}">{{$pg->shortname}}</a></li>
+							@endforeach
 						</ul>
 					</div>
 				</div>
 				<div class="clearfix visible-sm visible-xs"></div>
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
-						<h3 class="footer-header">{{__('app.Pages')}}</h3>
+						<h3 class="footer-header">{{conf('footer_title_2')}}</h3>
 						<ul class="list-links">
-							@foreach(App\Pages::where('footer',1)->get() as $pg)
+							@foreach(App\Pages::where('footer',1)->where('footer_type',1)->get() as $pg)
 							<li><a href="/page/{{$pg->slug}}">{{$pg->shortname}}</a></li>
 							@endforeach
 						</ul>

@@ -95,6 +95,13 @@
                                   <hr>
                                   <div class="demo-switch">
                                       <div class="switch">
+                                        <input type="hidden" name="footer" value="1">
+                                          <label>{{conf('footer_title_1')}}<input type="checkbox" checked><span class="lever"></span>{{conf('footer_title_2')}}</label>
+                                      </div>
+                                  </div>
+                                  <hr>
+                                  <div class="demo-switch">
+                                      <div class="switch">
                                         <input type="hidden" name="header" value="0">
                                           <label>{{__('app.In_header')}}<input type="checkbox" ><span class="lever"></span>{{__('app.Not_in_header')}}</label>
                                       </div>

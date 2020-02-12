@@ -76,6 +76,7 @@ class PageController extends Controller
       $pg->parent_id = $req->parent_id;
       $pg->shortname = $req->shortname;
       $pg->body = $req->body;
+      $pg->footer_type = $req->footer_type;
       if ($pg->slug !== $req->slug) {
         if (empty($req->slug)) {
           $pg->slug = make_slug($req->title);
@@ -206,6 +207,7 @@ class PageController extends Controller
       $pg->body = $req->body;
       $pg->status = $req->status;
       $pg->footer = $req->footer;
+      $pg->footer_type = $req->footer_type;
       $pg->header = $req->header;
       $pg->save();
       if ($req->hasFile('images')) {

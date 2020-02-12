@@ -131,6 +131,13 @@
                                           <hr>
                                           <div class="demo-switch">
                                               <div class="switch">
+                                                  <input type="hidden" name="footer_type" @if($page->footer_type == 1) value="1" @else value="0" @endif>
+                                                  <label>{{conf('footer_title_1')}}<input type="checkbox" data-page="{{$page->id}}" @if($page->footer_type == 1) checked @endif id="pg_footer_type"><span class="lever"></span>{{conf('footer_title_2')}}</label>
+                                              </div>
+                                          </div>
+                                          <hr>
+                                          <div class="demo-switch">
+                                              <div class="switch">
                                                   <input type="hidden" name="header"  @if($page->header == 1) value="1" @else value="0" @endif >
                                                   <label>{{__('app.In_header')}}<input type="checkbox" data-page="{{$page->id}}"  @if($page->header == 1) checked @endif id="pg_header"><span class="lever"></span></label>
                                               </div>

@@ -80,6 +80,7 @@ class Controller extends BaseController
         if(File::exists($image_small) && $im->image !== 'default.png') {File::delete($image_small);}
         DB::select("DELETE FROM images WHERE id = ".$im->id);
       }
+      DB::select("DELETE FROM boostedpros WHERE prod_id = ".$id);
       DB::select("DELETE FROM protab WHERE prod_id = ".$id);
       DB::select("DELETE FROM products WHERE id = ".$id);
       return redirect()->back()->with(['type' => 'success','message' => Lang::get('app.Product_deteled')]);

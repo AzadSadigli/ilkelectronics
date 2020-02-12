@@ -215,7 +215,7 @@
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="product product-single">
 						<div class="product-thumb">
-							<a href="/product/{{$pr->slug}}" title="{{$pr->productname}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
+							<a href="/product/{{$pr->slug}}" title="{{$pr->productname}}" class="main-btn quick-view"></a>
 							@php($im = App\Images::where('prod_id',$pr->id)->orderBy('order','asc')->first())
 							@if(!empty($im))
 							<img src="/uploads/pro/small/{{$im->image}}" alt="{{$pr->productname}}">

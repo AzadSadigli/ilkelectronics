@@ -55,7 +55,7 @@
 			</div>
 		</div>
 	</div>
-<div class="section">
+<div class="section deals_of_day_parent" style="display:none">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			@foreach(App\Posters::inRandomOrder()->where('type',1)->where('status',1)->take(1)->get() as $ps)
-			<div class="col-md-3 col-sm-6 col-xs-6">
+			<div class="col-md-3 col-sm-6 col-xs-6 deals_of_day_item">
 				<div class="banner banner-2">
 					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
 					<div class="banner-caption">
@@ -77,7 +77,7 @@
 				</div>
 			</div>
 			@endforeach
-			<div class="col-md-9 col-sm-6 col-xs-6">
+			<div class="col-md-9 col-sm-6 col-xs-6 deals_of_day_item">
 				<div class="row">
 					<div id="product-slick-1" class="product-slick">
 						@foreach($bpro as $bp)
@@ -89,7 +89,6 @@
 								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
 									<li><span></span></li><li><span></span></li><li><span></span></li><li><span></span></li>
 								</ul>
-								<a href="/product/{{$bp->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
 								@if(App\Images::where('prod_id',$bp->id)->count() == 0)
 								<img src="/img/default.png" alt="{{$bp->productname}}">
 								@else @php($img = App\Images::where('prod_id',$bp->id)->orderBy('order','asc')->first())
@@ -143,7 +142,6 @@
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
-						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">
 						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())

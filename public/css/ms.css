@@ -12546,7 +12546,7 @@ textarea.input {
     padding: 5px 15px;
     font-weight: 700;
     color: #FFF;
-    background-color: #1e1d19;
+    background-color: #21c303;
     z-index: 22;
 }
 
@@ -12655,7 +12655,7 @@ textarea.input {
 }
 
 .product.product-single .quick-view {
-    position: absolute;
+    /* position: absolute;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
@@ -12663,7 +12663,8 @@ textarea.input {
     transform: translate(-50%, -50%);
     opacity: 0;
     visibility: hidden;
-    z-index: 20;
+    z-index: 20; */
+    display: none;
 }
 
 .product.product-single:hover .quick-view {

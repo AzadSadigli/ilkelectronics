@@ -5539,89 +5539,89 @@ function(t) {
         }
     }
 }),
-function(t) {
-    var e = {
-        url: !1,
-        callback: !1,
-        target: !1,
-        duration: 120,
-        on: "mouseover",
-        touch: !0,
-        onZoomIn: !1,
-        onZoomOut: !1,
-        magnify: 1
-    };
-    t.zoom = function(e, i, n, o) {
-        var r, s, a, l, c, d, u, p = t(e),
-            f = p.css("position"),
-            h = t(i);
-        return e.style.position = /(absolute|fixed)/.test(f) ? f : "relative", e.style.overflow = "hidden", n.style.width = n.style.height = "", t(n).addClass("zoomImg").css({
-            position: "absolute",
-            top: 0,
-            left: 0,
-            opacity: 0,
-            width: n.width * o,
-            height: n.height * o,
-            border: "none",
-            maxWidth: "none",
-            maxHeight: "none"
-        }).appendTo(e), {
-            init: function() {
-                s = p.outerWidth(), r = p.outerHeight(), i === e ? (l = s, a = r) : (l = h.outerWidth(), a = h.outerHeight()), c = (n.width - s) / l, d = (n.height - r) / a, u = h.offset()
-            },
-            move: function(t) {
-                var e = t.pageX - u.left,
-                    i = t.pageY - u.top;
-                i = Math.max(Math.min(i, a), 0), e = Math.max(Math.min(e, l), 0), n.style.left = e * -c + "px", n.style.top = i * -d + "px"
-            }
-        }
-    }, t.fn.zoom = function(i) {
-        return this.each(function() {
-            var n = t.extend({}, e, i || {}),
-                o = n.target && t(n.target)[0] || this,
-                r = this,
-                s = t(r),
-                a = document.createElement("img"),
-                l = t(a),
-                c = "mousemove.zoom",
-                d = !1,
-                u = !1;
-            if (!n.url) {
-                var p = r.querySelector("img");
-                if (p && (n.url = p.getAttribute("data-src") || p.currentSrc || p.src), !n.url) return
-            }
-            s.one("zoom.destroy", function(t, e) {
-                s.off(".zoom"), o.style.position = t, o.style.overflow = e, a.onload = null, l.remove()
-            }.bind(this, o.style.position, o.style.overflow)), a.onload = function() {
-                function e(e) {
-                    p.init(), p.move(e), l.stop().fadeTo(t.support.opacity ? n.duration : 0, 1, !!t.isFunction(n.onZoomIn) && n.onZoomIn.call(a))
-                }
-
-                function i() {
-                    l.stop().fadeTo(n.duration, 0, !!t.isFunction(n.onZoomOut) && n.onZoomOut.call(a))
-                }
-                var p = t.zoom(o, r, a, n.magnify);
-                "grab" === n.on ? s.on("mousedown.zoom", function(n) {
-                    1 === n.which && (t(document).one("mouseup.zoom", function() {
-                        i(), t(document).off(c, p.move)
-                    }), e(n), t(document).on(c, p.move), n.preventDefault())
-                }) : "click" === n.on ? s.on("click.zoom", function(n) {
-                    return d ? void 0 : (d = !0, e(n), t(document).on(c, p.move), t(document).one("click.zoom", function() {
-                        i(), d = !1, t(document).off(c, p.move)
-                    }), !1)
-                }) : "toggle" === n.on ? s.on("click.zoom", function(t) {
-                    d ? i() : e(t), d = !d
-                }) : "mouseover" === n.on && (p.init(), s.on("mouseenter.zoom", e).on("mouseleave.zoom", i).on(c, p.move)), n.touch && s.on("touchstart.zoom", function(t) {
-                    t.preventDefault(), u ? (u = !1, i()) : (u = !0, e(t.originalEvent.touches[0] || t.originalEvent.changedTouches[0]))
-                }).on("touchmove.zoom", function(t) {
-                    t.preventDefault(), p.move(t.originalEvent.touches[0] || t.originalEvent.changedTouches[0])
-                }).on("touchend.zoom", function(t) {
-                    t.preventDefault(), u && (u = !1, i())
-                }), t.isFunction(n.callback) && n.callback.call(a)
-            }, a.setAttribute("role", "presentation"), a.src = n.url
-        })
-    }, t.fn.zoom.defaults = e
-}(window.jQuery),
+// function(t) {
+//     var e = {
+//         url: !1,
+//         callback: !1,
+//         target: !1,
+//         duration: 120,
+//         on: "mouseover",
+//         touch: !0,
+//         onZoomIn: !1,
+//         onZoomOut: !1,
+//         magnify: 1
+//     };
+//     t.zoom = function(e, i, n, o) {
+//         var r, s, a, l, c, d, u, p = t(e),
+//             f = p.css("position"),
+//             h = t(i);
+//         return e.style.position = /(absolute|fixed)/.test(f) ? f : "relative", e.style.overflow = "hidden", n.style.width = n.style.height = "", t(n).addClass("zoomImg").css({
+//             position: "absolute",
+//             top: 0,
+//             left: 0,
+//             opacity: 0,
+//             width: n.width * o,
+//             height: n.height * o,
+//             border: "none",
+//             maxWidth: "none",
+//             maxHeight: "none"
+//         }).appendTo(e), {
+//             init: function() {
+//                 s = p.outerWidth(), r = p.outerHeight(), i === e ? (l = s, a = r) : (l = h.outerWidth(), a = h.outerHeight()), c = (n.width - s) / l, d = (n.height - r) / a, u = h.offset()
+//             },
+//             move: function(t) {
+//                 var e = t.pageX - u.left,
+//                     i = t.pageY - u.top;
+//                 i = Math.max(Math.min(i, a), 0), e = Math.max(Math.min(e, l), 0), n.style.left = e * -c + "px", n.style.top = i * -d + "px"
+//             }
+//         }
+//     }, t.fn.zoom = function(i) {
+//         return this.each(function() {
+//             var n = t.extend({}, e, i || {}),
+//                 o = n.target && t(n.target)[0] || this,
+//                 r = this,
+//                 s = t(r),
+//                 a = document.createElement("img"),
+//                 l = t(a),
+//                 c = "mousemove.zoom",
+//                 d = !1,
+//                 u = !1;
+//             if (!n.url) {
+//                 var p = r.querySelector("img");
+//                 if (p && (n.url = p.getAttribute("data-src") || p.currentSrc || p.src), !n.url) return
+//             }
+//             s.one("zoom.destroy", function(t, e) {
+//                 s.off(".zoom"), o.style.position = t, o.style.overflow = e, a.onload = null, l.remove()
+//             }.bind(this, o.style.position, o.style.overflow)), a.onload = function() {
+//                 function e(e) {
+//                     p.init(), p.move(e), l.stop().fadeTo(t.support.opacity ? n.duration : 0, 1, !!t.isFunction(n.onZoomIn) && n.onZoomIn.call(a))
+//                 }
+//
+//                 function i() {
+//                     l.stop().fadeTo(n.duration, 0, !!t.isFunction(n.onZoomOut) && n.onZoomOut.call(a))
+//                 }
+//                 var p = t.zoom(o, r, a, n.magnify);
+//                 "grab" === n.on ? s.on("mousedown.zoom", function(n) {
+//                     1 === n.which && (t(document).one("mouseup.zoom", function() {
+//                         i(), t(document).off(c, p.move)
+//                     }), e(n), t(document).on(c, p.move), n.preventDefault())
+//                 }) : "click" === n.on ? s.on("click.zoom", function(n) {
+//                     return d ? void 0 : (d = !0, e(n), t(document).on(c, p.move), t(document).one("click.zoom", function() {
+//                         i(), d = !1, t(document).off(c, p.move)
+//                     }), !1)
+//                 }) : "toggle" === n.on ? s.on("click.zoom", function(t) {
+//                     d ? i() : e(t), d = !d
+//                 }) : "mouseover" === n.on && (p.init(), s.on("mouseenter.zoom", e).on("mouseleave.zoom", i).on(c, p.move)), n.touch && s.on("touchstart.zoom", function(t) {
+//                     t.preventDefault(), u ? (u = !1, i()) : (u = !0, e(t.originalEvent.touches[0] || t.originalEvent.changedTouches[0]))
+//                 }).on("touchmove.zoom", function(t) {
+//                     t.preventDefault(), p.move(t.originalEvent.touches[0] || t.originalEvent.changedTouches[0])
+//                 }).on("touchend.zoom", function(t) {
+//                     t.preventDefault(), u && (u = !1, i())
+//                 }), t.isFunction(n.callback) && n.callback.call(a)
+//             }, a.setAttribute("role", "presentation"), a.src = n.url
+//         })
+//     }, t.fn.zoom.defaults = e
+// }(window.jQuery),
 function(t) {
     "use strict";
     var range_limit = [$("#price-slider").data("min"),$("#price-slider").data("max")];
@@ -5703,7 +5703,7 @@ function(t) {
         centerMode: !0,
         focusOnSelect: !0,
         asNavFor: "#product-main-view"
-    }), t("#product-main-view .product-view").zoom();
+    });
     var currency = $("#price-slider").data("c");
     var s = document.getElementById("price-slider");
     s && noUiSlider.create(s, {
@@ -6060,7 +6060,7 @@ $(document).ready(function(){
               old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val.slug+"' target='_blank'><i class='fa fa-search-plus'></i> "+vw+"</a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+val.productname+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+val.productname+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
           $(".prd_cnt").html(data.count);
@@ -6462,6 +6462,12 @@ $(document).ready(function(){
   // $(".brand-image").on("click",function(){
   //   window.location.href = $(this).children("img").data("href");
   // });
+  $db.on("click",".product-thumb",function(){
+    window.location.href = $(this).find("a.quick-view").attr("href");
+  });
+  if ($(".deals_of_day_item").length > 0) {
+    $(".deals_of_day_parent").removeAttr("style");
+  }
 });
 
 // testing purposes

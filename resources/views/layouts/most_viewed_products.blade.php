@@ -14,7 +14,7 @@
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
-						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"><i class="fa fa-search-plus"></i> {{__('app.Quick_view')}}</a>
+						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"></a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">
 						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())

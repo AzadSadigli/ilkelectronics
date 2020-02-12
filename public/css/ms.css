@@ -13861,6 +13861,9 @@ a {
       display: inline-block;
       vertical-align: top;
     }
+    .information div{
+      width: 50% !important;
+    }
 }
 #order_form,.acc_section{
   width: 94%;
@@ -14268,7 +14271,7 @@ textarea.input {
 }
 .information div{
   display: inline-block;
-  width: 50%;
+  width: 25%;
   border: 1px solid #efefef;
   padding: 10px;
   text-align: center;

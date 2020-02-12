@@ -180,6 +180,6 @@
 	</div>
 </div>
 <div class="information">
-	<div><h3><img src="/img/shipping.png"></h3><p>{{conf("text_1")}}</p></div><div><h3><img src="/img/price.png"></h3><p>{{conf("text_2")}}</p></div>
+	<div><h3><img src="/img/shipping.png"></h3><p>{{conf("text_1")}}</p></div><div><h3><img src="/img/price.png"></h3><p>{{conf("text_2")}}</p></div><div><h3><img src="/img/guarantee.png"></h3><p>{{conf("text_3")}}</p></div><div><h3><img src="/img/service.png"></h3><p>{{conf("text_4")}}</p></div>
 </div>
 @endsection

@@ -6463,7 +6463,7 @@ $(document).ready(function(){
   //   window.location.href = $(this).children("img").data("href");
   // });
   $db.on("click",".product-thumb",function(){
-    window.location.href = $(this).find("a.quick-view").attr("href");
+    window.location.href = $(this).siblings("div").find("a").attr("href");
   });
   if ($(".deals_of_day_item").length > 0) {
     $(".deals_of_day_parent").removeAttr("style");

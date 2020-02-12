@@ -77,11 +77,11 @@
 				</div>
 			</div>
 			@endforeach
-			<div class="col-md-9 col-sm-6 col-xs-6 deals_of_day_item">
+			<div class="col-md-9 col-sm-6 col-xs-6">
 				<div class="row">
 					<div id="product-slick-1" class="product-slick">
 						@foreach($bpro as $bp)
-						<div class="product product-single deals_of_day">
+						<div class="product product-single deals_of_day deals_of_day_item">
 							<div class="product-thumb">
 								<div class="product-label">
 									@if(!empty($bp->old_price)) <span class="sale">{{discount($bp->old_price,$bp->price)}} %</span> @endif

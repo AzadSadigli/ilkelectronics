@@ -64,7 +64,7 @@
             <form action="/search-result/search={request}" method="GET" autocomplete="off" class="form-search" accept-charset="utf-8">
 							<input class="input search-input" type="text" name="search" placeholder="{{__('app.Search')}}..." @if(Request::is('search-result/*')) value="{{$search}}" @else value="{{ isset($s) ?  $s : ''}}" @endif oninvalid="this.setCustomValidity('{{__('app.Please_enter_value_for_search')}}')" oninput="setCustomValidity('')" required>
 							<select class="input search-categories" name="category_id">
-								<option value="0">{{__('app.All_categories')}}</option>
+								<option value="0">{{__('app.All')}}</option>
                 @foreach(App\Category::all() as $ct)
                 <option @if(Request::is("search-result/search*")) @if($cat_id == $ct->id) selected @endif @endif value="{{$ct->id}}">{{$ct->name}}</option>
                 @endforeach

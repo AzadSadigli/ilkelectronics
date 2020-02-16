@@ -1,26 +1,23 @@
 @extends('layouts.ms')
 @section('head')
 	@if(Request::is('search-result/*'))
-	<meta name="description" content="">
+	<meta name="description" content="{{__('app.Search_result')}}: {{$search}}">
 	<meta name="keywords" content="">
-	<meta property=”og:title” content=””/>
-	<meta property=”og:url” content=””/>
-	<meta property=”og:site_name” content=””/>
-	<meta property=”og:image” content=””/>
-	<meta property=”og:type” content=””/>
-	<meta property=”og:description” content=””/>
+	<meta property=”og:title” content=”{$search}}”/>
+	<meta property=”og:description” content=”{{__('app.Search_result')}}: {{$search}}”/>
 	<title>{{$search}} - {{conf("Site_title")}}</title>
 	@else
-	<meta name="description" content="">
+	<meta name="description" content="{{$cat->name}} ">
 	<meta name="keywords" content="">
-	<meta property=”og:title” content=””/>
-	<meta property=”og:url” content=””/>
-	<meta property=”og:site_name” content=””/>
-	<meta property=”og:image” content=””/>
-	<meta property=”og:type” content=””/>
-	<meta property=”og:description” content=””/>
+	<meta property=”og:title” content=”{{$cat->name}}”/>
+	<meta property=”og:description” content=”{{$cat->name}}”/>
 	<title>{{$cat->name}} - {{conf("Site_title")}}</title>
 	@endif
+
+	<meta property=”og:url” content=”https://ilkelectronics.az/{{Request::path()}}”/>
+	<meta property=”og:site_name” content=”{{conf("Site_title")}}”/>
+	<meta property=”og:image” content=”https://ilkelectronics.az/img/logo.png”/>
+	<meta property=”og:type” content=”store”/>
 @endsection
 @section('body')
 	<div id="breadcrumb">
@@ -50,7 +47,7 @@
 								<img src="/uploads/pro/{{$tp->image}}" alt="{{$tp->productname}}">
 							</div>
 							<div class="product-body">
-								<h2 class="product-name"><a href="/product/{{$tp->slug}}" title="{{$tp->productname}}">{{$tp->productname}}</a></h2>
+								<h2 class="product-name"><a href="/product/{{$tp->slug}}" title="{{$tp->productname}}">{{str_limit($tp->productname,$limit = 80,$end = "...")}}</a></h2>
 								<h3 class="product-price">{{$tp->price}} @if(!empty($tp->old_price)) <del class="product-old-price">{{$tp->old_price}}</del> @endif</h3>
 								<div class="product-rating">
 									@for($k=1;$k<=5;$k++)
@@ -82,7 +79,7 @@
 						</div>
 					</div>
 					<div class="product-list">
-						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}}">
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
 							<div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
 							</div>

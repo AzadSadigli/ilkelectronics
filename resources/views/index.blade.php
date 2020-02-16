@@ -2,17 +2,17 @@
 @section('head')
 <meta name="description" content="">
 <meta name="keywords" content="">
-<meta property=”og:title” content=””/>
+<meta property=”og:title” content=”{{conf("Site_title")}}”/>
 <meta property=”og:url” content=””/>
-<meta property=”og:site_name” content=””/>
-<meta property=”og:image” content=””/>
-<meta property=”og:type” content=””/>
+<meta property=”og:site_name” content=”{{conf("Site_title")}}”/>
+<meta property=”og:image” content=”https://ilkelectronics.az/img/logo.png”/>
+<meta property=”og:type” content=”store”/>
 <meta property=”og:description” content=””/>
-<!-- <meta name="twitter:title" content="">
+<meta name="twitter:title" content="{{conf("Site_title")}}">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="">
-<meta name="twitter:site" content="">
-<meta name="twitter:creator" content=""> -->
+<meta name="twitter:image" content="https://ilkelectronics.az/img/logo.png">
+<meta name="twitter:site" content="{{conf("Site_title")}}">
+<meta name="twitter:creator" content="{{conf("Site_title")}}">
 <title>{{conf("Site_title")}}</title>
 @endsection
 @section('body')
@@ -86,6 +86,8 @@
 								<div class="product-label">
 									@if(!empty($bp->old_price)) <span class="sale">{{discount($bp->old_price,$bp->price)}} %</span> @endif
 								</div>
+								@php($lns = App\Loans::where('prod_id',$bpro->id)->where('rate',0)->orderBy('duration','desc')->first())
+								@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
 									<li><span></span></li><li><span></span></li><li><span></span></li><li><span></span></li>
 								</ul>
@@ -105,7 +107,7 @@
 								</div>
 							</div>
 							<div class="product-body">
-								<h3 class="product-name"><a href="/product/{{$bp->slug}}">{{str_limit($bp->productname,$limit = 28,$end="...")}}</a></h3>
+								<h3 class="product-name"><a href="/product/{{$bp->slug}}">{{str_limit($bp->productname,$limit = 80,$end="...")}}</a></h3>
 								<h2 class="product-price">{{$bp->price}} {{currency()}} @if(!empty($bp->old_price)) <del class="product-old-price">{{$bp->old_price}} {{currency()}}</del>@endif</h2>
 								<div class="product-btns">
 									@if(Auth::check())
@@ -142,6 +144,8 @@
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
+						@php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
+						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">
 						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())
@@ -158,7 +162,7 @@
 						</div>
 					</div>
 					<div class="product-body">
-						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{$pro->productname}}</a></h3>
+						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{str_limit($pro->productname,$limit = 80,$end="...")}}</a></h3>
 						<h2 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h2>
 						<div class="product-btns">
 							@if(Auth::check())

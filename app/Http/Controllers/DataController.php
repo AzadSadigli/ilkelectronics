@@ -72,7 +72,7 @@ class DataController extends Controller
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
-        $pros = DB::select("SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,(SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%' OR brand = '".$k."') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
+        $pros = DB::select("SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,(SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%' OR brand = '".$k."') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
         $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%' OR brand = '".$k."') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
       }
       return response()->json(['pros' => $pros,'count' => $c[0]->count,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
@@ -125,7 +125,7 @@ class DataController extends Controller
         }else{
           $ct_query = " = ".$ct;
         }
-        $pros = DB::select("SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
+        $pros = DB::select("SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query." ".$order." LIMIT ".$req->numb);
         $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
 
       }
@@ -169,7 +169,7 @@ class DataController extends Controller
       $data = array_slice($data,0,$range);
       return response()->json(['data' => $data]);
     }
-    
+
     public function subscribe(Request $req){
       $this->validate($req,[
         'email' => 'required|email'

@@ -6043,6 +6043,7 @@ $(document).ready(function(){
 				type: 'GET',
 				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct")},
 				success:function(data){
+          console.log(data.pros);
 					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
 					for (var i = 0; i < data.pros.length; i++) {
 						let val = data.pros[i],star = "";
@@ -6060,7 +6061,8 @@ $(document).ready(function(){
               old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div><a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+val.productname+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
+            let loan = val.loan != 0 ? `<i class="ln_head"><b>${val.loan} ${$("#prod_list").data("words").split(",")[4]}</b></i>` : '';
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div>"+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
           $(".prd_cnt").html(data.count);

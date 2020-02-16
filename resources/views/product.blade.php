@@ -1,13 +1,14 @@
 @extends('layouts.ms')
 @section('head')
-<meta name="description" content="{{$pro->description}}">
+@php($first_img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->get())
+<meta name="description" content="{{$pro->productname}}: {{$pro->description}}">
 <meta name="keywords" content="">
-<meta property=”og:title” content=””/>
-<meta property=”og:url” content=””/>
-<meta property=”og:site_name” content=””/>
-<meta property=”og:image” content=””/>
-<meta property=”og:type” content=””/>
-<meta property=”og:description” content=””/>
+<meta property=”og:title” content=”{{$pro->productname}}”/>
+<meta property=”og:url” content=”https://ilkelectronics.az/{{Request::path()}}”/>
+<meta property=”og:site_name” content=”{{conf("Site_title")}}”/>
+<meta property=”og:image” @if(count($first_img) > 0) content=”https://ilkelectronics.az/uploads/pro/{{$first_img->first()->image}}” @endif/>
+<meta property=”og:type” content=”store”/>
+<meta property=”og:description” content=”{{$pro->productname}}: {{$pro->description}}”/>
 <title>{{$pro->productname}} - {{conf("Site_title")}}</title>
 @endsection
 @section('body')
@@ -17,7 +18,7 @@
 				<li><a href="/">{{__('app.Home')}}</a></li>
 				@php($ct = App\Category::find($pro->category))
 				@if(!empty($ct))
-				<li><a href="/category/">{{App\Category::find($ct->parent_id)->name}}</a></li>
+				<li><a href="/category/{{App\Category::find($ct->parent_id)->slug}}">{{App\Category::find($ct->parent_id)->name}}</a></li>
 				<li class="active">{{$ct->name}}</li>
 				@endif
 			</ul>
@@ -215,6 +216,12 @@
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="product product-single">
 						<div class="product-thumb">
+							<div class="product-label">
+								@if(nd(\Carbon\Carbon::parse($pr->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
+								@if(!empty($pr->old_price)) <span class="sale">{{discount($pr->old_price,$pr->price)}} %</span> @endif
+							</div>
+	            @php($lns = App\Loans::where('prod_id',$pr->id)->where('rate',0)->orderBy('duration','desc')->first())
+							@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 							<a href="/product/{{$pr->slug}}" title="{{$pr->productname}}" class="main-btn quick-view"></a>
 							@php($im = App\Images::where('prod_id',$pr->id)->orderBy('order','asc')->first())
 							@if(!empty($im))
@@ -233,7 +240,7 @@
 							</div>
 						</div>
 						<div class="product-body">
-							<h3 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{$pr->productname}}</a></h3>
+							<h3 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{str_limit($pr->productname,$limit = 80,$end="...")}}</a></h3>
 							<h2 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h2>
 							<div class="product-btns">
 								@if(Auth::check())

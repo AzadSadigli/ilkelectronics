@@ -14,6 +14,8 @@
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
+            @php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
+						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"></a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">
@@ -31,7 +33,7 @@
 						</div>
 					</div>
 					<div class="product-body">
-						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{$pro->productname}}</a></h3>
+						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{str_limit($pro->productname,$limit = 80,$end="...")}}</a></h3>
 						<h2 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h2>
 						<div class="product-btns">
 							@if(Auth::check())

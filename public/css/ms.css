@@ -2863,6 +2863,7 @@ th {
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th {
+  max-width: 100px;
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;

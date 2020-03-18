@@ -20,8 +20,7 @@
 	<div class="container">
 		<div class="home-wrap">
 			<div id="home-slick">
-				@php($pss = App\Posters::where('type',0)->where('status',1)->get())
-				@if(count($pss) != 0)
+				@if(count($pss))
 				@foreach($pss as $ps)
 				<div class="banner banner-1">
 					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
@@ -29,8 +28,7 @@
 						<h1 class="primary-color">{{$ps->title}} </h1>
 						<h3 class="white-color font-weak">{{$ps->details}}</h3>
 						@if(isset($ps->button) && !empty($ps))
-						@php($arr = ['#2da8ff','#45e645','#e31e25','#e8cd09','#d0d0d0'])
-						 <a href="{{$ps->button_href}}" class="primary-btn" style="background:{{$arr[$ps->button_type]}}" target='_blank'>{{$ps->button}}</a>
+						 <a href="{{$ps->button_href}}" class="primary-btn" style="background:{{$arr_colors[$ps->button_type]}}" target='_blank'>{{$ps->button}}</a>
 						@endif
 					</div>
 				</div>
@@ -66,7 +64,7 @@
 					</div>
 				</div>
 			</div>
-			@foreach(App\Posters::inRandomOrder()->where('type',1)->where('status',1)->take(1)->get() as $ps)
+			@foreach($rnd_pss as $ps)
 			<div class="col-md-3 col-sm-6 col-xs-6 deals_of_day_item">
 				<div class="banner banner-2">
 					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">

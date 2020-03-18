@@ -238,6 +238,37 @@
         max-width: 100px;
         margin-bottom: 10px;
       }
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /* top: 100%; */
+        left: 50px;
+        right: 0;
+        width: 311px;
+        max-height: 160px;
+        overflow: overlay;
+      }
+
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff; 
+        border-bottom: 1px solid #d4d4d4; 
+      }
+
+      /*when hovering an item:*/
+      .autocomplete-items div:hover {
+        background-color: #e9e9e9; 
+      }
+
+      /*when navigating through the items using the arrow keys:*/
+      .autocomplete-active {
+        background-color: DodgerBlue !important; 
+        color: #ffffff; 
+      }
     </style>
 </head>
 <body class="theme-red">

@@ -4,17 +4,17 @@
 				<div class="category-nav @if(!Request::is('/')) show-on-click @endif">
 					<span class="category-header">{{__('app.Categories')}} <i class="fa fa-list"></i></span>
 					<ul class="category-list">
-						@foreach(App\Category::whereNull('parent_id')->orderBy('order','ASC')->get() as $ct)
+						@foreach($cats as $ct)
 						<li class="dropdown side-dropdown">
-							@if(App\Category::where('parent_id',$ct->id)->count() > 0) <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"> @else <a href="/category/{{$ct->slug}}"> @endif
+							@if($ct->subcats_count) <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"> @else <a href="/category/{{$ct->slug}}"> @endif
 								{{$ct->name}}
-								@if(App\Category::where('parent_id',$ct->id)->count() > 0) <i class="fa fa-angle-right"></i> @endif</a>
-								@if(App\Category::where('parent_id',$ct->id)->count() > 0)
+								@if($ct->subcats_count) <i class="fa fa-angle-right"></i> @endif</a>
+								@if($ct->subcats_count)
 								<div class="custom-menu">
 								<div class="row">
 									<div class="col-md-4">
 										<ul class="list-links">
-											@foreach(App\Category::where('parent_id',$ct->id)->get() as $k => $sub_ct)
+											@foreach($ct->subcats as $k => $sub_ct)
 												@if($k%2 === 0)
 												<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
 												@endif
@@ -24,7 +24,7 @@
 									</div>
 									<div class="col-md-4">
 										<ul class="list-links">
-											@foreach(App\Category::where('parent_id',$ct->id)->orderBy('order','ASC')->get() as $k => $sub_ct)
+											@foreach($ct->subcats as $k => $sub_ct)
 												@if($k%2 !== 0)
 													<li><a href="/category/{{$sub_ct->slug}}">{{$sub_ct->name}}</a></li>
 												@endif
@@ -44,12 +44,11 @@
 					<span class="menu-header">{{__('app.Menu')}} <i class="fa fa-bars"></i></span>
 					<ul class="menu-list">
 						<li><a href="/">{{__('app.Home')}}</a></li>
-						@foreach(App\Pages::where('status',1)->where('header',1)->where('parent_id',0)->take(4)->get() as $page)
-						@php($ch_pg = App\Pages::where('status',1)->where('parent_id',$page->id)->where('header',1)->get())
-						<li @if(count($ch_pg) != 0) class="dropdown default-dropdown" @endif><a @if(count($ch_pg) != 0) class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" @else href="/page/{{$page->slug}}" @endif>{{$page->shortname}} @if(count($ch_pg) != 0) <i class="fa fa-caret-down"></i> @endif</a>
-							@if(count($ch_pg) != 0)
+						@foreach($header_pages as $page)
+						<li @if($page->childs_count) class="dropdown default-dropdown" @endif><a @if($page->childs_count) class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" @else href="/page/{{$page->slug}}" @endif>{{$page->shortname}} @if(count($page->childs) != 0) <i class="fa fa-caret-down"></i> @endif</a>
+							@if($page->childs_count)
 							<ul class="custom-menu">
-								@foreach($ch_pg as $pg)
+								@foreach($page->childs as $pg)
 								<li><a href="/page/{{$pg->slug}}">{{$pg->shortname}}</a></li>
 								@endforeach
 							</ul>

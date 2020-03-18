@@ -203,7 +203,7 @@ class ProductController extends Controller
         }
         $pt->prod_id = $req->main_id;
         if (!empty($arr[$i]["title"]) && !empty($arr[$i]["desc"])) {
-          $pt->title = $arr[$i]["title"];
+          $pt->title = trim($arr[$i]["title"]);
           $pt->description = $arr[$i]["desc"];
           $pt->order = $arr[$i]["index"];
           if (!isset($pt_check) | empty($pt_check)) {
@@ -231,7 +231,7 @@ class ProductController extends Controller
       if (empty($req->slug)) {
         $pro->slug = make_slug($req->productname);
       }else{
-        $pro->slug = make_slug($req->slug);
+        $pro->slug = str_slug($req->slug);
       }
       $pro->category = $req->category;
       $pro->prod_id = $req->prod_id;
@@ -315,5 +315,10 @@ class ProductController extends Controller
         $img->update();
       }
       return response()->json(['success' => Lang::get('app.Images_reordered')]);
+    }
+
+    public function get_tab_sugg(){
+      $names = DB::select("SELECT DISTINCT(title) FROM protab");
+      return $names;
     }
 }

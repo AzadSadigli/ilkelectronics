@@ -15,7 +15,7 @@ use App\News;
 
 
 
-Route::get('/not-found','Controller@error_page');
+Route::get('/error/{type?}','Controller@error_page');
 Route::get('/','ProductController@index');
 Route::get('/currency/{currency}','Controller@change_currency');
 
@@ -44,6 +44,9 @@ Route::post('/order-product','ProductController@order_now');
 
 Route::group(['prefix' => 'admin'], function(){
   Route::group(['middleware' => 'admin'],function(){
+
+    Route::get('/get-tab-suggestions','ProductController@get_tab_sugg');
+
     Route::get('/','AdminController@index');
     Route::view('/profile','admin.profile');
     Route::get('/get-notification','DataController@get_notification_for_admin');

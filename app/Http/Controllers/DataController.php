@@ -186,6 +186,9 @@ class DataController extends Controller
       return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
     }
     public function testing(Request $req){
-      // echo LDAP_Test("test","test");
+      $cats = Category::with('subcats')->withCount('subcats')->where(function ($q) {
+        $q->where('parent_id',0)->orWhereNull('parent_id');
+      })->get();
+      return $cats;
     }
 }

@@ -15,7 +15,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="error-page">
-					<h2>Nothing found</h2>
+					<h2>@if($type == '404') {{__('app.Nothing_found')}} @else {{__('app.Internal_error')}} @endif</h2>
 					<p>
 						<a href="/" class="btn btn-danger">{{__('app.Back_to_home')}}</a>
 					</p>

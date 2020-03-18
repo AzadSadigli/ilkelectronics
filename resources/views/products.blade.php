@@ -69,20 +69,21 @@
 							<div class="sort-filter">
 								<span class="text-uppercase">{{__('app.Sort_By')}}:</span>
 								<select class="input sortby_value">
-										<option value="0">{{__('app.Latest_products')}}</option>
-										<option value="1">{{__('app.First_cheaper')}}</option>
-										<option value="2">{{__('app.First_expensive')}}</option>
-										<option value="3">{{__('app.High_rated_products')}}</option>
-									</select>
+									<option value="0" data-value="latest-products">{{__('app.Latest_products')}}</option>
+									<option value="1" data-value="first-cheaps">{{__('app.First_cheaper')}}</option>
+									<option value="2" data-value="first-expensives">{{__('app.First_expensive')}}</option>
+									<option value="3" data-value="high-rated-products">{{__('app.High_rated_products')}}</option>
+								</select>
 								<a class="main-btn icon-btn sortby_value_btn filter-btn"><i class="fa fa-arrow-down"></i></a>
 							</div>
 						</div>
 					</div>
 					<div class="product-list">
+						@if(false)<div class="prod_loading_overlay"></div>@endif
 						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
-							<div class="loading-gif">
+							<!-- <div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<div class="load-section" style="display:none">

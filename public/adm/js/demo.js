@@ -82,6 +82,19 @@ const padZero = (str, len) => {
     var zeros = new Array(len).join('0');
     return (zeros + str).slice(-len);
 }
+const tsuggs = [];
+const tb_suggestions = () => {
+  $.ajax({
+    url: '/admin/get-tab-suggestions',
+    type: 'GET',
+    success:function(d){
+      for (let i = 0; i < d.length; i++) {
+        tsuggs.push(d[i].title);         
+      }
+    }
+  });
+}
+tb_suggestions();
 const invertColor = (hex) => {
     if (hex.indexOf('#') === 0) {
         hex = hex.slice(1);
@@ -120,6 +133,73 @@ $db.on("click",".notify .close",function(){
     $(".notify:eq("+(len - k - 1)+")").animate({bottom: bt+"px"});
   }
 });
+const autocomplete = (inp, arr) => {
+  var currentFocus;
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      this.parentNode.appendChild(a);
+      for (i = 0; i < arr.length; i++) {
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          b = document.createElement("DIV");
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          b.addEventListener("click", function(e) {
+              inp.value = this.getElementsByTagName("input")[0].value;
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        currentFocus++;
+        addActive(x);
+      } else if (e.keyCode == 38) { 
+        currentFocus--;
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        e.preventDefault();
+        if (currentFocus > -1) {
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+// autocomplete(document.getElementById("myInput"), countries);
+
 setInterval(function(){
   let len = $(".notify").length;
   for (var i = 0; i < len; i++) {
@@ -1054,13 +1134,18 @@ if (typeof page !== 'undefined') {
                 let html = "";
                 for (var i = 0; i < data.pts.length; i++) {
                   let val = data.pts[i];
-                  html += "<tr data-id='"+val['id']+"'><td><input type='text' class='tab_inputs' placeholder='"+wrds[0]+"...' value='"+val['title']+"'> </td><td><textarea class='tab_inputs' placeholder='"+wrds[1]+"...'>"+val['description']+"</textarea> </td><td><a class='btn btn-danger tab_input_delete' data-id='"+val['id']+"'><i class='fa fa-trash'></i></a> </td></tr>";
+                  html += "<tr data-id='"+val['id']+"'><td><input type='text' class='tab_inputs' placeholder='"+wrds[0]+"...' value='"+val['title']+"' autocomplete='off'> </td><td><textarea class='tab_inputs' placeholder='"+wrds[1]+"...'>"+val['description']+"</textarea> </td><td><a class='btn btn-danger tab_input_delete' data-id='"+val['id']+"'><i class='fa fa-trash'></i></a> </td></tr>";
+                  // console.log($("tab_inputs").eq(i));
                 }
                 $(tbd).html(html);
                 $(tbd).append(new_input);
               }
             })
           }
+          $db.on("input",".tab_inputs",function(){
+            console.log(this);
+            autocomplete(this, tsuggs);
+          });
           $(function() {
               var isDragging = false;
               $("tbody tr")

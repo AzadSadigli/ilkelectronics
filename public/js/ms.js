@@ -5779,6 +5779,9 @@ $(document).ready(function(){
     //   paddingRight: sz+'px'
     // });
   }
+  const isset = (variable) => {
+      return typeof variable !== 'undefined';
+  }
   const setCookie = function(name,value,days) {
     var expires = "";
     if (days) {
@@ -5838,6 +5841,82 @@ $(document).ready(function(){
       var date_diff = new Date( milisec_diff );
       return days;
   }
+
+  const changeurl = (page, url) => {
+        if (typeof (history.pushState) != "undefined") {
+            var obj = {Page: page, Url: url};
+            history.pushState(obj, obj.Page, obj.Url);
+        } else {
+            window.location.href = "/panel";
+        }
+  }
+const baseName = (str) => {
+     var base = new String(str).substring(str.lastIndexOf('/') + 1);
+      if(base.lastIndexOf(".") != -1)
+          base = base.substring(0, base.lastIndexOf("."));
+     return base;
+  }
+const $_get = (index) => {
+    let vars = location.href.substring(location.href.indexOf("?") + 1).split("&");
+    let qs = {};
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split("=");
+      var key = decodeURIComponent(pair[0]);
+      var value = decodeURIComponent(pair[1]);
+      // If first entry with this name
+      if (typeof qs[key] === "undefined") {
+        qs[key] = decodeURIComponent(value);
+        // If second entry with this name
+      } else if (typeof qs[key] === "string") {
+        var arr = [qs[key], decodeURIComponent(value)];
+        qs[key] = arr;
+        // If third or later entry with this name
+      } else {
+        qs[key].push(decodeURIComponent(value));
+      }
+    }
+    return qs[index] || "";
+  }
+  const lang = [];
+  const l = (k) => {
+    if (lang.length == 0) {
+      let res = "";
+      $.ajax({
+        url: '/get-lang-list',
+        type: 'GET',
+        data: {token: mt},
+        async: false,
+        success:function(d){
+          let i = 0;
+          while (i < d.length) {
+            lang.push({key: Object.keys(d[i])[0],val:Object.values(d[i])[0] || ''});
+            i++;
+          }
+          res = isset(lang.filter(a => a.key.includes(k))[0]) ? lang.filter(a => a.key.includes(k))[0].val  : `app.${k}`;
+        }
+      });
+      if (isset(res)) {
+        return res;
+      }else{
+        return l(k);
+      }
+    }else{
+      return isset(lang.filter(it => it.key.includes(k))[0]) ? lang.filter(it => it.key.includes(k))[0].val : `app.${k}`;
+    }
+  }
+  // const Toast = Swal.mixin({
+  //     toast: true,
+  //     position: 'top-end',
+  //     showConfirmButton: false,
+  //     timer: 3000
+  //   });
+  // const notify_once = (mess,type) => {
+  //   // Expected "success", "error", "warning", "info" or "question", got "danger"
+  //   Toast.fire({
+  //     type: type,
+  //     title: mess
+  //   });
+  // }
   const ucheck = (data) => {
     return document.URL.indexOf(data) > 0 ? true : false;
   }
@@ -5927,7 +6006,7 @@ $(document).ready(function(){
           for (var i = 0; i < data.list.length; i++) {
             let vl = data.list[i];
             let img = `<img src='/uploads/pro/small/${vl["image"]}' alt='${vl["productname"]}'>`;
-            html += "<div class='product product-widget'><div class='product-thumb'>"+img+"</div><div class='product-body'><h3 class='product-price'>"+vl['price']+" "+data.currency+"<span class='qty'> x "+vl["wquantity"]+"</span></h3><h2 class='product-name'><a href='/product/"+vl["slug"]+"'>"+vl["productname"]+"</a></h2></div><a class='wdelete cancel-btn' data-id='"+vl["id"]+"'><i class='fa fa-trash'></i></a></div>";
+            html += "<div class='product product-widget'><div class='product-thumb'>"+img+"</div><div class='product-body'><h3 class='product-price'>"+vl['price']+" "+data.currency+"<span class='qty'> x "+vl["wquantity"]+"</span></h3><h2 class='product-name'><a href='/product/"+vl["slug"]+"'>"+str_limit(vl["productname"],50)+"</a></h2></div><a class='wdelete cancel-btn' data-id='"+vl["id"]+"'><i class='fa fa-trash'></i></a></div>";
           }
           $("#wishlist_head").html(html);
           // $(".wish_total").html(data.total +data.currency);
@@ -6009,24 +6088,23 @@ $(document).ready(function(){
 					brand_list.splice(brand_list.indexOf($(this).val()),1);
 				}
 		});
-    let $sv = $(".sortby_value"),
-        $fmi = $(".filt_min"),
-        $fma = $(".filt_max"),
-        $smp = $(".show_num_prod");
-		let filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
+    let $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
+		let filter = [$_get('sort-by-value'),$_get('min-price'),$_get('max-price'),$smp.val(),brand_list];
     var pro_numb = 15;
-		$db.on("click",".filter-btn",function(){
-			filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
-      $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
-			get_prods(pro_numb);
-		});
-    $(".sortby_value").on("change",function(){
-      filter = [$(this).val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
-      get_prods(pro_numb);
+    console.log(filter);
+    let filter_prod = (txt_filter) => {
+      filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
+      changeurl(location.pathname,`${location.pathname}?brand-list=${brand_list}&min-price=${$fmi.val()}&max-price=${$(".filt_max").val()}&sort-by-value=${$sv.find(':selected').data("value")}`);
+      // $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
+      get_prods(pro_numb,txt_filter);
+    }
+    $db.on("click",".filter-btn,.sortby_value_btn",function(){
+        let txt_filter = $(this).html();
+        btn_spin($(this));
+        filter_prod(txt_filter);
     });
-    $(".sortby_value_btn").on("click",function(){
-      filter = [$sv.val(),$fmi.val(),$smp.val(),$smp.val(),brand_list];
-      get_prods(pro_numb);
+    $(".sortby_value").on("change",function(){
+      filter_prod();
     });
     let ld_btn_txt = $(".load-section a").text();
     $db.on("click",".load-section a",function(){
@@ -6035,7 +6113,7 @@ $(document).ready(function(){
       get_prods(pro_numb);
     });
 		urls = ['/get-search-result','/get-category-products'];
-		const get_prods = (pro_numb) => {
+		const get_prods = (pro_numb,txt_filter) => {
 			let u = urls[1];
 			if (ucheck("search-result")) {u = urls[0];}
 			$.ajax({
@@ -6043,7 +6121,6 @@ $(document).ready(function(){
 				type: 'GET',
 				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct")},
 				success:function(data){
-          console.log(data.pros);
 					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
 					for (var i = 0; i < data.pros.length; i++) {
 						let val = data.pros[i],star = "";
@@ -6075,6 +6152,7 @@ $(document).ready(function(){
             $(".load-section").css("display","none");
           }
 				},complete:function(){
+                    if(isset(txt_filter)){$(".filter-btn").html(txt_filter);}
           $(".load-section a").html(ld_btn_txt)
         }
 			});

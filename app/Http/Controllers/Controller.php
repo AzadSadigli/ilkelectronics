@@ -163,7 +163,8 @@ class Controller extends BaseController
         }
       }
     }
-    public function error_page(){
-      return view('error');
+    public function error_page($type = null){
+      $type = $type || "default";
+      return view('error',compact('type'));
     }
 }

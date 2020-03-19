@@ -80,7 +80,7 @@
 					</div>
 					<div class="product-list">
 						@if(false)<div class="prod_loading_overlay"></div>@endif
-						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-ct="{{$cat_id}}"  data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
 							<!-- <div class="loading-gif">
 								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
 							</div> -->

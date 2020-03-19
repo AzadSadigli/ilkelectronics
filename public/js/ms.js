@@ -6117,6 +6117,7 @@ const $_get = (index) => {
 						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div>"+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
+          // $(id + "img.lazy").lazyload();
           $(".prd_cnt").html(data.count);
           if (data.pros.length == 0) {
             $(id).html("<center class='no-prod-found'>"+data.empty+"</center>")
@@ -6559,61 +6560,3 @@ const $_get = (index) => {
     $(".deals_of_day_parent").removeAttr("style");
   }
 });
-
-// testing purposes
-(function(){
-  // var numbersArray = [] , max = 100;
-  // for( var i=1; numbersArray.push(i++) < max;)
-  // console.log(numbersArray);
-  const doSomething = (a) => {
-    // a || console.log("a");
-    // console.log("test");
-  }
-  doSomething();
-  // function getCategory(age) {
-  //   var category = "";
-  //   switch (true) {
-  //       case isNaN(age):
-  //           category = "not an age";
-  //           break;
-  //       case (age >= 50):
-  //           category = "Old";
-  //           break;
-  //       case (age <= 20):
-  //           category = "Baby";
-  //           break;
-  //       default:
-  //           category = "Young";
-  //           break;
-  //   };
-  //   return category;
-  // }
-  // Math.pow(2, n);
-  // 2 << (n - 1);
-  // 2**n;
-  // var num =2.443242342;
-  // num = num.toFixed(4);
-  class Car {
-    constructor(brand) {
-      this.carname = brand;
-    }
-  }
-  mycar = new Car("Ford");
-  let foo = 110; let a = 5;
-  foo == 10 && doSomething(a);
-  // console.log(num)
-  // setInterval(doSomething, 1000);
-  const xx = (x, y) => x * y;
-  const yy = (x, y) => { return x * y};
-  let first = 'first',last='last';
-  let name = `Your name is ${first} ${last}.`
-
-  // console.log(1553 / 10   | 0)  // Result: 155
-  const DisplayNone = (input) => {
-    $(input).css("display","none");
-  }
-  // $("#top-header").DisplayNone();
-  // console.log(ucheck("product"));
-
-
-})();

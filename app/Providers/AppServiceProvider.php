@@ -3,22 +3,17 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Schema;
+//use Illuminate\Support\URL;
+
 use App\Category;
 use App\Pages;
 use App\Posters;
+
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
     /**
      * Bootstrap any application services.
      *
@@ -26,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (Request::server('HTTP_X_FORWARDED_PROTO') == 'https') {
+            URL::forceScheme('https');
+        } else {
+            URL::forceScheme('http');
+        }
       Schema::defaultStringLength(191);
       $cats = Category::with('subcats')->withCount('subcats')->where(function ($q) {
         $q->where('parent_id',0)->orWhereNull('parent_id');
@@ -42,5 +42,15 @@ class AppServiceProvider extends ServiceProvider
       view()->composer(['index'],function($view) use ($arr_colors,$pss,$rnd_pss){
         $view->with(['arr_colors' => $arr_colors,'pss' => $pss,'rnd_pss' => $rnd_pss]);
       });
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+      
     }
 }

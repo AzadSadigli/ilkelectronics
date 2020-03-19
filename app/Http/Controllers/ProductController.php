@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Category;
 use App\Products;
 use App\Protab;
@@ -18,7 +18,7 @@ use File;
 use App\Boostedpros;
 use Auth;
 use App\Brand;
-use Request;
+// use Request;
 
 class ProductController extends Controller
 {

@@ -1107,7 +1107,6 @@ if (typeof page !== 'undefined') {
             urls = urls[0];
             main_id = $(tbd).data("id");
           }
-          console.log(main_id);
           $db.on("click",".tab_input_delete",function(){
             $("#tab_table tbody tr td:eq(2) a").html('<i class="fa fa-refresh fa-spin"></i>').removeClass(".tab_input_delete");
             $(tbd+" > tr:eq("+getCookie("number_of_tr")+")").remove();
@@ -1143,7 +1142,6 @@ if (typeof page !== 'undefined') {
             })
           }
           $db.on("input",".tab_inputs",function(){
-            console.log(this);
             autocomplete(this, tsuggs);
           });
           $(function() {

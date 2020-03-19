@@ -12,7 +12,9 @@
 	@if(!empty(conf('Mob_browser_color')))
 	<meta name="theme-color" content="{{conf('Mob_browser_color')}}" />
 	@endif
+	@if(!isLocalhost())
 	@include('layouts.google')
+	@endif
 </head>
 <body>
 	<header>
@@ -216,7 +218,7 @@
 			</div>
 		</div>
 	</footer>
-	<script src="/js/ms.js?v={{uniqid()}}"></script>
+	<script src="/js/ms.js?v={{uniqid()}}" defer></script>
   @section('foot')
   @show
 </body>

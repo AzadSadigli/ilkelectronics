@@ -46,7 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        // return parent::render($request, $e);
+        if (isLocalhost()) {
+            return parent::render($request, $e);
+        }
         if($this->isHttpException($e)){
           return redirect('/error/'.$e->getStatusCode());
         }else{

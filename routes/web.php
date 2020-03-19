@@ -128,6 +128,7 @@ Route::group(['prefix' => 'admin'], function(){
   Route::group(['middleware' => 'secondadmin'],function(){
     Route::get('/users-list','AdminController@user_list');
     Route::get('/delete-product/{id}','Controller@delete_product');
+    Route::get('/compress/images','ProductController@compress_all_images');
   });
   Route::group(['middleware' => 'mainadmin'],function(){
     Route::get('/testing','DataController@testing');

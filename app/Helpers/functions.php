@@ -218,6 +218,26 @@ function currency($val = null){
     }
   }
 }
+function isLocalhost($whitelist = ['127.0.0.1', '::1']) {
+  return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
+}
+function compress($source, $destination, $quality) {
+
+  $info = getimagesize($source);
+
+  if ($info['mime'] == 'image/jpeg') 
+      $image = imagecreatefromjpeg($source);
+
+  elseif ($info['mime'] == 'image/gif') 
+      $image = imagecreatefromgif($source);
+
+  elseif ($info['mime'] == 'image/png') 
+      $image = imagecreatefrompng($source);
+
+  imagejpeg($image, $destination, $quality);
+
+  return $destination;
+}
 
 function number_of_tags($path,$element){
   $data = file_get_contents(burl().$path);

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use App\Category;
 use App\Products;
 use App\Protab;
@@ -18,6 +18,8 @@ use File;
 use App\Boostedpros;
 use Auth;
 use App\Brand;
+use Request;
+
 class ProductController extends Controller
 {
     public function index(){
@@ -267,6 +269,7 @@ class ProductController extends Controller
         for ($i=0; $i < count($imgArr); $i++) {
             $img_name = $imgArr[$i];
             resize($sm_folder.$img_name, $sm_folder.$img_name, 262.5, 350);
+            compress($sm_folder.$img_name, $sm_folder.$img_name,300);
             resize($folder.$img_name, $folder.$img_name, 1200, 1200);
             logo_on_image($folder.$img_name,'img/logo-transparent.png',$folder.$img_name);
             $img = new Images;
@@ -288,6 +291,18 @@ class ProductController extends Controller
     // public function edit_product(Request $req){
     //
     // }
+    public function compress_all_images(){
+      $sm_folder = 'uploads/pro/small/';
+      for ($i=0; $i < count(scandir($sm_folder)); $i++) {
+        $img = scandir($sm_folder)[$i];
+        if (!in_array($img,array('.','..','default.png','.DS_Store'))) {
+          compress($sm_folder.$img, $sm_folder.$img,65);
+          // echo scandir($sm_folder)[$i].'<br>';
+        }
+      }
+      // die;
+      return "ok";
+    }
     public function add_tab(Request $req){
 
     }

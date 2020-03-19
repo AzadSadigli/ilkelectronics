@@ -12183,7 +12183,7 @@ textarea.input {
     -webkit-transform: translate(0px, 0px);
     -ms-transform: translate(0px, 0px);
     transform: translate(0px, 0px);
-    box-shadow: 0 17px 15px 18px #dedcdc59;
+    box-shadow: 0 9px 9px -4px #dedcdc59;
 }
 
 .category-nav .category-list>li+li {

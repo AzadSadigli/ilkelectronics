@@ -1282,6 +1282,18 @@ $(".brand_image").change(function(){
     }
   });
 });
+ 
+$("#compress_prods").click(function(){
+  let t = $(this);
+  t.find('i').addClass('fa-spin');
+  $.ajax({
+    url: '/admin/compress/images',
+    type: 'GET',
+    success:function(d){
+      t.find('i').removeClass('fa-spin');
+    }
+  });
+});
 // $("#submit_loans").on("click",function(){
 //   $(".new_loan_form").submit();
 // });

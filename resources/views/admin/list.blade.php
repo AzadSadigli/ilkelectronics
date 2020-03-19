@@ -8,6 +8,7 @@
 <link href="/adm/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="/adm/css/style.css" rel="stylesheet">
 <link href="/adm/css/themes/all-themes.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/fontawesome.min.css">
 @if(Request::is('admin/page-list'))
 <title>{{__('app.Page_list')}} - {{conf("admin_title")}}</title>
 @elseif(Request::is('admin/news-list'))
@@ -37,9 +38,13 @@
                       @elseif(Request::is('admin/users-list'))
                       {{__('app.User_list')}}
                       @else
-                      {{__('app.Product_list')}}
+                      {{__('app.Product_list')}} 
+                      @if(Auth::user()->role_id >= 3)
+                      <a href="#" class="btn btn-primary pull-right" id="compress_prods"><i class="fa fa-sync"></i> </a>
                       @endif
-                    </h2></div>
+                      @endif
+                    </h2>
+                  </div>
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable">

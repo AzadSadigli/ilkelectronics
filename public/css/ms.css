@@ -12185,7 +12185,9 @@ textarea.input {
     transform: translate(0px, 0px);
     box-shadow: 0 9px 9px -4px #dedcdc59;
 }
-
+.error-page-div{
+  min-height: 587px;
+}
 .category-nav .category-list>li+li {
     border-top: 1px solid #e2e2e2;
 }

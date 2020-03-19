@@ -11,7 +11,7 @@
 			</ul>
 		</div>
 	</div>
-	<div class="section">
+	<div class="section error-page-div">
 		<div class="container">
 			<div class="row">
 				<div class="error-page">

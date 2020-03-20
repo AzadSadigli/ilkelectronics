@@ -15,5 +15,5 @@
   <input type="hidden" class="filt_max" value="{{$max}}">
   <hr>
   <button class="cust-btn-danger reset-filter">{{__('app.Reset')}}</button>
-  <button class="cust-btn filter-btn pull-right">{{__('app.Filter')}}</button>
+  <button class="cust-btn filter-btn pull-right" id="nav_filter">{{__('app.Filter')}}</button>
 </div>

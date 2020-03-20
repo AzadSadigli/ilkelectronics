@@ -126,10 +126,16 @@
 							</div>
 							<div class="input-checkbox">
 									<div class="prof_sec">
+											@if(Auth::check())
 											<ul>
 												<li><i class="fa fa-chevron-left"></i>  <a href="/profile"> {{__('app.Account_settings')}}</a></li>
 												<li> <i class="fa fa-chevron-left"></i> <a href="/profile?action=password-change"> {{__('app.Change_password')}}</a></li>
 											</ul>
+											@else
+											<ul>
+												<li> <i class="fa fa-chevron-left"></i> <a href="/account?action=register"> {{__('app.Register')}}</a></li>
+											</ul>
+											@endif
 											{{conf("Contact_page_text")}}
 									</div>
 								</div>

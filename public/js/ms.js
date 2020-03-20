@@ -6088,7 +6088,7 @@ const $_get = (index) => {
         $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
 		let filter = [($_get('sort-by-value') || $sv.val()),($_get('min-price') || $fmi.val()),
                   ($_get('max-price') || $fma.val()),$smp.val(),brand_list];
-    let get_prods = (pro_numb,txt_filter) => {
+    let get_prods = (pro_numb,txt_filter,btn_cls) => {
 			let u = urls[1];
 			if (ucheck("search-result")) {u = urls[0];}
 			$.ajax({
@@ -6127,14 +6127,26 @@ const $_get = (index) => {
           }else{
             $(".load-section").css("display","none");
           }
-				},complete:function(){if(isset(txt_filter)){$(".filter-btn").html(txt_filter);}$(".load-section a").html(ld_btn_txt)}
+				},complete:function(){
+          if(isset(txt_filter)){
+            if (btn_cls.includes('filter-btn')) {
+              $(".sortby_value_btn").html(`<i class="fa fa-arrow-down"></i>`);
+              $("#nav_filter").html(txt_filter);
+            }else{
+              $(".reset-filter").html(txt_filter);
+            }
+          }$(".load-section a").html(ld_btn_txt)}
 			});
 		}
 		$db.on("click",".reset-filter",function(){
+      let txt_filter = $(this).html(),btn_cls = $(this).attr("class");
+      btn_spin($(this));
 			for (var i = 0; i < $(".filt-by-brands input").length; i++) {
 				$($(".filt-by-brands input")[i]).prop("checked", false);
 			}
 			brand_list = [];
+      filter_url([{'brand-list': ''},{'min-price': ''},{'max-price': ''},{'sort-by-value':''}]);
+      get_prods(pro_numb,txt_filter,btn_cls);
 		});
 		let input = ".filt-by-brands input[type='checkbox']";
 		$db.on("change",".filt-by-brands input:not(:eq(0))",function(){
@@ -6148,16 +6160,16 @@ const $_get = (index) => {
 					brand_list.splice(brand_list.indexOf($(this).val()),1);
 				}
 		});
-    let filter_prod = (txt_filter) => {
+    let filter_prod = (txt_filter,btn_cls) => {
       filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
       filter_url([{'brand-list': brand_list},{'min-price': $fmi.val()},{'max-price': $(".filt_max").val()},{'sort-by-value':$sv.find(':selected').data("value")}]);
       // $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
-      get_prods(pro_numb,txt_filter);
+      get_prods(pro_numb,txt_filter,btn_cls);
     }
     $db.on("click",".filter-btn,.sortby_value_btn",function(){
-        let txt_filter = $(this).html();
+        let txt_filter = $("#nav_filter").html(),btn_cls = $(this).attr("class");
         btn_spin($(this));
-        filter_prod(txt_filter);
+        filter_prod(txt_filter,btn_cls);
     });
     $(".sortby_value").on("change",function(){
       filter_prod();

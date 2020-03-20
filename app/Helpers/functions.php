@@ -66,7 +66,7 @@ function burl(){
 function discount($a,$b){
   $c = (floatval($a) - floatval($b))*100/floatval($a);
   if (!is_int($c)) {
-    return number_format($c,2);
+    return round($c);
   }else{
     return $c;
   }
@@ -225,13 +225,13 @@ function compress($source, $destination, $quality) {
 
   $info = getimagesize($source);
 
-  if ($info['mime'] == 'image/jpeg') 
+  if ($info['mime'] == 'image/jpeg')
       $image = imagecreatefromjpeg($source);
 
-  elseif ($info['mime'] == 'image/gif') 
+  elseif ($info['mime'] == 'image/gif')
       $image = imagecreatefromgif($source);
 
-  elseif ($info['mime'] == 'image/png') 
+  elseif ($info['mime'] == 'image/png')
       $image = imagecreatefrompng($source);
 
   imagejpeg($image, $destination, $quality);
@@ -286,6 +286,7 @@ function LDAP_Test($username,$password){
     echo "Wrong credentials";
   }
 }
+
 
   // $conf = [
   //   "admin_title" => ["Ilkelectronics Panel","text_input"],

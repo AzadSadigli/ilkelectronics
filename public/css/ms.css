@@ -12167,6 +12167,13 @@ textarea.input {
     z-index: 50;
     -webkit-transition: 0.3s all;
     transition: 0.3s all;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;   
 }
 
 .category-nav.show-on-click .category-list {
@@ -13570,7 +13577,7 @@ textarea.input {
 
 .load-section a {
     margin: auto;
-    /* max-width: 10%; */
+    max-width: 110px;
     display: block;
     text-align: center;
 }

@@ -48,7 +48,7 @@
 							</div>
 							<div class="product-body">
 								<h2 class="product-name"><a href="/product/{{$tp->slug}}" title="{{$tp->productname}}">{{str_limit($tp->productname,$limit = 80,$end = "...")}}</a></h2>
-								<h3 class="product-price">{{$tp->price}} @if(!empty($tp->old_price)) <del class="product-old-price">{{$tp->old_price}}</del> @endif</h3>
+								<h3 class="product-price">{{number_format($tp->price,2)}} {{currency()}}  @if(!empty($tp->old_price))<br> <del class="product-old-price">{{number_format($tp->old_price,2)}} {{currency()}} </del> @endif</h3>
 								<div class="product-rating">
 									@for($k=1;$k<=5;$k++)
 										@if($k < $tp->rating)

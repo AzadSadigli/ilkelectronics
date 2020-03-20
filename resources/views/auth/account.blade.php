@@ -199,6 +199,10 @@
 									<p>{{__('app.Register_now')}}:
 										<a href="/account?action=register">{{__('app.Register')}}</a>
 									</p>
+								@else
+								<p> {{__('app.Have_an_account')}}
+									<b><a href="/account?action=register">{{__('app.Login')}}</a></b>
+								</p>
 								@endif
 							@endif
 

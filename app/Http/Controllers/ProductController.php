@@ -172,7 +172,7 @@ class ProductController extends Controller
       }else{
         $pros = Products::orderBy('created_at','desc')->get();
       }
-      $cats = DB::select("SELECT name,id,(SELECT COUNT(*) FROM products WHERE category = c.id) as products FROM category c WHERE parent_id IS NOT NULL");
+      $cats = DB::select("SELECT name,id,(SELECT COUNT(*) FROM products WHERE category = c.id) as products FROM category c WHERE parent_id IS NOT NULL ORDER BY name ASC");
       return view('admin.list',compact('pros','cats'));
     }
     public function add_product_view(Request $req,$id = null){

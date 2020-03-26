@@ -26,9 +26,11 @@
     <div class="container-fluid">
         <div class="block-header"><h2>{{__('app.List')}}</h2>
           <hr>
-          @foreach($cats as $cat)
-          <a href="?category={{$cat->id}}" class="btn btn-success @if(isset($_GET['category']) && $_GET['category'] == $cat->id) btn-success-active @endif">{{$cat->name}}</a>
-          @endforeach
+          <div class="btn-group">
+            @foreach($cats as $cat)
+            <a href="?category={{$cat->id}}" class="btn btn-success @if(isset($_GET['category']) && $_GET['category'] == $cat->id) btn-success-active @endif">{{$cat->name}}</a>
+            @endforeach
+          </div>
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -6571,4 +6571,22 @@ const $_get = (index) => {
   if ($(".deals_of_day_item").length > 0) {
     $(".deals_of_day_parent").removeAttr("style");
   }
+  // const get_imgs = () => {
+  //   let arr = [];
+  //   for (var i = 0; i < $("img").length; i++) {
+  //     // $("img:eq("+i+")").attr("src",$("img:eq("+i+")").data("src"));
+  //     arr.push($("img:eq("+i+")").data("src"))
+  //   }
+  //   // console.log(arr);return false;
+  //   $.ajax({
+  //     url: '/check-consistency',
+  //     type: 'GET',
+  //     data: {imgs:arr},
+  //     success:function(d){
+  //       console.log(d)
+  //     }
+  //   });
+  //   // console.log($("img").length);
+  // }
+  // get_imgs();
 });

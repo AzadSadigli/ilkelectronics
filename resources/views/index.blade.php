@@ -23,7 +23,7 @@
 				@if(count($pss))
 				@foreach($pss as $ps)
 				<div class="banner banner-1">
-					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
+					<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
 					<div class="banner-caption">
 						<h1 class="primary-color">{{$ps->title}} </h1>
 						<h3 class="white-color font-weak">{{$ps->details}}</h3>
@@ -35,7 +35,7 @@
 				@endforeach
 				@else
 				<div class="banner banner-1">
-					<img src="/uploads/posters/default-slide.jpg" alt="{{conf('Site_title')}}">
+					<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/posters/default-slide.jpg" alt="{{conf('Site_title')}}">
 				</div>
 				@endif
 			</div>
@@ -47,7 +47,7 @@
 			<div class="row">
 				@foreach($brands as $brand)
 				<div class="col-md-2 col-sm-6 brand-image" title="{{$brand->brand}}">
-						<img src="/uploads/brands/{{$brand->image}}" @if(false) data-href="/brands/{{$brand->brand}}" @endif alt="{{$brand->brand}}">
+						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/brands/{{$brand->image}}" @if(false) data-href="/brands/{{$brand->brand}}" @endif alt="{{$brand->brand}}">
 				</div>
 				@endforeach
 			</div>
@@ -67,7 +67,7 @@
 			@foreach($rnd_pss as $ps)
 			<div class="col-md-3 col-sm-6 col-xs-6 deals_of_day_item">
 				<div class="banner banner-2">
-					<img src="/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
+					<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/posters/{{$ps->image}}" alt="{{$ps->title}}">
 					<div class="banner-caption">
 						<h2 class="white-color">{!! $ps->title !!}</h2>
 						@if(!empty($ps->button)) <button class="primary-btn">{{$ps->button}}</button> @endif
@@ -90,9 +90,9 @@
 									<li><span></span></li><li><span></span></li><li><span></span></li><li><span></span></li>
 								</ul>
 								@if(App\Images::where('prod_id',$bp->id)->count() == 0)
-								<img src="/img/default.png" alt="{{$bp->productname}}">
+								<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/default.png" alt="{{$bp->productname}}">
 								@else @php($img = App\Images::where('prod_id',$bp->id)->orderBy('order','asc')->first())
-								<img src="/uploads/pro/small/{{$img->image}}" alt="{{$bp->productname}}">
+								<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/pro/small/{{$img->image}}" alt="{{$bp->productname}}">
 								@endif
 								<div class="product-rating">
 									@for($k=1;$k<=5;$k++)
@@ -145,9 +145,9 @@
 						@php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
 						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
-						<img src="/img/default.png" alt="{{$pro->productname}}">
+						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/default.png" alt="{{$pro->productname}}">
 						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())
-						<img src="/uploads/pro/small/{{$img->image}}" alt="{{$pro->productname}}">
+						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/pro/small/{{$img->image}}" alt="{{$pro->productname}}">
 						@endif
 						<div class="product-rating">
 							@for($k=1;$k<=5;$k++)
@@ -182,6 +182,6 @@
 	</div>
 </div>
 <div class="information">
-	<div><h3><img src="/img/shipping.png"></h3><p>{{conf("text_1")}}</p></div><div><h3><img src="/img/price.png"></h3><p>{{conf("text_2")}}</p></div><div><h3><img src="/img/guarantee.png"></h3><p>{{conf("text_3")}}</p></div><div><h3><img src="/img/service.png"></h3><p>{{conf("text_4")}}</p></div>
+	<div><h3><img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/shipping.png"></h3><p>{{conf("text_1")}}</p></div><div><h3><img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/price.png"></h3><p>{{conf("text_2")}}</p></div><div><h3><img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/guarantee.png"></h3><p>{{conf("text_3")}}</p></div><div><h3><img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/service.png"></h3><p>{{conf("text_4")}}</p></div>
 </div>
 @endsection

@@ -166,9 +166,14 @@ class ProductController extends Controller
         return Lang::get('app.Product_you_looking_not_found');
       }
     }
-    public function get_product_list(){
-      $pros = Products::orderBy('created_at','desc')->get();
-      return view('admin.list',compact('pros'));
+    public function get_product_list(Request $req){
+      if ($req->category) {
+        $pros = Products::where('category',$req->category)->orderBy('created_at','desc')->get();
+      }else{
+        $pros = Products::orderBy('created_at','desc')->get();
+      }
+      $cats = DB::select("SELECT name,id,(SELECT COUNT(*) FROM products WHERE category = c.id) as products FROM category c WHERE parent_id IS NOT NULL");
+      return view('admin.list',compact('pros','cats'));
     }
     public function add_product_view(Request $req,$id = null){
       if (!is_null($id)) {

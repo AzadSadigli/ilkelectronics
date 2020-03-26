@@ -24,7 +24,12 @@
 @section('body')
 <section class="content">
     <div class="container-fluid">
-        <div class="block-header"><h2>{{__('app.List')}}</h2></div>
+        <div class="block-header"><h2>{{__('app.List')}}</h2>
+          <hr>
+          @foreach($cats as $cat)
+          <a href="?category={{$cat->id}}" class="btn btn-success @if(isset($_GET['category']) && $_GET['category'] == $cat->id) btn-success-active @endif">{{$cat->name}}</a>
+          @endforeach
+        </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -38,7 +43,7 @@
                       @elseif(Request::is('admin/users-list'))
                       {{__('app.User_list')}}
                       @else
-                      {{__('app.Product_list')}} 
+                      {{__('app.Product_list')}}
                       @if(Auth::user()->role_id >= 3)
                       <a href="#" class="btn btn-primary pull-right" id="compress_prods"><i class="fa fa-sync"></i> </a>
                       @endif

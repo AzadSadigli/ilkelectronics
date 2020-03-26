@@ -186,9 +186,7 @@ class DataController extends Controller
       return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
     }
     public function testing(Request $req){
-      $cats = Category::with('subcats')->withCount('subcats')->where(function ($q) {
-        $q->where('parent_id',0)->orWhereNull('parent_id');
-      })->get();
-      return $cats;
+      $data = DB::select("SELECT name,id,(SELECT COUNT(*) FROM products WHERE category = c.id) as products FROM category c WHERE parent_id IS NOT NULL");
+      return $data;
     }
 }

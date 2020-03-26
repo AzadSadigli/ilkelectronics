@@ -15,7 +15,7 @@ use App\News;
 
 
 
-Route::get('/error/{type?}','Controller@error_page');
+Route::get('/error','Controller@error_page');
 Route::get('/','ProductController@index');
 Route::get('/currency/{currency}','Controller@change_currency');
 
@@ -28,6 +28,7 @@ Route::get('/get-category-products','DataController@category_page_ajax'); // aja
 Route::get('/categories','DataController@get_all_categories');
 
 // Route::get('/brand-list','BrandController@brand_list_store');
+Route::post('/check-consistency','Controller@consistent_url');
 
 Route::get('/product/{slug}','ProductController@get_product_details');
 Route::get('/page/{slug}','PageController@page_view');

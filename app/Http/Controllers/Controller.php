@@ -163,6 +163,26 @@ class Controller extends BaseController
         }
       }
     }
+    public function consistent_url(Request $req){
+      $array = [];
+      for ($i=0; $i < count($req->imgs); $i++) {
+        if (!empty($req->imgs[$i])) {
+          $val = $req->imgs[$i];
+          $key = $req->imgs[$i];
+          if ($i != 0) {
+            $md5image1 = md5(file_get_contents($req->imgs[$i]));
+            for ($k=0; $k < count($array); $k++) {
+              $md5image2 = md5(file_get_contents($array[$k]));
+              if ($md5image1 == $md5image2) {
+                $val = '';
+              }
+            }
+          }
+          $array[] = [$key => $val];
+        }
+      }
+      return $array;
+    }
     public function error_page($type = null){
       $type = $type || "default";
       return view('error',compact('type'));

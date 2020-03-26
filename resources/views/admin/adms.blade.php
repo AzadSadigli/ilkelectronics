@@ -255,19 +255,22 @@
       .autocomplete-items div {
         padding: 10px;
         cursor: pointer;
-        background-color: #fff; 
-        border-bottom: 1px solid #d4d4d4; 
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
       }
 
       /*when hovering an item:*/
       .autocomplete-items div:hover {
-        background-color: #e9e9e9; 
+        background-color: #e9e9e9;
       }
 
       /*when navigating through the items using the arrow keys:*/
       .autocomplete-active {
-        background-color: DodgerBlue !important; 
-        color: #ffffff; 
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+      }
+      .btn-success-active{
+        background: #0f580f !important;
       }
     </style>
 </head>

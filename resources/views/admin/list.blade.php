@@ -26,10 +26,19 @@
     <div class="container-fluid">
         <div class="block-header"><h2>{{__('app.List')}}</h2>
           <hr>
-          <div class="btn-group">
-            @foreach($cats as $cat)
-            <a href="?category={{$cat->id}}" class="btn btn-success @if(isset($_GET['category']) && $_GET['category'] == $cat->id) btn-success-active @endif">{{$cat->name}}</a>
-            @endforeach
+          <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#categories_list" role="button" aria-expanded="false" aria-controls="categories_list">
+              {{__('app.Categories')}}
+            </a>
+          </p>
+          <div class="collapse" id="categories_list">
+            <!-- <div class="card card-xbody"> -->
+              <div class="btn-group">
+                @foreach($cats as $cat)
+                <a href="?category={{$cat->id}}" class="btn btn-success @if(isset($_GET['category']) && $_GET['category'] == $cat->id) btn-success-active @endif">{{$cat->name}}</a>
+                @endforeach
+              </div>
+            <!-- </div> -->
           </div>
         </div>
         <div class="row clearfix">

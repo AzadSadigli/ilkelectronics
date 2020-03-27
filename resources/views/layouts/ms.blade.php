@@ -218,7 +218,7 @@
 			</div>
 		</div>
 	</footer>
-	<script src="/js/ms.js?v={{uniqid()}}" defer></script>
+	<script src="/js/ms.min.js?v={{uniqid()}}" defer></script>
   @section('foot')
   @show
 </body>

@@ -145,11 +145,13 @@
 			<div class="row">
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="footer">
+						@if(false)
 						<div class="footer-logo">
 							<a class="logo" href="#">
 		            <img src="/img/logo.png" alt="{{config('settings.Site_title')}}">
 		          </a>
 						</div>
+						@endif
 						<ul class="footer-social">
 							@if(conf('fa-facebook') !== "")
 							<li><a href="{{conf('fa-facebook')}}" target="_blank"><i class="fa fa-facebook"></i></a></li>

@@ -119,6 +119,7 @@ class DataController extends Controller
           $brand_update->views += 1;
           $brand_update->update();
         }
+        $brand = ucfirst($brand);
         return view('products',compact("currency","tp_pros","brand"));
       }
     }

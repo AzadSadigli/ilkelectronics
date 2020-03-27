@@ -20,7 +20,7 @@
 	<div class="container">
 		<ul class="breadcrumb">
 			<li><a href="/">{{__('app.Home')}}</a></li>
-			<li class="active text-capitalize">{{__('app.Brand_list')}}</li>
+			<li class="active">{{__('app.Brand_list')}}</li>
 		</ul>
 	</div>
 </div>

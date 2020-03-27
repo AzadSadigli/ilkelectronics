@@ -6083,18 +6083,18 @@ const $_get = (index) => {
       }
     });
   });
-  if (ucheck("category") | ucheck("search-result")) {
-    let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products'],pro_numb = 15,
+  if (ucheck("brand") || ucheck("category") | ucheck("search-result")) {
+    let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = 15,
         $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
 		let filter = [($_get('sort-by-value') || $sv.val()),($_get('min-price') || $fmi.val()),
                   ($_get('max-price') || $fma.val()),$smp.val(),brand_list];
     let get_prods = (pro_numb,txt_filter,btn_cls) => {
 			let u = urls[1];
-			if (ucheck("search-result")) {u = urls[0];}
+			if (ucheck("search-result")) {u = urls[0];}else if(ucheck("brand")){u = urls[2];}
 			$.ajax({
 				url: u,
 				type: 'GET',
-				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct")},
+				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct"),brand_unique:$("#prod_list").data("br")},
 				success:function(data){
 					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
 					for (var i = 0; i < data.pros.length; i++) {

@@ -27,6 +27,8 @@ Route::get('/category/{slug}','DataController@category_page');
 Route::get('/get-category-products','DataController@category_page_ajax'); // ajax
 Route::get('/categories','DataController@get_all_categories');
 
+Route::get('/brand/{brand?}','DataController@brand_function');
+
 // Route::get('/brand-list','BrandController@brand_list_store');
 Route::post('/check-consistency','Controller@consistent_url');
 

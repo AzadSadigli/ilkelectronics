@@ -163,7 +163,7 @@ class ProductController extends Controller
         $lns = Loans::where('prod_id',$pro->id)->where('type',1)->orderBy('duration','ASC')->get();
         return view('product',compact('pro','pros','prod_tabs','loans','lns'));
       }else{
-        return Lang::get('app.Product_you_looking_not_found');
+        return redirect('/error')->with(['error_message' => Lang::get('app.Product_you_looking_not_found')]);
       }
     }
     public function get_product_list(Request $req){

@@ -6,6 +6,12 @@
 	<meta property=”og:title” content=”{$search}}”/>
 	<meta property=”og:description” content=”{{__('app.Search_result')}}: {{$search}}”/>
 	<title>{{$search}} - {{conf("Site_title")}}</title>
+	@elseif(Request::is('brand/*'))
+	<meta name="description" content="{{$brand}} ">
+	<meta name="keywords" content="">
+	<meta property=”og:title” content=”{{$brand}}”/>
+	<meta property=”og:description” content=”{{$brand}}”/>
+	<title>{{$brand}} - {{conf("Site_title")}}</title>
 	@else
 	<meta name="description" content="{{$cat->name}} ">
 	<meta name="keywords" content="">
@@ -27,6 +33,9 @@
 				@if(Request::is('search-result/*'))
 				<li><a>{{__('app.Search_result')}}</a> </li>
 				<li class="active">{{$search}} (<span class="prd_cnt"></span>)</li>
+				@elseif(Request::is('brand/*'))
+				<li><a>{{__('app.Brands')}}</a> </li>
+				<li class="active">{{$brand}} (<span class="prd_cnt"></span>)</li>
 				@else
 				<li><a>{{__('app.Category')}}</a> </li>
 				<li class="active">{{$cat->name}} (<span class="prd_cnt"></span>)</li>
@@ -80,10 +89,7 @@
 					</div>
 					<div class="product-list">
 						@if(false)<div class="prod_loading_overlay"></div>@endif
-						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
-							<!-- <div class="loading-gif">
-								<img src="/img/loading.gif" alt="{{__('app.Please_wait')}}">
-							</div> -->
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @elseif(isset($brand)) data-br="{{$brand}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
 						</div>
 					</div>
 					<div class="load-section" style="display:none">

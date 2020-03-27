@@ -47,7 +47,9 @@
 			<div class="row">
 				@foreach($brands as $brand)
 				<div class="col-md-2 col-sm-6 brand-image" title="{{$brand->brand}}">
-						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/brands/{{$brand->image}}" @if(false) data-href="/brands/{{$brand->brand}}" @endif alt="{{$brand->brand}}">
+					<a href="/brand/{{strtolower($brand->brand)}}">
+						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/brands/{{$brand->image}}" alt="{{$brand->brand}}">
+					</a>
 				</div>
 				@endforeach
 			</div>

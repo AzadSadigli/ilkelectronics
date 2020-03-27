@@ -77,6 +77,41 @@ class DataController extends Controller
       }
       return response()->json(['pros' => $pros,'count' => $c[0]->count,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
     }
+    public function brand_function(Request $req,$brand = null){
+      $tp_pros = $this->top_prods();
+      $currency = currency();
+      $list = $req->filter;$pros="";$c = 0;
+      if(!isset($brand)){
+          $brand = $req->brand_unique;
+          if (isset($list) && is_array($list)) {
+          $order = "ORDER BY created_at DESC";
+          if ($list[0] == 2) {
+            $order = "ORDER BY price DESC";
+          }elseif($list[0] == 1){
+            $order = "ORDER BY price ASC";
+          }elseif($list[0] == 3){
+            $order = "ORDER BY rating DESC";
+          }
+          $pros = DB::select("SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,p.brand,
+                                      IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
+                                      p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,
+                                      COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,
+                                      (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating
+                              FROM `products` p
+                              WHERE brand = '{$brand}'
+                              AND price <= '{$list[2]}' AND price >= '{$list[1]}' {$order} LIMIT ".$req->numb);
+
+          $cc = DB::select("SELECT COUNT(*) as count
+                            FROM `products` p
+                            WHERE brand = '{$brand}'
+                            AND price <= '{$list[2]}' AND price >= '{$list[1]}'");
+          $c = $cc[0]->count;
+        }
+        return response()->json(['pros' => $pros,'count' => $c,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
+      }else{
+        return view('products',compact("currency","tp_pros","brand"));
+      }
+    }
     public function category_page($slug){
       $tp_pros = $this->top_prods();
       $cat = Category::where('slug',$slug)->first();
@@ -186,7 +221,7 @@ class DataController extends Controller
       return response()->json(['mess' => Lang::get('app.You_have_subscribed')]);
     }
     public function testing(Request $req){
-      $data = DB::select("SELECT name,id,(SELECT COUNT(*) FROM products WHERE category = c.id) as products FROM category c WHERE parent_id IS NOT NULL");
+      $data = DB::select("SELECT name,(SELECT COUNT(*) FROM category WHERE id = c.id) as products FROM category c");
       return $data;
     }
 }

@@ -15,7 +15,11 @@ class PageController extends Controller
 {
     public function page_view($slug){
       $page = Pages::where('slug',$slug)->first();
-      return view('page',compact('page'));
+      if ($page) {
+        return view('page',compact('page'));
+      }else{
+        return redirect('/error')->with(['error_message' => Lang::get('app.Page_you_looking_not_found')]);
+      }
     }
     public function page_tabs($slug){
       $page = Pages::where('slug',$slug)->first();
@@ -89,7 +93,11 @@ class PageController extends Controller
     }
     public function news_view($slug){
       $news_unique = News::where('slug',$slug)->first();
-      return view('news',compact('news_unique'));
+      if ($news_unique) {
+        return view('news',compact('news_unique'));
+      }else{
+        return redirect('/error')->with(['error_message' => Lang::get('app.News_you_looking_not_found')]);
+      }
     }
     public function news_list(){
       $news = News::where('status',1)->orderBy('created_at','desc')->paginate(6);

@@ -109,6 +109,11 @@ class DataController extends Controller
         }
         return response()->json(['pros' => $pros,'count' => $c,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
       }else{
+        $brand_update = Brand::where('brand',$brand)->first();
+        if (isset($brand_update)) {
+          $brand_update->views += 1;
+          $brand_update->update();
+        }
         return view('products',compact("currency","tp_pros","brand"));
       }
     }

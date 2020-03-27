@@ -24,7 +24,7 @@ class ProductController extends Controller
 {
     public function index(){
         $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
-        $brands = Brand::where('status',1)->inRandomOrder()->take(6)->get();
+        $brands = Brand::where('status',1)->orderBy('views','desc')->take(6)->get();
         $bpro = DB::select("SELECT
                                 p.id,b.end_date,p.slug,
                                 (SELECT image FROM `images` i WHERE i.prod_id = b.prod_id ORDER BY `order` ASC LIMIT 1) as image,

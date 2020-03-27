@@ -6042,7 +6042,7 @@ const $_get = (index) => {
     });
   }
   // $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-  function add_wishls(quantity,prid,th){
+  var add_wishls = (quantity,prid,th) => {
     $header;
     // $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     $.ajax({
@@ -6084,10 +6084,12 @@ const $_get = (index) => {
     });
   });
   if ($("#prod_list").length > 0) {
-    let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = 15,
+    let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = ($_get('show') && $_get('show')) >= 15 ? $_get('show') : 15,
         $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
-		let filter = [($_get('sort-by-value') || $sv.val()),($_get('min-price') || $fmi.val()),
+		let pro_order = $_get('sort-by-value') || $sv.val();
+    let filter = [pro_order,($_get('min-price') || $fmi.val()),
                   ($_get('max-price') || $fma.val()),$smp.val(),brand_list];
+    $(".sortby_value option[data-value='"+pro_order+"']").prop("selected",true);
     let get_prods = (pro_numb,txt_filter,btn_cls) => {
 			let u = urls[1];
 			if (ucheck("search-result")) {u = urls[0];}else if(ucheck("brand")){u = urls[2];}
@@ -6145,7 +6147,7 @@ const $_get = (index) => {
 				$($(".filt-by-brands input")[i]).prop("checked", false);
 			}
 			brand_list = [];
-      // filter_url([{'brand-list': ''},{'min-price': ''},{'max-price': ''},{'sort-by-value':''}]);
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
       get_prods(pro_numb,txt_filter,btn_cls);
 		});
 		let input = ".filt-by-brands input[type='checkbox']";
@@ -6161,8 +6163,9 @@ const $_get = (index) => {
 				}
 		});
     let filter_prod = (txt_filter,btn_cls) => {
-      filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
-      // filter_url([{'brand-list': brand_list},{'min-price': $fmi.val()},{'max-price': $(".filt_max").val()},{'sort-by-value':$sv.find(':selected').data("value")}]);
+      pro_order = $sv.val();
+      filter = [pro_order,$fmi.val(),$fma.val(),$smp.val(),brand_list];
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
       // $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
       get_prods(pro_numb,txt_filter,btn_cls);
     }
@@ -6178,6 +6181,7 @@ const $_get = (index) => {
     $db.on("click",".load-section a",function(){
       pro_numb += 15;
       $(this).html('<i class="fa fa-refresh fa-spin"></i> ');
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
       get_prods(pro_numb);
     });
     $(".load-section a").css("width","");

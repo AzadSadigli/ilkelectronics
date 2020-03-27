@@ -220,7 +220,7 @@
 			</div>
 		</div>
 	</footer>
-	@if(false)
+	@if(0)
 	<script src="/js/ms-dev-mode-file.js"></script>
 	@else
 	<script src="/js/ms.min.js?v={{uniqid()}}" defer></script>

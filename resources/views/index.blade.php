@@ -45,13 +45,15 @@
 <div class="section">
 		<div class="container">
 			<div class="row">
-				@foreach($brands as $brand)
-				<div class="col-md-2 col-sm-6 brand-image" title="{{$brand->brand}}">
-					<a href="/brand/{{strtolower($brand->brand)}}">
-						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/brands/{{$brand->image}}" alt="{{$brand->brand}}">
-					</a>
+				<div class="col-md-12">
+					@foreach($brands as $brand)
+					<div class="col-md-2 col-sm-6 brand-image" title="{{$brand->brand}}">
+						<a href="/brand/{{strtolower($brand->brand)}}">
+							<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/uploads/brands/{{$brand->image}}" alt="{{$brand->brand}}">
+						</a>
+					</div>
+					@endforeach
 				</div>
-				@endforeach
 			</div>
 		</div>
 	</div>

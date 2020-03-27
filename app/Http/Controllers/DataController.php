@@ -15,6 +15,11 @@ use App\Brand;
 use File;
 class DataController extends Controller
 {
+
+    public function brands_list(){
+      $brands = Brand::orderBy('views','desc')->get();
+      return view('brands',compact('brands'));
+    }
     public function searchedproducts(Request $req){
       $tp_pros = $this->top_prods();
       $search = $req->search;

@@ -6083,7 +6083,7 @@ const $_get = (index) => {
       }
     });
   });
-  if (ucheck("brand") || ucheck("category") | ucheck("search-result")) {
+  if ($("#prod_list").length > 0) {
     let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = 15,
         $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
 		let filter = [($_get('sort-by-value') || $sv.val()),($_get('min-price') || $fmi.val()),

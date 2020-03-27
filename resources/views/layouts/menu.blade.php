@@ -55,6 +55,7 @@
 							@endif
 						</li>
 						@endforeach
+						<li><a href="/brands-list">{{__('app.Brand_list')}}</a></li>
 						<li><a href="/contact-us">{{__('app.Contact_us')}}</a></li>
 					</ul>
 				</div>

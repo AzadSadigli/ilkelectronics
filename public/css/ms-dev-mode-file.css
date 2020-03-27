@@ -12173,7 +12173,7 @@ textarea.input {
     -khtml-user-select: none;    /* Konqueror HTML */
     -moz-user-select: none;      /* Firefox */
     -ms-user-select: none;       /* Internet Explorer/Edge */
-    user-select: none;   
+    user-select: none;
 }
 
 .category-nav.show-on-click .category-list {
@@ -12643,7 +12643,7 @@ textarea.input {
 }
 
 .product.product-single .product-thumb>img {
-    /* width: 100%; */
+    max-width: 100%;
     padding: 15px;
     max-height: 315px;
     margin: auto;

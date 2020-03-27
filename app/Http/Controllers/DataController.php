@@ -71,15 +71,15 @@ class DataController extends Controller
           }
         }
         if ($list[0] == 2) {
-          $order = "ORDER BY REPLACE(price,',','') DESC";
+          $order = "ORDER BY pp DESC";
         }elseif($list[0] == 1){
-          $order = "ORDER BY REPLACE(price,',','') ASC";
+          $order = "ORDER BY pp ASC";
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
         $pros = DB::select("SELECT * FROM (SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) AS loan,
-                                    p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' AS currency,
+                                    p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,p.price as pp,'".currency()."' AS currency,
                                     COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') AS image,
                                     (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) AS rating
                                     FROM `products` p
@@ -99,15 +99,15 @@ class DataController extends Controller
           if (isset($list) && is_array($list)) {
           $order = "ORDER BY date DESC";
           if ($list[0] == 2) {
-            $order = "ORDER BY REPLACE(price,',','') DESC";
+            $order = "ORDER BY pp DESC";
           }elseif($list[0] == 1){
-            $order = "ORDER BY REPLACE(price,',','') ASC";
+            $order = "ORDER BY pp ASC";
           }elseif($list[0] == 3){
             $order = "ORDER BY rating DESC";
           }
           $pros = DB::select("SELECT * FROM (SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,p.brand,
                                       IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
-                                      p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,
+                                      p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,p.price as pp,'".currency()."' as currency,
                                       COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image,
                                       (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating
                               FROM `products` p
@@ -167,9 +167,9 @@ class DataController extends Controller
           $brand_query = "AND brand IN (".$arr.")";
         }
         if ($list[0] == 2) {
-          $order = "ORDER BY REPLACE(price,',','') DESC";
+          $order = "ORDER BY pp DESC";
         }elseif($list[0] == 1){
-          $order = "ORDER BY REPLACE(price,',','') ASC";
+          $order = "ORDER BY pp ASC";
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
@@ -182,7 +182,7 @@ class DataController extends Controller
         $pros = DB::select("SELECT * FROM (SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
                                     FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,
-                                    FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,
+                                    FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,p.price as pp,
                                     COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image
                             FROM `products` p WHERE p.category ".$ct_query."
                             AND price <= '{$list[2]}'

@@ -6087,9 +6087,10 @@ const $_get = (index) => {
     let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = ($_get('show') && $_get('show')) >= 15 ? $_get('show') : 15,
         $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
 		let pro_order = $_get('sort-by-value') ? $(".sortby_value option[data-value='"+$_get('sort-by-value')+"']").val() : $sv.val();
+    let pro_order_url = $_get('sort-by-value');
     let filter = [pro_order,($_get('min-price') || $fmi.val()),
                   ($_get('max-price') || $fma.val()),$smp.val(),brand_list];
-    $(".sortby_value option[data-value='"+pro_order+"']").prop("selected",true);
+    $(".sortby_value option[data-value='"+pro_order_url+"']").prop("selected",true);
     let get_prods = (pro_numb,txt_filter,btn_cls) => {
 			let u = urls[1];
 			if (ucheck("search-result")) {u = urls[0];}else if(ucheck("brand")){u = urls[2];}

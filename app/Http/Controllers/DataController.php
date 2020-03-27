@@ -58,7 +58,7 @@ class DataController extends Controller
         $arr = "";$brand_query="";$cat_section = "";$order = "ORDER BY date DESC";
         if (isset($list[4]) && !empty($list[4])) {
           for ($i=0; $i < count($list[4]); $i++) {if ($i != (count($list[4]) - 1)) {$arr .= "'".$list[4][$i]."',";}else{$arr .= "'".$list[4][$i]."'";}}
-          $brand_query = "AND brand IN (".$arr.")";
+          $brand_query = "AND brand IN ({$arr})";
         }
         $ct_id = $req->category;
         if (isset($ct_id) && !empty($ct_id) && $ct_id != 0) {
@@ -71,9 +71,9 @@ class DataController extends Controller
           }
         }
         if ($list[0] == 2) {
-          $order = "ORDER BY price DESC";
+          $order = "ORDER BY REPLACE(price,',','') DESC";
         }elseif($list[0] == 1){
-          $order = "ORDER BY price ASC";
+          $order = "ORDER BY REPLACE(price,',','') ASC";
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
@@ -99,9 +99,9 @@ class DataController extends Controller
           if (isset($list) && is_array($list)) {
           $order = "ORDER BY date DESC";
           if ($list[0] == 2) {
-            $order = "ORDER BY price DESC";
+            $order = "ORDER BY REPLACE(price,',','') DESC";
           }elseif($list[0] == 1){
-            $order = "ORDER BY price ASC";
+            $order = "ORDER BY REPLACE(price,',','') ASC";
           }elseif($list[0] == 3){
             $order = "ORDER BY rating DESC";
           }
@@ -167,9 +167,9 @@ class DataController extends Controller
           $brand_query = "AND brand IN (".$arr.")";
         }
         if ($list[0] == 2) {
-          $order = "ORDER BY price DESC";
+          $order = "ORDER BY REPLACE(price,',','') DESC";
         }elseif($list[0] == 1){
-          $order = "ORDER BY price ASC";
+          $order = "ORDER BY REPLACE(price,',','') ASC";
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }

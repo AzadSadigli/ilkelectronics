@@ -220,7 +220,11 @@
 			</div>
 		</div>
 	</footer>
+	@if(false)
+	<script src="/js/ms-dev-mode-file.js"></script>
+	@else
 	<script src="/js/ms.min.js?v={{uniqid()}}" defer></script>
+	@endif
   @section('foot')
   @show
 </body>

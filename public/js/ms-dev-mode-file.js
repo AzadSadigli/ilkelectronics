@@ -6099,7 +6099,7 @@ const $_get = (index) => {
 					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
 					for (var i = 0; i < data.pros.length; i++) {
 						let val = data.pros[i],star = "";
-            let img = "src='/uploads/pro/small/"+val['image']+"'";
+            let img = `src='/uploads/pro/small/${val['image']}'`;
             let new_case = "",discount = "",old_price = "";
             for (var k = 1; k <= 5; k++) {
               if (k <= parseInt(val['rating'])) {star += "<i class='fa fa-star'></i>";}else{star += "<i class='fa fa-star-o empty'></i>";}
@@ -6145,7 +6145,7 @@ const $_get = (index) => {
 				$($(".filt-by-brands input")[i]).prop("checked", false);
 			}
 			brand_list = [];
-      filter_url([{'brand-list': ''},{'min-price': ''},{'max-price': ''},{'sort-by-value':''}]);
+      // filter_url([{'brand-list': ''},{'min-price': ''},{'max-price': ''},{'sort-by-value':''}]);
       get_prods(pro_numb,txt_filter,btn_cls);
 		});
 		let input = ".filt-by-brands input[type='checkbox']";
@@ -6162,7 +6162,7 @@ const $_get = (index) => {
 		});
     let filter_prod = (txt_filter,btn_cls) => {
       filter = [$sv.val(),$fmi.val(),$fma.val(),$smp.val(),brand_list];
-      filter_url([{'brand-list': brand_list},{'min-price': $fmi.val()},{'max-price': $(".filt_max").val()},{'sort-by-value':$sv.find(':selected').data("value")}]);
+      // filter_url([{'brand-list': brand_list},{'min-price': $fmi.val()},{'max-price': $(".filt_max").val()},{'sort-by-value':$sv.find(':selected').data("value")}]);
       // $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
       get_prods(pro_numb,txt_filter,btn_cls);
     }

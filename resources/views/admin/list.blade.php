@@ -63,7 +63,7 @@
                   </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable" @if(Request::is('admin/product-list')) id="prod_list" @endif>
                                 <thead id="copy_to_tfoot">
                                   @if(Request::is('admin/page-list'))
                                     <tr>

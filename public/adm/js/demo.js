@@ -89,7 +89,7 @@ const tb_suggestions = () => {
     type: 'GET',
     success:function(d){
       for (let i = 0; i < d.length; i++) {
-        tsuggs.push(d[i].title);         
+        tsuggs.push(d[i].title);
       }
     }
   });
@@ -164,7 +164,7 @@ const autocomplete = (inp, arr) => {
       if (e.keyCode == 40) {
         currentFocus++;
         addActive(x);
-      } else if (e.keyCode == 38) { 
+      } else if (e.keyCode == 38) {
         currentFocus--;
         addActive(x);
       } else if (e.keyCode == 13) {
@@ -1280,7 +1280,7 @@ $(".brand_image").change(function(){
     }
   });
 });
- 
+
 $("#compress_prods").click(function(){
   let t = $(this);
   t.find('i').addClass('fa-spin');
@@ -1291,6 +1291,10 @@ $("#compress_prods").click(function(){
       t.find('i').removeClass('fa-spin');
     }
   });
+});
+$(document).ready(function () {
+  $('#prod_list').DataTable().destroy();
+  $('#prod_list').dataTable({"autoWidth": false,"lengthChange": false,"pageLength": 100});
 });
 // $("#submit_loans").on("click",function(){
 //   $(".new_loan_form").submit();

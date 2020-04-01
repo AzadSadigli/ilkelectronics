@@ -78,7 +78,7 @@ class DataController extends Controller
           $order = "ORDER BY rating DESC";
         }
         $page = $req->page <= 1 ? 1 : $req->page;
-        $numb = $req->numb <= 15 ? 15 : $req->numb;
+        $numb = (int)$req->numb <= 15 ? 15 : $req->numb;
         $limit = ($page - 1) * $numb;
         $pros = DB::select("SELECT * FROM (SELECT IFNULL(FORMAT(p.old_price/".currency(0).",2),0) as old_price,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) AS loan,
@@ -109,7 +109,7 @@ class DataController extends Controller
             $order = "ORDER BY rating DESC";
           }
           $page = $req->page <= 1 ? 1 : $req->page;
-          $numb = $req->numb <= 15 ? 15 : $req->numb;
+          $numb = (int)$req->numb <= 15 ? 15 : $req->numb;
           $limit = ($page - 1) * $numb;
           $pros = DB::select("SELECT * FROM (SELECT IFNULL(FORMAT(p.old_price/".currency(0).",2),0) as old_price,p.brand,
                                       IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
@@ -186,7 +186,7 @@ class DataController extends Controller
           $ct_query = " = ".$ct;
         }
         $page = $req->page <= 1 ? 1 : $req->page;
-        $numb = $req->numb <= 15 ? 15 : $req->numb;
+        $numb = (int)$req->numb <= 15 ? 15 : $req->numb;
         $limit = ($page - 1) * $numb;
         $pros = DB::select("SELECT * FROM (SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,

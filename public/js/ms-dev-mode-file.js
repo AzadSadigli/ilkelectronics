@@ -6113,8 +6113,8 @@ const $_get = (index) => {
               product_btns = "<div class='product-btns'><a class='primary-btn add-to-cart' data-id='"+val.id+"'><i class='fa fa-shopping-cart'></i></a> <a href='/order-product/"+val.slug+"' class='main-btn'>"+orn+"</a></div>";
             }
             if (time_diff(val.date) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
-            if (val.old_price != val.price && val.old_price != 0 && val.old_price !== null) {
-              discount = "<span class='prod-discount'><p>"+Math.ceil(val.old_price - val.price)+val.currency+"</p><i>"+$("#prod_list").data("words").split(",")[5]+"</i></span>";
+            if (val.old_price != val.price && parseInt(val.old_price) != 0 && val.old_price !== null) {
+              discount = `<span class='prod-discount'><p>${Math.ceil(val.old_price.replace(',','') - val.price.replace(',',''))}${val.currency}</p><i>${$("#prod_list").data("words").split(",")[5]}</i></span>`;
               old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
@@ -6127,14 +6127,17 @@ const $_get = (index) => {
           if (data.pros.length == 0) {
             $(id).html(`<center class='no-prod-found'>${data.empty}</center>`)
           }
-          if (data.count > pro_numb) {
-            $(".load-section").css("display","");
-          }else{
-            $(".load-section").css("display","none");
-          }
+          // if (data.count > pro_numb) {
+          //   $(".load-section").css("display","");
+          // }else{
+          //   $(".load-section").css("display","none");
+          // }
           page_limit = Math.ceil(data.count/pro_numb);
           for (var y = 1; y <= page_limit; y++) {
             list_of_pages += `<li ${$_get('page') ? ($_get('page') == y ? ' class="active"' : '') : (y == 1 ? ' class="active"' : '')}>${y}</li>`;
+          }
+          if ($_get('page') > page_limit) {
+            filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page_limit}]);
           }
           $(".store-pages").html(`<li><i class="fa fa-caret-left"></i></li>${list_of_pages}<li><i class="fa fa-caret-right"></i></li>`);
 				},complete:function(){
@@ -6188,7 +6191,7 @@ const $_get = (index) => {
     });
     let ld_btn_txt = $(".load-section a").text();
     $("#product-pagination .pg-show").change(function(){
-      pro_numb = $(this).val();
+      pro_numb = $(this).val();page = 1;
       filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
       get_prods(pro_numb,page);
     });

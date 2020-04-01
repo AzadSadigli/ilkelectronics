@@ -6213,10 +6213,10 @@ const $_get = (index) => {
           get_prods(pro_numb,page);
         }
         if ($(this).find('i').hasClass('fa-caret-right') && page < page_limit) {
-          page += 1;
+           page = parseInt(page) + 1;
           inside_func();
         }else if($(this).find('i').hasClass('fa-caret-left') && page >= page_limit){
-          page -= 1;
+          page = parseInt(page) - 1;
           inside_func();
         }
       }

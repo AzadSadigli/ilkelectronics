@@ -7,7 +7,11 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@section('head')
   @show
+	@if(false)
+	<link type="text/css" rel="stylesheet" href="/css/ms-dev-mode-file.css?v={{uniqid()}}" />
+	@else
 	<link type="text/css" rel="stylesheet" href="/css/ms.min.css?v={{uniqid()}}" />
+	@endif
 	<link rel="shortcut icon" type="image/x-icon" href="/img/icon.png" />
 	@if(!empty(conf('Mob_browser_color')))
 	<meta name="theme-color" content="{{conf('Mob_browser_color')}}" />

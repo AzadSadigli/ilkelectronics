@@ -43,7 +43,7 @@
 							</div>
 							@endif
 						</div>
-						@if(!empty($pro->old_price)) <span class="pro-discount">{{number_format(($pro->old_price - $pro->price)/$pro->price * 100,2)}}% <br> <small>{{__('app.Discount')}}</small> </span> @endif
+						@if(!empty($pro->old_price))<span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
 						@if(count($imgs) !== 0)
 						<div id="product-view">
 							@foreach($imgs as $img)
@@ -218,8 +218,8 @@
 						<div class="product-thumb">
 							<div class="product-label">
 								@if(nd(\Carbon\Carbon::parse($pr->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
-								@if(!empty($pr->old_price)) <span class="sale">{{discount($pr->old_price,$pr->price)}} %</span> @endif
 							</div>
+							@if(!empty($pr->old_price)) <span class="prod-discount"><p>{{(int)$pr->old_price - (int)$pr->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
 	            @php($lns = App\Loans::where('prod_id',$pr->id)->where('rate',0)->orderBy('duration','desc')->first())
 							@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 							<a href="/product/{{$pr->slug}}" title="{{$pr->productname}}" class="main-btn quick-view"></a>

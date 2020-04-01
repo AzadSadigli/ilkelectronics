@@ -40,6 +40,10 @@ class Controller extends BaseController
         return redirect()->back()->with(['type' => 'danger','message' => Lang::get('app.User_not_found')]);
       }
     }
+    public function get_langs(Request $req){
+      $arr = ['Home' => 'Home page'];
+      return $arr;
+    }
     public function check_otp_code(Request $req){
       $otp = $req->code;
       $email = $req->email;

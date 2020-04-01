@@ -87,14 +87,27 @@
 							</div>
 						</div>
 					</div>
-					<div class="product-list">
+					<div class="product-list prod-data-list">
 						@if(false)<div class="prod_loading_overlay"></div>@endif
-						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @elseif(isset($brand)) data-br="{{$brand}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}}">
+						<div class="row" @if(Request::is("search-result/search*")) data-ct="{{$cat_id}}" @elseif(isset($brand)) data-br="{{$brand}}" @endif id="prod_list" data-words="{{__('app.New')}},{{__('app.Quick_view')}},{{__('app.Please_wait')}},{{__('app.Order_now')}},{{__('app.Interest_free')}},{{__('app.Discount_on_cash')}}">
 						</div>
 					</div>
+					<div class="pull-right" id="product-pagination">
+						<div class="page-filter">
+							<span class="text-uppercase">{{__('app.Show')}}:</span>
+							<select class="input pg-show">
+								<option value="15">15</option>
+								<option value="30">30</option>
+								<option value="45">45</option>
+							</select>
+						</div>
+						<ul class="store-pages"></ul>
+					</div>
+					@if(false)
 					<div class="load-section" style="display:none">
 							<a class="cust-btn">{{__('app.Load_more')}}</a>
 					</div>
+					@endif
 				</div>
 			</div>
 		</div>

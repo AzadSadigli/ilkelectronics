@@ -86,8 +86,8 @@
 						<div class="product product-single deals_of_day deals_of_day_item">
 							<div class="product-thumb">
 								<div class="product-label">
-									@if(!empty($bp->old_price)) <span class="sale">{{discount($bp->old_price,$bp->price)}} %</span> @endif
 								</div>
+								@if(!empty($bp->old_price)) <span class="prod-discount"><p>{{(int)$bp->old_price - (int)$bp->price}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
 								@php($lns = App\Loans::where('prod_id',$bp->id)->where('rate',0)->orderBy('duration','desc')->first())
 								@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
@@ -144,8 +144,8 @@
 					<div class="product-thumb">
 						<div class="product-label">
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
-							@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 						</div>
+						@if(!empty($pro->old_price)) <span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
 						@php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
 						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)

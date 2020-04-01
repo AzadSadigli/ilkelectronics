@@ -77,6 +77,9 @@ class DataController extends Controller
         }elseif($list[0] == 3){
           $order = "ORDER BY rating DESC";
         }
+        $page = $req->page <= 1 ? 1 : $req->page;
+        $numb = $req->numb <= 15 ? 15 : $req->numb;
+        $limit = ($page - 1) * $numb;
         $pros = DB::select("SELECT * FROM (SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) AS loan,
                                     p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,p.price as pp,'".currency()."' AS currency,
@@ -85,7 +88,7 @@ class DataController extends Controller
                                     FROM `products` p
                                     WHERE (productname LIKE '%{$k}%' OR description LIKE '%{$k}%' OR description_title LIKE '%{$k}%' OR prod_id LIKE '%{$k}%' OR brand = '{$k}')
                                     {$cat_section} AND price <= '{$list[2]}'
-                                    AND price >= '{$list[1]}' {$brand_query}) AS products {$order} LIMIT ".$req->numb);
+                                    AND price >= '{$list[1]}' {$brand_query}) AS products {$order} LIMIT {$req->numb} OFFSET {$limit}");
         $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE (productname LIKE '%".$k."%' OR description LIKE '%".$k."%' OR description_title LIKE '%".$k."%' OR prod_id LIKE '%".$k."%' OR brand = '".$k."') ".$cat_section." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
       }
       return response()->json(['pros' => $pros,'count' => $c[0]->count,'empty' => Lang::get('app.No_product_found'),'currency' => currency()]);
@@ -105,6 +108,9 @@ class DataController extends Controller
           }elseif($list[0] == 3){
             $order = "ORDER BY rating DESC";
           }
+          $page = $req->page <= 1 ? 1 : $req->page;
+          $numb = $req->numb <= 15 ? 15 : $req->numb;
+          $limit = ($page - 1) * $numb;
           $pros = DB::select("SELECT * FROM (SELECT FORMAT(p.old_price/".currency(0).",2) as old_price,p.brand,
                                       IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
                                       p.productname,p.slug,p.id,p.created_at as `date`,FORMAT(p.price/".currency(0).",2) as price,p.price as pp,'".currency()."' as currency,
@@ -112,7 +118,7 @@ class DataController extends Controller
                                       (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating
                               FROM `products` p
                               WHERE brand = '{$brand}'
-                              AND price <= '{$list[2]}' AND price >= '{$list[1]}') AS products {$order} LIMIT ".$req->numb);
+                              AND price <= '{$list[2]}' AND price >= '{$list[1]}') AS products {$order} LIMIT {$req->numb} OFFSET {$limit}");
 
           $cc = DB::select("SELECT COUNT(*) as count
                             FROM `products` p
@@ -164,7 +170,7 @@ class DataController extends Controller
         $arr = "";$brand_query="";$order = "ORDER BY date DESC";
         if (isset($list[4]) && !empty($list[4])) {
           for ($i=0; $i < count($list[4]); $i++) {if ($i != (count($list[4]) - 1)) {$arr .= "'".$list[4][$i]."',";}else{$arr .= "'".$list[4][$i]."'";}}
-          $brand_query = "AND brand IN (".$arr.")";
+          $brand_query = "AND brand IN ({$arr})";
         }
         if ($list[0] == 2) {
           $order = "ORDER BY pp DESC";
@@ -179,16 +185,18 @@ class DataController extends Controller
         }else{
           $ct_query = " = ".$ct;
         }
+        $page = $req->page <= 1 ? 1 : $req->page;
+        $numb = $req->numb <= 15 ? 15 : $req->numb;
+        $limit = ($page - 1) * $numb;
         $pros = DB::select("SELECT * FROM (SELECT (SELECT AVG(rating) FROM `comments` WHERE prod_id = p.id) as rating,
                                     IFNULL((SELECT duration FROM loans WHERE prod_id = p.id AND rate = 0 ORDER BY duration ASC LIMIT 1),0) as loan,
                                     FORMAT(p.old_price/".currency(0).",2) as old_price,p.productname,p.slug,p.id,p.created_at as `date`,
                                     FORMAT(p.price/".currency(0).",2) as price,'".currency()."' as currency,p.price as pp,
                                     COALESCE((SELECT image FROM `images` WHERE prod_id = p.id ORDER BY `order` ASC LIMIT 1),'default.png') as image
-                            FROM `products` p WHERE p.category ".$ct_query."
+                            FROM `products` p WHERE p.category {$ct_query}
                             AND price <= '{$list[2]}'
-                            AND price >= '{$list[1]}' {$brand_query}) AS products {$order} LIMIT ".$req->numb);
-        $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE p.category ".$ct_query." AND price <= '".$list[2]."' AND price >= '".$list[1]."' ".$brand_query);
-
+                            AND price >= '{$list[1]}' {$brand_query}) AS products {$order} LIMIT {$req->numb} OFFSET {$limit}");
+        $c = DB::select("SELECT COUNT(*) as count FROM `products` p WHERE p.category {$ct_query} AND price <= '{$list[2]}' AND price >= '{$list[1]}' {$brand_query}");
       }
       return response()->json(['pros' => $pros,'count'=>$c[0]->count,'empty' => Lang::get('app.No_product_found')]);
     }

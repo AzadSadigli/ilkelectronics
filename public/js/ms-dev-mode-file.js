@@ -5739,7 +5739,7 @@ $(document).ready(function(){
     }
   });
   const $db = $(document.body);
-  const isEmail = function(email) {
+  const isEmail = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
@@ -5755,14 +5755,14 @@ $(document).ready(function(){
     else
         return text;
   }
-  const inNotValidInput = function(input){
+  const inNotValidInput = (input) => {
     $(input).css({
       boxShadow: '0 0 5px 1px red',
       border: 'red'
     });
   }
 
-  const isValidInput = function(input){
+  const isValidInput = (input) => {
     $(input).css({
       boxShadow: '0px 0px 0px 1px #DADADA inset, 0px 0px 0px 5px transparent',
       border: 'none'
@@ -5771,7 +5771,7 @@ $(document).ready(function(){
   const isNotNull = function(value){
     return value !== undefined && value !== null && value !== '';
   }
-  const btn_spin = (btn,size) =>{
+  const btn_spin = (btn,size) => {
     let sz = isNotNull(size) ? size : '';
     $(btn).html('<i class="fa fa-refresh fa-spin"></i>')
     // .css({
@@ -5782,7 +5782,7 @@ $(document).ready(function(){
   const isset = (variable) => {
       return typeof variable !== 'undefined';
   }
-  const setCookie = function(name,value,days) {
+  const setCookie = (name,value,days) => {
     var expires = "";
     if (days) {
         var date = new Date();
@@ -5791,7 +5791,7 @@ $(document).ready(function(){
     }
     document.cookie = name + "=" + (value || "")  + expires + "; path=/";
   }
-  const getCookie = function(name) {
+  const getCookie = (name) => {
       var nameEQ = name + "=";
       var ca = document.cookie.split(';');
       for(var i=0;i < ca.length;i++) {
@@ -5801,15 +5801,19 @@ $(document).ready(function(){
       }
       return null;
   }
-  const eraseCookie = function(name) {
+
+  const isNumb = (num) => {
+    if(typeof num !== 'number'){return false}
+    return true;
+  }
+  const eraseCookie = (name) => {
       document.cookie = name+'=; Max-Age=-99999999;';
   }
-  const go_to_bottom = function(){
+  const go_to_bottom = () => {
     let $target = $('html,body');
     $target.animate({scrollTop: $target.height()}, 1000);
   }
-  // console.log(isNotNull());
-  const number_format = function(number, decimals, dec_point, thousands_sep) {
+  const number_format = (number, decimals, dec_point, thousands_sep) => {
     number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
     var n = !isFinite(+number) ? 0 : +number,
         prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
@@ -5894,30 +5898,31 @@ const $_get = (index) => {
     return qs[index] || "";
   }
   const lang = [];
-  const l = (k) => {
+  const trans = (k) => {
     if (lang.length == 0) {
       let res = "";
       $.ajax({
         url: '/get-lang-list',
         type: 'GET',
-        data: {token: mt},
+        data: {word: k},
         async: false,
         success:function(d){
           let i = 0;
           while (i < d.length) {
-            lang.push({key: Object.keys(d[i])[0],val:Object.values(d[i])[0] || ''});
+            let key = Object.keys(d[i])[0],val = Object.values(d[i])[0] || '';
+            lang.push([key,val]);
             i++;
           }
-          res = isset(lang.filter(a => a.key.includes(k))[0]) ? lang.filter(a => a.key.includes(k))[0].val  : `app.${k}`;
+          res = Object.fromEntries(lang)[k] ? Object.fromEntries(lang)[k]  : `app.${k}`;
         }
       });
       if (isset(res)) {
         return res;
       }else{
-        return l(k);
+        return trans(k);
       }
     }else{
-      return isset(lang.filter(it => it.key.includes(k))[0]) ? lang.filter(it => it.key.includes(k))[0].val : `app.${k}`;
+      return Object.fromEntries(lang)[k] ? Object.fromEntries(lang)[k]  : `app.${k}`;
     }
   }
   // const Toast = Swal.mixin({
@@ -5961,9 +5966,6 @@ const $_get = (index) => {
           g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
           b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
       return '#' + padZero(r) + padZero(g) + padZero(b);
-  }
-  const isNumber = (n) => {
-    return !isNaN(parseFloat(n)) && isFinite(n);
   }
   const isArray = (obj) => {
     return Object.prototype.toString.call(obj) === '[object Array]' ;
@@ -6085,21 +6087,21 @@ const $_get = (index) => {
   });
   if ($("#prod_list").length > 0) {
     let sortby = 0,	brand_list = [],urls = ['/get-search-result','/get-category-products','/brand'],pro_numb = ($_get('show') && $_get('show')) >= 15 ? $_get('show') : 15,
-        $sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod");
+        page = $_get('page') || 1,$sv = $(".sortby_value"),$fmi = $(".filt_min"),$fma = $(".filt_max"),$smp = $(".show_num_prod"),page_limit = 1;
 		let pro_order = $_get('sort-by-value') ? $(".sortby_value option[data-value='"+$_get('sort-by-value')+"']").val() : $sv.val();
     let pro_order_url = $_get('sort-by-value');
     let filter = [pro_order,($_get('min-price') || $fmi.val()),
                   ($_get('max-price') || $fma.val()),$smp.val(),brand_list];
     $(".sortby_value option[data-value='"+pro_order_url+"']").prop("selected",true);
-    let get_prods = (pro_numb,txt_filter,btn_cls) => {
+    let get_prods = (pro_numb,page,txt_filter,btn_cls) => {
 			let u = urls[1];
 			if (ucheck("search-result")) {u = urls[0];}else if(ucheck("brand")){u = urls[2];}
 			$.ajax({
 				url: u,
 				type: 'GET',
-				data: {filter: filter,numb:pro_numb,category:$("#prod_list").data("ct"),brand_unique:$("#prod_list").data("br")},
+				data: {filter: filter,page:page,numb:pro_numb,category:$("#prod_list").data("ct"),brand_unique:$("#prod_list").data("br")},
 				success:function(data){
-					let html = "",product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
+					let html = "",list_of_pages='',product_btns = "",id = "#prod_list",vw = $("#prod_list").data("words").split(",")[1],orn = $("#prod_list").data("words").split(",")[3];
 					for (var i = 0; i < data.pros.length; i++) {
 						let val = data.pros[i],star = "";
             let img = `src='/uploads/pro/small/${val['image']}'`;
@@ -6111,13 +6113,13 @@ const $_get = (index) => {
               product_btns = "<div class='product-btns'><a class='primary-btn add-to-cart' data-id='"+val.id+"'><i class='fa fa-shopping-cart'></i></a> <a href='/order-product/"+val.slug+"' class='main-btn'>"+orn+"</a></div>";
             }
             if (time_diff(val.date) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
-            if (val.old_price !== "" && val.old_price !== null) {
-              discount = "<span class='sale'>"+disc(val.price,val.old_price)+"%</span>";
+            if (!isNaN(val.price - val.old_price)) {
+              discount = "<span class='prod-discount'><p>"+Math.ceil(val.old_price - val.price)+val.currency+"</p><i>"+$("#prod_list").data("words").split(",")[5]+"</i></span>";
               old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
             let loan = val.loan != 0 ? `<i class="ln_head"><b>${val.loan} ${$("#prod_list").data("words").split(",")[4]}</b></i>` : '';
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+discount+"</div>"+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+"</div>"+discount+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
           // $(id + "img.lazy").lazyload();
@@ -6130,6 +6132,11 @@ const $_get = (index) => {
           }else{
             $(".load-section").css("display","none");
           }
+          page_limit = Math.ceil(data.count/pro_numb);
+          for (var y = 1; y <= page_limit; y++) {
+            list_of_pages += `<li ${$_get('page') ? ($_get('page') == y ? ' class="active"' : '') : (y == 1 ? ' class="active"' : '')}>${y}</li>`;
+          }
+          $(".store-pages").html(`<li><i class="fa fa-caret-left"></i></li>${list_of_pages}<li><i class="fa fa-caret-right"></i></li>`);
 				},complete:function(){
           if(isset(txt_filter)){
             if (btn_cls.includes('filter-btn')) {
@@ -6148,8 +6155,8 @@ const $_get = (index) => {
 				$($(".filt-by-brands input")[i]).prop("checked", false);
 			}
 			brand_list = [];
-      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
-      get_prods(pro_numb,txt_filter,btn_cls);
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
+      get_prods(pro_numb,page,txt_filter,btn_cls);
 		});
 		let input = ".filt-by-brands input[type='checkbox']";
 		$db.on("change",".filt-by-brands input:not(:eq(0))",function(){
@@ -6162,13 +6169,14 @@ const $_get = (index) => {
 				}else{
 					brand_list.splice(brand_list.indexOf($(this).val()),1);
 				}
+        filter_prod();
 		});
     let filter_prod = (txt_filter,btn_cls) => {
       pro_order = $sv.val();
       filter = [pro_order,$fmi.val(),$fma.val(),$smp.val(),brand_list];
-      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
       // $("#prod_list").html("<div class='loading-gif'><img src='/img/loading.gif' alt='"+$("#prod_list").data("words").split(',')[2]+"'></div>")
-      get_prods(pro_numb,txt_filter,btn_cls);
+      get_prods(pro_numb,page,txt_filter,btn_cls);
     }
     $db.on("click",".filter-btn,.sortby_value_btn",function(){
         let txt_filter = $("#nav_filter").html(),btn_cls = $(this).attr("class");
@@ -6179,14 +6187,41 @@ const $_get = (index) => {
       filter_prod();
     });
     let ld_btn_txt = $(".load-section a").text();
-    $db.on("click",".load-section a",function(){
-      pro_numb += 15;
-      $(this).html('<i class="fa fa-refresh fa-spin"></i> ');
-      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb}]);
-      get_prods(pro_numb);
+    $("#product-pagination .pg-show").change(function(){
+      pro_numb = $(this).val();
+      filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
+      get_prods(pro_numb,page);
+    });
+    if($_get('show')) $("#product-pagination .pg-show option[value='"+$_get('show')+"']").prop('selected',true);
+    // $db.on("click",".load-section a",function(){
+    //   pro_numb += 15;
+    //   $(this).html('<i class="fa fa-refresh fa-spin"></i> ');
+    //   filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
+    //   get_prods(pro_numb,page);
+    // });
+    $db.on("click","#product-pagination .store-pages li",function(){
+      if($(this).has('i').length == 0){
+        page = $(this).text();
+        $(this).addClass('active').siblings().removeClass('active');
+        filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
+        get_prods(pro_numb,page);
+      }else{
+        let inside_func = () => {
+          $("#product-pagination .store-pages li:eq("+page+")").addClass("active").siblings().removeClass("active");
+          $(this).addClass('active').siblings().removeClass('active');
+          filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
+          get_prods(pro_numb,page);
+        }
+        if ($(this).find('i').hasClass('fa-caret-right') && page < page_limit) {
+          page += 1;
+          inside_func();
+        }else if($(this).find('i').hasClass('fa-caret-left') && page >= page_limit){
+          page -= 1;
+          inside_func();
+        }
+      }
     });
     $(".load-section a").css("width","");
-    // , .filt-by-brands span,
 		$db.on("change",input +":eq(0)",function(){
       let fb = ".filt-by-brands b";
 			if ($(this).hasClass("chckd")) {
@@ -6203,9 +6238,10 @@ const $_get = (index) => {
 					brand_list.push($(this).siblings("input[type='checkbox']:eq("+i+")").val());
 				}
 			}
+      filter_prod();
 			// console.log(brand_list);
 		});
-		get_prods(pro_numb);
+		get_prods(pro_numb,page);
   }
   $db.on("click",".pages-body > ul > li",function(){
     window.location = $(this).data("url");

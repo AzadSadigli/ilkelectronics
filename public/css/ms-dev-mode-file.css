@@ -12564,7 +12564,22 @@ textarea.input {
 .product .product-label>span.sale {
     background-color: #ff0000;
 }
-
+.prod-discount p{
+  font-size: 17px;
+font-weight: bold;
+}
+.prod-discount{
+  background: #ff0000;
+  color: #ffffff;
+  padding: 20px;
+  position: absolute;
+  border-radius: 101px;
+  height: 108px;
+  bottom: 10px;
+  left: 10px;
+  width: 109px;
+  text-align: center;
+}
 .product .product-countdown {
     z-index: 22;
 }
@@ -12956,6 +12971,9 @@ textarea.input {
     border-bottom: 1px solid #DADADA;
 }
 
+.prod-data-list{
+  /* min-height: 2700px; */
+}
 
 /*-- store filter --*/
 
@@ -13003,22 +13021,32 @@ textarea.input {
 
 .store-pages {
     display: inline-block;
-    margin-left: 15px;
+    /* margin-left: 15px; */
+    /* padding: 10px;
+    background: #ff0000f2;
+    color: white !important; */
 }
 
 .store-pages li {
     display: inline-block;
     margin-right: 6px;
+    background: red;
+    padding: 10px;
+    color: white !important;
+    cursor: pointer;
 }
 
 .store-pages li a {
     display: block;
     min-width: 10px;
     text-align: center;
+    color: white;
 }
 
 .store-pages li.active {
-    color: #e31e25;
+  color: #f7f7f7;
+  font-weight: bold;
+  background: #a70d0d;
 }
 
 
@@ -14306,7 +14334,7 @@ textarea.input {
   font-weight: bold;
 }
 .ln_head{
-  background: red;
+  background: #ff0000;
   padding: 10px;
   position: absolute;
   color: white;

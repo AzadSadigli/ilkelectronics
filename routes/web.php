@@ -143,9 +143,9 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
   });
 });
+Route::get('/order-product/{slug}','ProductController@order_product_view');
 
 Route::group(['middleware' => 'auth'],function(){
-  Route::get('/order-product/{slug}','ProductController@order_product_view');
   Route::delete('/delete-comment','UserController@delete_comment');
   Route::get('/profile', 'HomeController@index')->name('home');
   Route::get('/wishlist', 'UserController@wishlist');

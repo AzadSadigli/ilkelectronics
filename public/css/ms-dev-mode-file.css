@@ -12568,6 +12568,18 @@ textarea.input {
   font-size: 17px;
 font-weight: bold;
 }
+.prod-discount-top{
+  background: #ff0000;
+  color: #ffffff;
+  padding: 20px;
+  position: absolute;
+  border-radius: 101px;
+  height: 108px;
+  top: 10px;
+  left: 10px;
+  width: 109px;
+  text-align: center;
+}
 .prod-discount{
   background: #ff0000;
   color: #ffffff;

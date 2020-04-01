@@ -6208,12 +6208,14 @@ const $_get = (index) => {
         $(this).addClass('active').siblings().removeClass('active');
         filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
         get_prods(pro_numb,page);
+        // $("#main").animate({scrollTop: 0}, 1000);
       }else{
         let inside_func = () => {
           $("#product-pagination .store-pages li:eq("+page+")").addClass("active").siblings().removeClass("active");
           $(this).addClass('active').siblings().removeClass('active');
           filter_url([{'sort-by-value':$sv.find(':selected').data("value")},{show:pro_numb},{page:page}]);
           get_prods(pro_numb,page);
+          // $("#main").animate({scrollTop: 0}, 1000);
         }
         if ($(this).find('i').hasClass('fa-caret-right') && page < page_limit) {
            page = parseInt(page) + 1;

@@ -43,7 +43,7 @@
 							</div>
 							@endif
 						</div>
-						@if(!empty($pro->old_price))<span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
+						@if(!empty($pro->old_price))<span class="prod-discount-top"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
 						@if(count($imgs) !== 0)
 						<div id="product-view">
 							@foreach($imgs as $img)

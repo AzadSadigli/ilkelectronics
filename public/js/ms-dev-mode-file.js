@@ -6113,7 +6113,7 @@ const $_get = (index) => {
               product_btns = "<div class='product-btns'><a class='primary-btn add-to-cart' data-id='"+val.id+"'><i class='fa fa-shopping-cart'></i></a> <a href='/order-product/"+val.slug+"' class='main-btn'>"+orn+"</a></div>";
             }
             if (time_diff(val.date) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
-            if (!isNaN(val.price - val.old_price)) {
+            if (val.old_price != val.price && val.old_price != 0 && val.old_price !== null) {
               discount = "<span class='prod-discount'><p>"+Math.ceil(val.old_price - val.price)+val.currency+"</p><i>"+$("#prod_list").data("words").split(",")[5]+"</i></span>";
               old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
             }
@@ -6125,7 +6125,7 @@ const $_get = (index) => {
           // $(id + "img.lazy").lazyload();
           $(".prd_cnt").html(data.count);
           if (data.pros.length == 0) {
-            $(id).html("<center class='no-prod-found'>"+data.empty+"</center>")
+            $(id).html(`<center class='no-prod-found'>${data.empty}</center>`)
           }
           if (data.count > pro_numb) {
             $(".load-section").css("display","");

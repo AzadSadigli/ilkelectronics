@@ -44,11 +44,14 @@ Route::post('/add-new-comment','UserController@add_comment');
 Route::get('/get-review-list','UserController@get_comments');
 
 Route::post('/order-product','ProductController@order_now');
+Route::get('/order-product/{slug}','ProductController@order_product_view');
 
 Route::group(['prefix' => 'admin'], function(){
   Route::group(['middleware' => 'admin'],function(){
 
     Route::get('/get-tab-suggestions','ProductController@get_tab_sugg');
+
+    Route::post('/mark-order-as-seen','OrderController@mark_as_read');
 
     Route::get('/','AdminController@index');
     Route::view('/profile','admin.profile');
@@ -143,7 +146,6 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/update-all-category-slugs','AdminController@update_all_category_slugs');
   });
 });
-Route::get('/order-product/{slug}','ProductController@order_product_view');
 
 Route::group(['middleware' => 'auth'],function(){
   Route::delete('/delete-comment','UserController@delete_comment');

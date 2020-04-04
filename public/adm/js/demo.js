@@ -116,14 +116,31 @@ const isHexColor = (hex) => {
       && hex.length === 6
       && !isNaN(Number('0x' + hex))
 }
-function notify(message,type){
-  let len = $(".notify").length;
-  for (var i = 0; i < len; i++) {
-    let bt = 90 + 75 * i;
-    let op = 0.6 + 0.4/i;
-    $(".notify:eq("+(len - i - 1)+")").animate({bottom: bt+"px",opacity:op});
-  }
-  $("body").append("<div class='notify notify_"+(len - $(this).index())+" notify-"+type+"' data-index='"+(len - $(this).index())+"'><a class='close'>&times;</a>"+message+"</div>");
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
+  // const notify_once = (mess,type) => {
+  //   // Expected "success", "error", "warning", "info" or "question", got "danger"
+  //   Toast.fire({
+  //     type: type,
+  //     title: mess
+  //   });
+  // }
+const notify = (message,type) => {
+  // let len = $(".notify").length;
+  // for (var i = 0; i < len; i++) {
+  //   let bt = 90 + 75 * i;
+  //   let op = 0.6 + 0.4/i;
+  //   $(".notify:eq("+(len - i - 1)+")").animate({bottom: bt+"px",opacity:op});
+  // }
+  Toast.fire({
+    type: type,
+    title: message
+  });
+  // $("body").append("<div class='notify notify_"+(len - $(this).index())+" notify-"+type+"' data-index='"+(len - $(this).index())+"'><a class='close'>&times;</a>"+message+"</div>");
 }
 $db.on("click",".notify .close",function(){
   close_notify($(this).parent().data("index"));
@@ -1293,8 +1310,30 @@ $("#compress_prods").click(function(){
   });
 });
 $(document).ready(function () {
-  $('#prod_list').DataTable().destroy();
-  $('#prod_list').dataTable({"autoWidth": false,"lengthChange": false,"pageLength": 100});
+  if ($('#prod_list').length > 0) {
+    $('#prod_list').DataTable().destroy();
+    $('#prod_list').dataTable({"autoWidth": false,"lengthChange": false,"pageLength": 100});
+  }
+  $(".mark_as_read").on("click",function(){
+    let th = $(this);
+    $header;
+    $.ajax({
+      url: '/admin/mark-order-as-seen',
+      type: 'POST',
+      data: {id: th.data("id")},
+      success:function(d){
+        if (d.st == 1) {
+          th.html('<i class="fa fa-envelope-open"></i>');
+        }else{
+          th.html('<i class="fa fa-envelope"></i>');
+        }
+        notify(d.message,"success");
+      },error:function(d){
+        console.log(d);
+      }
+    });
+    // $(this).html($(this).attr("title"));
+  });
 });
 // $("#submit_loans").on("click",function(){
 //   $(".new_loan_form").submit();

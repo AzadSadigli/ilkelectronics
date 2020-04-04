@@ -99,6 +99,148 @@
 
             <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <!-- orders list -->
+                  @if(!empty($home_orders) || !empty($home_orders_ns))
+                  <div class="card">
+                      <div class="header">
+                          <h2>{{__('app.Orders')}}</h2>
+                      </div>
+                      <div class="body">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#not_seen_orders">{{__('app.Orders')}} ({{count($home_orders_ns)}})</a></li>
+                            <li><a data-toggle="tab" href="#seen_orders">{{__('app.Seen_orders')}} ({{count($home_orders)}})</a></li>
+                          </ul>
+                          <div class="tab-content">
+                            <div id="not_seen_orders" class="tab-pane fade in active">
+                              <div class="table-responsive">
+                                <table class="table table-hover dashboard-task-infos">
+                                    <thead>
+                                        <tr>
+                                            <th>{{__('app.Orderer')}}</th>
+                                            <th>{{__('app.Product')}}</th>
+                                            <th>{{__('app.Email')}}</th>
+                                            <th>{{__('app.Contact_number')}}</th>
+                                            <th>#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($home_orders_ns as $or)
+                                        <tr>
+                                            <td>{{$or->name}} {{$or->surname}}</td>
+                                            <td style="width:300px;"><a href="/product/{{$or->product->slug}}" target="_blank">{{$or->product->productname}}</a> </td>
+                                            <td>{{$or->email}}</td>
+                                            <td>{{$or->contact_number}} </td>
+                                            <td>
+                                              <div class="btn-group-vertical">
+                                                <!-- <button type="button" class="btn btn-danger" title="{{__('app.Delete_order')}}"><i class="fa fa-trash"></i> </button> -->
+                                                <button type="button" class="btn btn-success" title="{{__('app.View_order_details')}}" data-toggle="modal" data-target="#view_more{{$or->id}}"><i class="fa fa-eye"></i> </button>
+                                                <button type="button" class="btn btn-primary mark_as_read" data-id="{{$or->id}}" title="{{__('app.Mark_as_read')}}"> @if($or->status == 0) <i class="fa fa-envelope"></i> @else <i class="fa fa-envelope-open"></i> @endif</button>
+                                              </div>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="view_more{{$or->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title">{{__('app.Order_detail')}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <ul class="list-group">
+                                                  <li class='list-group-item'><b>ID:</b> {{$or->id}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Orderer')}}:</b> {{$or->name}} {{$or->surname}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Father_name')}}:</b> {{$or->father_name}} </li>
+                                                  <li class='list-group-item'><b>{{__('app.Product')}}:</b> {{$or->product->productname}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Quantity')}}:</b> {{$or->quantity}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Email')}}:</b> {{$or->email}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.ID_card')}}:</b> {{$or->id_seria}} / {{$or->id_number}} / {{$or->id_pin}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Contact_number')}}:</b> {{$or->contact_number}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Gender')}}:</b> @if($or->gender == 0) {{__('app.Male')}} @else {{__('app.Female')}} @endif</li>
+                                                  <li class='list-group-item'><b>{{__('app.Birthdate')}}:</b> {{$or->birthdate}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Address')}}:</b> {{$or->city}} / {{$or->address}}</li>
+                                                  <li class='list-group-item'><b>{{__('app.Loan')}}:</b> {{$or->loan->price}}AZN | {{$or->loan->rate}}% | {{$or->loan->duration}}</li>
+                                                </ul>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('app.Close')}}</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            </div>
+                            <div id="seen_orders" class="tab-pane fade">
+                              <div class="table-responsive">
+                                  <table class="table table-hover dashboard-task-infos">
+                                      <thead>
+                                          <tr>
+                                              <th>{{__('app.Orderer')}}</th>
+                                              <th>{{__('app.Product')}}</th>
+                                              <th>{{__('app.Email')}}</th>
+                                              <th>{{__('app.Contact_number')}}</th>
+                                              <th>#</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          @foreach($home_orders as $or)
+                                          <tr>
+                                              <td>{{$or->name}} {{$or->surname}}</td>
+                                              <td style="width:300px;"><a href="/product/{{$or->product->slug}}" target="_blank">{{$or->product->productname}}</a> </td>
+                                              <td>{{$or->email}}</td>
+                                              <td>{{$or->contact_number}} </td>
+                                              <td>
+                                                <div class="btn-group-vertical">
+                                                  <button type="button" class="btn btn-success" title="{{__('app.View_order_details')}}" data-toggle="modal" data-target="#view_more{{$or->id}}"><i class="fa fa-eye"></i> </button>
+                                                  <button type="button" class="btn btn-primary mark_as_read" data-id="{{$or->id}}" title="{{__('app.Mark_as_read')}}"> @if($or->status == 0) <i class="fa fa-envelope"></i> @else <i class="fa fa-envelope-open"></i> @endif</button>
+                                                </div>
+                                              </td>
+                                          </tr>
+                                          <div class="modal fade" id="view_more{{$or->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title">{{__('app.Order_detail')}}</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <ul class="list-group">
+                                                    <li class='list-group-item'><b>ID:</b> {{$or->id}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Orderer')}}:</b> {{$or->name}} {{$or->surname}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Father_name')}}:</b> {{$or->father_name}} </li>
+                                                    <li class='list-group-item'><b>{{__('app.Product')}}:</b> {{$or->product->productname}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Quantity')}}:</b> {{$or->quantity}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Email')}}:</b> {{$or->email}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.ID_card')}}:</b> {{$or->id_seria}} / {{$or->id_number}} / {{$or->id_pin}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Contact_number')}}:</b> {{$or->contact_number}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Gender')}}:</b> @if($or->gender == 0) {{__('app.Male')}} @else {{__('app.Female')}} @endif</li>
+                                                    <li class='list-group-item'><b>{{__('app.Birthdate')}}:</b> {{$or->birthdate}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Address')}}:</b> {{$or->city}} / {{$or->address}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Loan')}}:</b> {{$or->loan->price}}AZN | {{$or->loan->rate}}% | {{$or->loan->duration}}</li>
+                                                  </ul>
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('app.Close')}}</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          @endforeach
+                                      </tbody>
+                                  </table>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  @endif
+                  <!-- orders list ends here -->
                     <div class="card">
                         <div class="header">
                             <h2>{{__('app.Most_viewed_products')}}</h2>
@@ -108,16 +250,14 @@
                                 <table class="table table-hover dashboard-task-infos">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
                                             <th>{{__('app.Product')}}</th>
                                             <th>{{__('app.Creation_date')}}</th>
                                             <th>{{__('app.Views_count')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(App\Products::orderBy('views','DESC')->take(conf("Limit_of_most_viewed_prods"))->get() as $pr)
+                                        @foreach($home_prods as $pr)
                                         <tr>
-                                            <td>{{$pr->prod_id}}</td>
                                             <td><a href="/product/{{$pr->slug}}" target="_blank">{{$pr->productname}}</a> </td>
                                             <td>{{$pr->created_at}}</td>
                                             <td>{{$pr->views}} {{__('app.times')}}</td>

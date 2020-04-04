@@ -6548,10 +6548,22 @@ const $_get = (index) => {
       "#region",
       "#contact_number"
     ];
+    for (var n = 0; n < ids.length; n++) {
+      if (isNotNull($(ids[n]).val())) {
+        isValidInput($(ids[n]));
+      }else{
+        inNotValidInput($(ids[n]));
+        return false;
+      }
+    }
     let loan_id = $(ids[0]).val() ? $(ids[0]).val() : 0;
     $("#order_form div").css("display","none");
-    $("#order_form").append("<img class='order-lding' src='/img/loading.gif'>");
+    let th = $(this);
+    let txt = th.html();
+    btn_spin(th);
+    // $("#order_form").append("<img class='order-lding' src='/img/loading.gif'>");
     $header;
+
     $.ajax({
       url: '/order-product',
       type: 'POST',
@@ -6562,11 +6574,13 @@ const $_get = (index) => {
         address:$(ids[9]).val(),city: $(ids[10]).val(),contact_number:$(ids[11]).val(),
       },
       success:function(t){
-        $("#order_form img").attr('src','/img/confirmed.png').after("<p class='success-text'>"+t.mess+"</p>");
+        $("#order_form").html('<img class="order-lding" src="/img/confirmed.png">').after("<p class='success-text'>"+t.mess+"</p>");
       },complete:function(){
+        th.html(txt);
       }
     });
   });
+  $("input[type='date']").attr('min','1979-12-31').attr('max','2100-12-31');
   // var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
   const pc_tm = ".pro_countdown";
     var cntdown = setInterval(function() {

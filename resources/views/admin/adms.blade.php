@@ -467,8 +467,12 @@
   	@endif
     @section('body')
     @show
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     @section('foot')
     @show
+
 
 </body>
 

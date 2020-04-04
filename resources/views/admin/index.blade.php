@@ -222,7 +222,7 @@
                                                     <li class='list-group-item'><b>{{__('app.Gender')}}:</b> @if($or->gender == 0) {{__('app.Male')}} @else {{__('app.Female')}} @endif</li>
                                                     <li class='list-group-item'><b>{{__('app.Birthdate')}}:</b> {{$or->birthdate}}</li>
                                                     <li class='list-group-item'><b>{{__('app.Address')}}:</b> {{$or->city}} / {{$or->address}}</li>
-                                                    <li class='list-group-item'><b>{{__('app.Loan')}}:</b> {{$or->loan->price}}AZN | {{$or->loan->rate}}% | {{$or->loan->duration}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Loan')}}:</b> @if(!empty($or->loan)) {{$or->loan->price}}AZN | {{$or->loan->rate}}% | {{$or->loan->duration}} @endif</li>
                                                   </ul>
                                                 </div>
                                                 <div class="modal-footer">

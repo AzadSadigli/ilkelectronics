@@ -320,5 +320,4 @@
 <script src="/adm/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/forms/basic-form-elements.js"></script>
-<script src="/adm/js/demo.js?v={{time()}}"></script>
 @endsection

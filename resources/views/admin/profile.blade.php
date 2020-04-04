@@ -172,5 +172,4 @@
 <script src="/adm/plugins/node-waves/waves.js"></script>
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/examples/profile.js"></script>
-<script src="/adm/js/demo.js"></script>
 @endsection

@@ -323,5 +323,4 @@
     <script src="/adm/plugins/jquery-sparkline/jquery.sparkline.js"></script>
     <script src="/adm/js/admin.js"></script>
     <script src="/adm/js/pages/index.js"></script>
-    <script src="/adm/js/demo.js?v={{md5(microtime())}}"></script>
 @endsection

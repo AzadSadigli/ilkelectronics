@@ -262,6 +262,4 @@
 <script src="/adm/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 <script src="/adm/js/admin.js"></script>
 <script src="/adm/js/pages/tables/jquery-datatable.js"></script>
-<script src="/adm/js/demo.js?v={{uniqid()}}"></script>
-
 @endsection

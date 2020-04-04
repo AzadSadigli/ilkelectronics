@@ -32,7 +32,8 @@ class Admin
           if ($request->ajax()){
             return response('Unauthorized.', 401);
           } else{
-            return redirect()->guest('login');
+            return redirect('/account?action=login');
+            // return redirect()->guest('login');
           }
         } else {
           if(Auth::user()->role_id == 2 | Auth::user()->role_id == 3 | Auth::user()->role_id == 4){

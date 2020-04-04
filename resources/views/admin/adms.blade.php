@@ -333,7 +333,7 @@
             									 onclick="event.preventDefault();
             																 document.getElementById('logout-form').submit();"><i class="material-icons">input</i> {{__('app.Logout')}}</a></li>
 
-            								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            								<form id="logout-form" action="/logout/user" method="GET" style="display: none;">
             										@csrf
             								</form>
                         </ul>
@@ -472,8 +472,6 @@
     @section('foot')
     @show
     <script src="/adm/js/demo.js?v={{md5(microtime())}}"></script>
-    
-
 
 </body>
 

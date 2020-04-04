@@ -13928,6 +13928,7 @@ a {
 #order_form,.acc_section{
   width: 94%;
   margin: auto;
+  margin-bottom: 70px;
 }
 @media screen and (max-width: 527px) {
     .header-search {
@@ -14381,4 +14382,7 @@ textarea.input {
   background-color: rgba(0,0,0,0.5);
   z-index: 2;
   cursor: pointer;
+}
+.swal2-popup {
+font-size: 1.6rem !important;
 }

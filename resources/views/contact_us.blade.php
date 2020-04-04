@@ -15,7 +15,13 @@
 		<div class="container">
 			<ul class="breadcrumb">
 				<li><a href="/">{{__('app.Home')}}</a></li>
-				<li class="active">{{__('app.Contact_us')}}</li>
+				<li class="active">
+					@if(Request::is('order-product/*'))
+					{{__('app.Order_online')}}
+					@else
+					{{__('app.Contact_us')}}
+					@endif
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -30,26 +36,28 @@
 									<h4 class="title">{{__('app.Contact_us')}}</h4>
 							</div>
 							<div id="contact_form" class="profile-section">
-								<div class="form-group row">
-									<input id="name" type="text" placeholder="{{ __('app.Name') }}..." class="input" @if(Auth::check()) value="{{ Auth::user()->name }}" disabled @endif required autocomplete="name" autofocus>
-									@error('name')
-											<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-									@enderror
-								</div>
-								<div class="form-group row">
-										<input id="email" type="email" placeholder="{{ __('app.E_mail') }}..." class="input" @if(Auth::check()) value="{{ Auth::user()->email }}" disabled @endif required autocomplete="email">
-										@error('email')
-											<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+								<div class="col-md-12">
+									<div class="form-group row">
+										<input id="name" type="text" placeholder="{{ __('app.Name') }}..." class="input" @if(Auth::check()) value="{{ Auth::user()->name }}" disabled @endif required autocomplete="name" autofocus>
+										@error('name')
+												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
 										@enderror
-								</div>
-								<div class="form-group row">
-										<textarea id="body" class="input @error('email') is-invalid @enderror" placeholder="{{__('app.Your_message')}}..."></textarea>
-										@error('body')
-											<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-										@enderror
-								</div>
-								<div class="form-group row mb-0 pull-right">
-									<a class="cust-btn">{{ __('app.Send') }}</a>
+									</div>
+									<div class="form-group row">
+											<input id="email" type="email" placeholder="{{ __('app.E_mail') }}..." class="input" @if(Auth::check()) value="{{ Auth::user()->email }}" disabled @endif required autocomplete="email">
+											@error('email')
+												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+											@enderror
+									</div>
+									<div class="form-group row">
+											<textarea id="body" class="input @error('email') is-invalid @enderror" placeholder="{{__('app.Your_message')}}..."></textarea>
+											@error('body')
+												<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+											@enderror
+									</div>
+									<div class="form-group row mb-0 pull-right">
+										<a class="cust-btn">{{ __('app.Send') }}</a>
+									</div>
 								</div>
 							</div>
 						</div>

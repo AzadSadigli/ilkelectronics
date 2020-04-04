@@ -5971,15 +5971,25 @@ const $_get = (index) => {
     return Object.prototype.toString.call(obj) === '[object Array]' ;
   }
   let tv_time = 6000;
+  const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      // timer: 3000
+    });
   const notify = (message,type) => {
-    let len = $(".notify").length;
-    for (var i = 0; i < len; i++) {
-      let bt = 90 + 75 * i;
-      let op = 0.6 + 0.4/i;
-      $(".notify:eq("+(len - i - 1)+")").animate({bottom: bt+"px",});
-    }
-    tv_time = 6000;
-    $("body").append(`<div class='notify notify_${(len - $(this).index())} notify-${type}' data-index='${(len - $(this).index())}'><a class='close'>&times;</a>${message}</div>`);
+    // let len = $(".notify").length;
+    // for (var i = 0; i < len; i++) {
+    //   let bt = 90 + 75 * i;
+    //   let op = 0.6 + 0.4/i;
+    //   $(".notify:eq("+(len - i - 1)+")").animate({bottom: bt+"px",});
+    // }
+    // tv_time = 6000;
+    // $("body").append(`<div class='notify notify_${(len - $(this).index())} notify-${type}' data-index='${(len - $(this).index())}'><a class='close'>&times;</a>${message}</div>`);
+    Toast.fire({
+      type: type,
+      title: message
+    });
   }
 
   const close_notify = (id) => {
@@ -6413,10 +6423,10 @@ const $_get = (index) => {
   $("#image_input").change(function() {
     readURL(this);
   });
-  $(".lg-out-btn").on("click",function(){
-    event.preventDefault();
-    document.getElementById('logout-form').submit();
-  });
+  // $(".lg-out-btn").on("click",function(){
+  //   event.preventDefault();
+  //   document.getElementById('logout-form').submit();
+  // });
 
   let slideIndex = 0;
   const showSlides = function(n) {
@@ -6554,6 +6564,9 @@ const $_get = (index) => {
       }else{
         inNotValidInput($(ids[n]));
         return false;
+      }
+      if (ids[n] === '#email') {
+        if (isEmail($(ids[n]).val())) {isValidInput($(ids[n]));}else{inNotValidInput($(ids[n]));return false;}
       }
     }
     let loan_id = $(ids[0]).val() ? $(ids[0]).val() : 0;

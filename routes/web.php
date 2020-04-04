@@ -177,7 +177,7 @@ Route::post('/enter-new-password','Controller@change_password');
 
 Route::post('login', 'Auth\LoginController@login')->name('login');
 Route::post('register', 'Auth\RegisterController@register')->name('register');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/logout/user', 'Auth\LoginController@logout')->name('logout');
 
 // Registration Routes...
 

@@ -119,8 +119,9 @@
 								<li><a href="/admin"><i class="fa fa-columns"></i> {{__('app.Panel')}}</a></li>
 								@endif
 								<li><a href="/wishlist"><i class="fa fa-shopping-cart"></i> {{__('app.My_wishlist')}}</a></li>
-								<li><a href="{{ route('logout') }}" class="lg-out-btn"><i class="fa fa-angle-left"></i> {{__('app.Logout')}}</a></li>
-								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+								<li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+                              document.getElementById('logout-form').submit();"><i class="fa fa-angle-left"></i> {{__('app.Logout')}}</a></li>
+								<form id="logout-form" action="/logout/user" method="GET" style="display: none;">
 										@csrf
 								</form>
 								@else
@@ -224,6 +225,8 @@
 			</div>
 		</div>
 	</footer>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	@if(0)
 	<script src="/js/ms-dev-mode-file.js"></script>
 	@else

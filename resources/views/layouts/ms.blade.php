@@ -84,14 +84,14 @@
 					<li class="nav-toggle">
 						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-align-left"></i></button>
 					</li>
+					<li>
+						<a id="search_icon">
+							<div class="header-btns-icon">
+								<i class="fa fa-search"></i>
+							</div>
+						</a>
+					</li>
 						@if(Auth::check())
-						<li>
-							<a id="search_icon">
-								<div class="header-btns-icon">
-									<i class="fa fa-search"></i>
-								</div>
-							</a>
-						</li>
 						<li class="header-cart dropdown default-dropdown frst">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">

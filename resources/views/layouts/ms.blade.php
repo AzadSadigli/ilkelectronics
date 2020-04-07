@@ -7,7 +7,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@section('head')
   @show
-	@if(false)
+	@if(0)
 	<link type="text/css" rel="stylesheet" href="/css/ms-dev-mode-file.css?v={{uniqid()}}" />
 	@else
 	<link type="text/css" rel="stylesheet" href="/css/ms.min.css?v={{uniqid()}}" />
@@ -66,7 +66,7 @@
 							<img src="/img/logo.png" alt="{{__('app.Logo')}}">
 						</a>
 					</div>
-					<div class="header-search">
+					<div class="header-search hide">
             <form action="/search-result/search={request}" method="GET" autocomplete="off" class="form-search" accept-charset="utf-8">
 							<input class="input search-input" type="text" name="search" placeholder="{{__('app.Search')}}..." @if(Request::is('search-result/*')) value="{{$search}}" @else value="{{ isset($s) ?  $s : ''}}" @endif oninvalid="this.setCustomValidity('{{__('app.Please_enter_value_for_search')}}')" oninput="setCustomValidity('')" required>
 							<select class="input search-categories" name="category_id">
@@ -85,14 +85,19 @@
 						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-align-left"></i></button>
 					</li>
 						@if(Auth::check())
+						<li>
+							<a id="search_icon">
+								<div class="header-btns-icon">
+									<i class="fa fa-search"></i>
+								</div>
+							</a>
+						</li>
 						<li class="header-cart dropdown default-dropdown frst">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-shopping-cart"></i>
 									<span class="qty wish_count"></span>
 								</div>
-								<strong>{{__('app.My_wishlist')}}</strong>
-								@if(false)<br><span class="wish_total"></span>@endif
 							</a>
 							<div class="custom-menu wish_head_list">
 								<div id="shopping-cart">
@@ -109,7 +114,6 @@
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>
 								</div>
-								<strong>@if(Auth::check()) {{Auth::user()->name}} @else {{__('app.My_account')}} @endif <i class="fa fa-caret-down"></i></strong><br>
 							</div>
 							@guest <a href="#">{{__('app.Join')}}</a> @endif
 							<ul class="custom-menu">

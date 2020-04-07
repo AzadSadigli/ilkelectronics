@@ -23,15 +23,15 @@ use App\Brand;
 class ProductController extends Controller
 {
     public function index(){
-        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
+        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",0) as price,FORMAT(p.old_price/".currency(0).",0) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY created_at DESC LIMIT 20");
         $brands = Brand::where('status',1)->orderBy('views','desc')->take(6)->get();
         $bpro = DB::select("SELECT
                                 p.id,b.end_date,p.slug,
                                 (SELECT image FROM `images` i WHERE i.prod_id = b.prod_id ORDER BY `order` ASC LIMIT 1) as image,
                                 b.start_date,
-                                FORMAT(p.price/".currency(0).",2) as price,
+                                FORMAT(p.price/".currency(0).",0) as price,
                                 p.productname,p.prod_id,
-                                FORMAT(p.old_price/".currency(0).",2) as old_price,
+                                FORMAT(p.old_price/".currency(0).",0) as old_price,
                                 p.created_at as date,
                                 (SELECT AVG(rating) FROM `comments` c WHERE c.prod_id = b.prod_id) as rating
                             FROM
@@ -39,7 +39,7 @@ class ProductController extends Controller
                             LEFT JOIN `products` p ON p.id = b.prod_id
                             WHERE end_date >= '".date("Y-m-d H:i:s")."' AND start_date <= '".date("Y-m-d H:i:s")."'
                             ORDER BY end_date limit 3");
-        $mv_pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY views DESC LIMIT 4");
+        $mv_pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",0) as price,FORMAT(p.old_price/".currency(0).",0) as old_price,(SELECT AVG(rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p ORDER BY views DESC LIMIT 4");
         return view('index',compact('pros','mv_pros','bpro','brands'));
     }
     public function order_product_view($slug){
@@ -153,11 +153,11 @@ class ProductController extends Controller
 
     }
     public function get_product_details($slug){
-      $pro = Products::select(DB::raw("*,FORMAT(price/".currency(0).",2) as price,FORMAT(old_price/".currency(0).",2) as old_price"))->where('slug',$slug)->first();
+      $pro = Products::select(DB::raw("*,FORMAT(price/".currency(0).",0) as price,FORMAT(old_price/".currency(0).",0) as old_price"))->where('slug',$slug)->first();
       if (!empty($pro)) {
         $pro->views += 1;
         $pro->update();
-        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",2) as price,FORMAT(p.old_price/".currency(0).",2) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
+        $pros = DB::select("SELECT p.*,FORMAT(p.price/".currency(0).",0) as price,FORMAT(p.old_price/".currency(0).",0) as old_price,(SELECT AVG(c.rating) FROM `comments` c WHERE prod_id = p.id) as rating FROM products p WHERE category = ".$pro->category." AND id != ".$pro->id." LIMIT 4");
         $prod_tabs = Protab::where('prod_id',$pro->id)->orderBy('order','ASC')->get();
         $loans = Loans::where('prod_id',$pro->id)->where('type',0)->orderBy('duration','ASC')->get();
         $lns = Loans::where('prod_id',$pro->id)->where('type',1)->orderBy('duration','ASC')->get();

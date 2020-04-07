@@ -168,8 +168,8 @@ class UserController extends Controller
                           p.prod_id,
                           p.id as pid,
                           p.productname,
-                          FORMAT(p.price/".currency(0).",2) as price,
-                          FORMAT(p.old_price/".currency(0).",2) as old_price,
+                          FORMAT(p.price/".currency(0).",0) as price,
+                          FORMAT(p.old_price/".currency(0).",0) as old_price,
                           p.slug,
                           p.category,
                           p.quantity as pquantity,
@@ -191,7 +191,7 @@ class UserController extends Controller
       $count = Wishlist::where('user_id',Auth::user()->id)->count();
       $currency = currency();
       $sum = DB::select("SELECT SUM(p.price)*w.quantity as sum FROM wishlist w LEFT JOIN products p ON p.id = w.prod_id");
-      $tot = number_format(($sum[0]->sum)/currency(0),2);
+      $tot = number_format(($sum[0]->sum)/currency(0),0);
       if ($sum[0]->sum === null) {
         $tot = 0;
       }

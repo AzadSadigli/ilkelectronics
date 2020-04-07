@@ -6662,4 +6662,34 @@ const $_get = (index) => {
   //   // console.log($("img").length);
   // }
   // get_imgs();
+  $("#search_icon").click(function(){
+    let hs = $(".header-search");
+    if (hs.hasClass("hide")) {
+      $(this).addClass("active").parents("li").css("z-index","100000");
+      hs.removeClass("hide");
+      $('header').before('<div class="background-body"></div>');
+      $('html, body').css({
+          overflow: 'hidden',
+          height: '100%'
+      });
+    }else{
+      hs.addClass("hide");
+      $(this).removeClass("active").parents("li").remove("style");
+      $('.background-body').remove();
+      $('html, body').css({
+          overflow: 'auto',
+          height: 'auto'
+      });
+    }
+  });
+  $db.on("click",".background-body",function(){
+    let hs = $(".header-search");
+    hs.addClass("hide");
+    $("#search_icon").removeClass("active").parents("li").remove("style");
+    $('.background-body').remove();
+    $('html, body').css({
+      overflow: 'auto',
+      height: 'auto'
+    });
+  });
 });

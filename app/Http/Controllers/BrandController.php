@@ -42,7 +42,7 @@ class BrandController extends Controller
       'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
     $br_exist = Brand::where('brand',$req->brand)->first();
-    if (empty($req->id) || $req->id == 0 || empty($br_exist)) {
+    if (empty($br_exist)) {
       $br = new Brand;
     }else{
       if (empty($br_exist)) {
@@ -62,7 +62,7 @@ class BrandController extends Controller
       resize($folder.$filename, $folder.$filename, 120, 120);
       $br->status = $req->status;
       $br->brand = trim($req->brand);
-      if (empty($req->id) || $req->id == 0 || empty($br_exist)) {
+      if (empty($br_exist)) {
         $br->image = $filename;
         $br->save();
       }else{

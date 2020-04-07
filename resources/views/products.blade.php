@@ -78,9 +78,9 @@
 							<div class="sort-filter">
 								<span class="text-uppercase">{{__('app.Sort_By')}}:</span>
 								<select class="input sortby_value">
-									<option value="0" data-value="latest-products">{{__('app.Latest_products')}}</option>
 									<option value="1" data-value="first-cheaps">{{__('app.First_cheaper')}}</option>
 									<option value="2" data-value="first-expensives">{{__('app.First_expensive')}}</option>
+									<option value="0" data-value="latest-products">{{__('app.Latest_products')}}</option>
 									<option value="3" data-value="high-rated-products">{{__('app.High_rated_products')}}</option>
 								</select>
 								<a class="main-btn icon-btn sortby_value_btn filter-btn"><i class="fa fa-arrow-down"></i></a>

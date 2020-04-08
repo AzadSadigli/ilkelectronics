@@ -7,7 +7,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@section('head')
   @show
-	@if(1)
+	@if(0)
 	<link type="text/css" rel="stylesheet" href="/css/ms-dev-mode-file.css?v={{uniqid()}}" />
 	@else
 	<link type="text/css" rel="stylesheet" href="/css/ms.min.css?v={{uniqid()}}" />
@@ -231,7 +231,7 @@
 	</footer>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	@if(1)
+	@if(0)
 	<script src="/js/ms-dev-mode-file.js"></script>
 	@else
 	<script src="/js/ms.min.js?v={{uniqid()}}" defer></script>

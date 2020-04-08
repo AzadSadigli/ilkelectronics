@@ -33,7 +33,7 @@
 						@foreach(App\Pages::where('status',0)->where('important',1)->get() as $page)
 							<li><a href="/page/{{$page->slug}}">{{$page->shortname}}</a></li>
 						@endforeach
-
+						@if(0)
 						<!-- <li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
@@ -43,6 +43,7 @@
 								<li><a href="#">Spanish (Es)</a></li>
 							</ul>
 						</li> -->
+						@endif
 						@if(!empty(conf("currencies")))
 						<li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">@if(empty(get("currency"))) AZN @else {{get("currency")}} @endif <i class="fa fa-caret-down"></i></a>
@@ -83,13 +84,6 @@
 					<ul class="header-btns">
 					<li class="nav-toggle">
 						<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-align-left"></i></button>
-					</li>
-					<li>
-						<a id="search_icon">
-							<div class="header-btns-icon">
-								<i class="fa fa-search"></i>
-							</div>
-						</a>
 					</li>
 						@if(Auth::check())
 						<li class="header-cart dropdown default-dropdown frst">
@@ -133,6 +127,13 @@
 								<li><a href="/account?action=register"><i class="fa fa-user-plus"></i> {{__('app.Register')}}</a></li>
 								@endif
 							</ul>
+						</li>
+						<li class="btn-icon-header dropdown">
+							<a id="search_icon">
+								<div class="header-btns-icon">
+									<i class="fa fa-search"></i>
+								</div>
+							</a>
 						</li>
 					</ul>
 				</div>

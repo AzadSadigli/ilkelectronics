@@ -13930,7 +13930,7 @@ a {
     .header-btns strong{
       display: none;
     }
-    .header-btns > .default-dropdown{
+    .header-btns > .default-dropdown,.header-btns > .btn-icon-header{
       float: right;
     }
     .header-btns .custom-menu{

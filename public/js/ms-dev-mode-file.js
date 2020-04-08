@@ -6558,7 +6558,7 @@ const $_get = (index) => {
       "#region",
       "#contact_number"
     ];
-    for (var n = 0; n < ids.length; n++) {
+    for (var n = 1; n < ids.length; n++) {
       if (isNotNull($(ids[n]).val())) {
         isValidInput($(ids[n]));
       }else{

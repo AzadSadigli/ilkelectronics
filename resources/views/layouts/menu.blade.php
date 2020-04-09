@@ -1,7 +1,7 @@
 	<div id="navigation">
 		<div class="container">
 			<div id="responsive-nav">
-				<div class="category-nav @if(!Request::is('/')) show-on-click @endif">
+				<div class="category-nav show-on-click">
 					<span class="category-header">{{__('app.Categories')}} <i class="fa fa-list"></i></span>
 					<ul class="category-list">
 						@foreach($cats as $ct)

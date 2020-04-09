@@ -7,7 +7,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@section('head')
   @show
-	@if(0)
+	@if(1)
 	<link type="text/css" rel="stylesheet" href="/css/ms-dev-mode-file.css?v={{uniqid()}}" />
 	@else
 	<link type="text/css" rel="stylesheet" href="/css/ms.min.css?v={{uniqid()}}" />

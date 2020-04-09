@@ -69,7 +69,7 @@ class SlideController extends Controller
       if (in_array($req->page_type,["slide","poster"])) {
         if ($req->page_type === "slide") {
           $ps->type = 0;
-          $a = 1200;$b = 675;
+          $a = 1200;$b = 400;
         }else{
           $ps->type = 1;
           $a = 420;$b = 700;

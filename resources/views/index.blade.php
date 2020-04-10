@@ -87,7 +87,7 @@
 							<div class="product-thumb">
 								<div class="product-label">
 								</div>
-								@if(!empty($bp->old_price)) <span class="prod-discount"><p>{{(int)$bp->old_price - (int)$bp->price}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
+								@if(!empty($bp->old_price)) <span class="prod-discount"><p>{{(int)$bp->old_price - (int)$bp->price}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 								@php($lns = App\Loans::where('prod_id',$bp->id)->where('rate',0)->orderBy('duration','desc')->first())
 								@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
@@ -110,7 +110,7 @@
 							</div>
 							<div class="product-body">
 								<h3 class="product-name"><a href="/product/{{$bp->slug}}">{{str_limit($bp->productname,$limit = 80,$end="...")}}</a></h3>
-								<h2 class="product-price">{{$bp->price}} {{currency()}} @if(!empty($bp->old_price)) <del class="product-old-price">{{$bp->old_price}} {{currency()}}</del>@endif</h2>
+								<h2 class="product-price"> @if(!empty($bp->old_price)) {{$bp->old_price}} @else {{$bp->price}} @endif {{currency()}}</h2>
 								<div class="product-btns">
 									@if(Auth::check())
 										@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$bp->id)->first()))
@@ -145,7 +145,7 @@
 						<div class="product-label">
 							@if(nd(\Carbon\Carbon::parse($pro->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 						</div>
-						@if(!empty($pro->old_price)) <span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
+						@if(!empty($pro->old_price)) <span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 						@php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
 						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
@@ -165,7 +165,7 @@
 					</div>
 					<div class="product-body">
 						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{str_limit($pro->productname,$limit = 80,$end="...")}}</a></h3>
-						<h2 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h2>
+						<h2 class="product-price"> @if(!empty($pro->old_price)){{$pro->old_price}} @else {{$pro->price}} @endif {{currency()}}</h2>
 						<div class="product-btns">
 							@if(Auth::check())
 								@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pro->id)->first()))

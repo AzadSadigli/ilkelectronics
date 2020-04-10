@@ -6123,13 +6123,14 @@ const $_get = (index) => {
               product_btns = "<div class='product-btns'><a class='primary-btn add-to-cart' data-id='"+val.id+"'><i class='fa fa-shopping-cart'></i></a> <a href='/order-product/"+val.slug+"' class='main-btn'>"+orn+"</a></div>";
             }
             if (time_diff(val.date) <= 40) {new_case = "<span>"+$(id).data("words").split(",")[0]+"</span>";}
+            old_price = val.price+val.currency;
             if (val.old_price != val.price && parseInt(val.old_price) != 0 && val.old_price !== null) {
-              discount = `<span class='prod-discount'><p>${Math.ceil(val.old_price.replace(',','') - val.price.replace(',',''))}${val.currency}</p><i>${$("#prod_list").data("words").split(",")[5]}</i></span>`;
-              old_price = " <del class='product-old-price'>"+val.old_price+ val.currency+"</del>";
+              discount = `<span class='prod-discount'><p>${Math.ceil(val.old_price.replace(',','') - val.price.replace(',',''))}${val.currency}</p><span>${$("#prod_list").data("words").split(",")[5]}</span></span>`;
+              old_price = val.old_price+ val.currency;
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
             let loan = val.loan != 0 ? `<i class="ln_head"><b>${val.loan} ${$("#prod_list").data("words").split(",")[4]}</b></i>` : '';
-						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+"</div>"+discount+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>"+val.price+val.currency + old_price+" </h2>"+product_btns+"</div></div></div>";
+						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+"</div>"+discount+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>" + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);
           // $(id + "img.lazy").lazyload();

@@ -13015,7 +13015,9 @@ font-weight: bold;
     display: inline-block;
     vertical-align: top;
 }
-
+.prod-desc{
+  margin-top: 33px;
+}
 .row-filter>a {
     display: inline-block;
     height: 40px;

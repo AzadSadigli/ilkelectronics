@@ -34,7 +34,7 @@
 					</div>
 					<div class="product-body">
 						<h3 class="product-name"><a href="/product/{{$pro->slug}}">{{str_limit($pro->productname,$limit = 80,$end="...")}}</a></h3>
-						<h2 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del>@endif</h2>
+						<h2 class="product-price">@if(!empty($pro->old_price)){{$pro->old_price}} @else {{$pro->price}} @endif {{currency()}}</h2>
 						<div class="product-btns">
 							@if(Auth::check())
   							@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pro->id)->first()))

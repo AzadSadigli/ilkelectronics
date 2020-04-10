@@ -43,7 +43,7 @@
 							</div>
 							@endif
 						</div>
-						@if(!empty($pro->old_price))<span class="prod-discount-top"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
+						@if(!empty($pro->old_price))<span class="prod-discount-top"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 						@if(count($imgs) !== 0)
 						<div id="product-view">
 							@foreach($imgs as $img)
@@ -58,11 +58,11 @@
 						<div class="product-body">
 							<div class="product-label">
 								@if(nd($pro->created_at))<span>{{__('app.New')}}</span> @endif
-								@if(!empty($pro->old_price)) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
+								@if(!empty($pro->old_price) && 0) <span class="sale">{{discount($pro->old_price,$pro->price)}} %</span> @endif
 							</div>
 							<h2 class="product-name">{{$pro->productname}}</h2>
 
-							<h3 class="product-price">{{$pro->price}} {{currency()}} @if(!empty($pro->old_price)) <del class="product-old-price">{{$pro->old_price}} {{currency()}}</del> @endif</h3>
+							<h3 class="product-price"> @if(!empty($pro->old_price)) {{$pro->old_price}} @else {{$pro->price}} @endif {{currency()}} </h3>
 							<div id="un_product_rating">
 								<div class="product-rating"></div>
 								<a href="#reviews">{{__('app.Reviews')}} / {{__('app.Add_review')}}</a>
@@ -82,6 +82,7 @@
 								<a class="primary-btn add-to-cart" data-id="{{$pro->id}}"><i class="fa fa-shopping-cart"></i></a>
 								<a href="/order-product/{{$pro->slug}}" class="main-btn">{{__('app.Order_now')}}</a>
 							</div>
+							<p class="prod-desc">{!! $pro->description !!}</p>
 						</div>
 					</div>
 					<div class="col-md-12">
@@ -152,8 +153,10 @@
 											@endforeach
 								    </tbody>
 								  </table>
+									@if(false)
 									<strong>{{$pro->description_title}}</strong>
 									<p>{{$pro->description}}</p>
+									@endif
 								</div>
 								<div id="reviews" class="tab-pane fade in">
 									<div class="row">
@@ -219,7 +222,7 @@
 							<div class="product-label">
 								@if(nd(\Carbon\Carbon::parse($pr->created_at)->format('Y-m-d'))) <span>{{__('app.New')}}</span> @endif
 							</div>
-							@if(!empty($pr->old_price)) <span class="prod-discount"><p>{{(int)$pr->old_price - (int)$pr->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
+							@if(!empty($pr->old_price)) <span class="prod-discount"><p>{{(int)$pr->old_price - (int)$pr->price}}{{currency()}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 	            @php($lns = App\Loans::where('prod_id',$pr->id)->where('rate',0)->orderBy('duration','desc')->first())
 							@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
 							<a href="/product/{{$pr->slug}}" title="{{$pr->productname}}" class="main-btn quick-view"></a>
@@ -241,7 +244,7 @@
 						</div>
 						<div class="product-body">
 							<h3 class="product-name"><a href="/product/{{$pr->slug}}" title="{{$pr->productname}}">{{str_limit($pr->productname,$limit = 80,$end="...")}}</a></h3>
-							<h2 class="product-price">{{$pr->price}} {{currency()}} @if(!empty($pr->old_price)) <del class="product-old-price">{{$pr->old_price}} {{currency()}}</del>@endif</h2>
+							<h2 class="product-price"> @if(!empty($pr->old_price)) {{$pr->old_price}} @else {{$pr->price}} @endif {{currency()}}</h2>
 							<div class="product-btns">
 								@if(Auth::check())
 									@if(empty(App\Wishlist::where('user_id',Auth::user()->id)->where('prod_id',$pr->id)->first()))

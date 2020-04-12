@@ -6034,7 +6034,7 @@ const $_get = (index) => {
           for (var i = 0; i < data.list.length; i++) {
             let vl = data.list[i];
             let img = `<img src='/uploads/pro/small/${vl.image}' alt='${vl.productname}'>`;
-            html += `<div class='product product-widget'><div class='product-thumb'>${img}</div><div class='product-body'><h3 class='product-price'>${vl.old_price ? vl.old_price : vl.price}${data.currency}<span class='qty'> x ${vl.wquantity}</span></h3><h2 class='product-name'><a href='/product/${vl.slug}'>${str_limit(vl.productname,50)}</a></h2></div><a class='wdelete cancel-btn' data-id='${vl.id}'><i class='fa fa-trash'></i></a></div>`;
+            html += `<div class='product product-widget'><div class='product-thumb'>${img}</div><div class='product-body'><h3 class='product-price'>${number_format((vl.old_price ? vl.old_price : vl.price),0)}${data.currency}<span class='qty'> x ${vl.wquantity}</span></h3><h2 class='product-name'><a href='/product/${vl.slug}'>${str_limit(vl.productname,50)}</a></h2></div><a class='wdelete cancel-btn' data-id='${vl.id}'><i class='fa fa-trash'></i></a></div>`;
           }
           $("#wishlist_head").html(html);
           // $(".wish_total").html(data.total +data.currency);
@@ -6044,10 +6044,10 @@ const $_get = (index) => {
             let vl = data.list[i];
             pc += vl.old_price ? vl.old_price*vl.wquantity : vl.price*vl.wquantity;
             let img = `/uploads/pro/small/${vl.image}`;
-            html += `<tr><td class='thumb'><img src='${img}' alt=''></td><td class='details'><a href='/product/${vl.slug}'>${vl.productname}</a></td><td class='price text-center'><strong>${vl.old_price}${data.currency}</strong></td><td class='qty text-center'><input class='input' type='number' data-id='${vl.pid}' value='${vl.wquantity}'></td>
-                        <td class='total text-center'><strong class='primary-color'>${(vl.old_price ? parseFloat(vl.old_price)*vl.wquantity : parseFloat(vl.price)*vl.wquantity)}${data.currency}</strong></td><td class='text-right'><a class='main-btn icon-btn wdelete' data-id='${vl.id}'><i class='fa fa-close'></i></a></td></tr>`;
+            html += `<tr><td class='thumb'><img src='${img}' alt=''></td><td class='details'><a href='/product/${vl.slug}'>${vl.productname}</a></td><td class='price text-center'><strong>${number_format((vl.old_price ? vl.old_price : vl.price),0)}${data.currency}</strong></td><td class='qty text-center'><input class='input' type='number' data-id='${vl.pid}' value='${vl.wquantity}'></td>
+                        <td class='total text-center'><strong class='primary-color'>${(vl.old_price ? number_format(parseFloat(vl.old_price)*vl.wquantity,0) : number_format(parseFloat(vl.price)*vl.wquantity,0))}${data.currency}</strong></td><td class='text-right'><a class='main-btn icon-btn wdelete' data-id='${vl.id}'><i class='fa fa-close'></i></a></td></tr>`;
           }
-          $("#wsh_total").html(pc+data.currency);
+          $("#wsh_total").html(number_format(pc,0)+data.currency);
           $("#wishlist_tbody").html(html);
         }
       }

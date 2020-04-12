@@ -5975,7 +5975,7 @@ const $_get = (index) => {
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      // timer: 3000
+      timer: 3000
     });
   const notify = (message,type) => {
     // let len = $(".notify").length;
@@ -6089,7 +6089,7 @@ const $_get = (index) => {
       url: '/delete-wishlist',
       type: 'GET',data:{id:$(this).data("id")},
       success:function(data){
-        notify(data.success,"danger");
+        notify(data.success,"success");
         wishlist_head(0);
         wishlist_head(1);
       }

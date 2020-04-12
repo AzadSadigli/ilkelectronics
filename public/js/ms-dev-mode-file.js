@@ -6085,8 +6085,8 @@ const $_get = (index) => {
   });
 
   $db.on("click",".wdelete",function(){
-    $(this).removeClass('wdelete');
-    btn_spin($(this).find('i'));
+    $(this).removeClass('wdelete').find('i').addClass('fa-spin');
+    // btn_spin($(this).find('i'));
     $.ajax({
       url: '/delete-wishlist',
       type: 'GET',data:{id:$(this).data("id")},

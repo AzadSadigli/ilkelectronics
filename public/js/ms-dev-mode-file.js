@@ -6131,7 +6131,7 @@ const $_get = (index) => {
               old_price = val.old_price+ val.currency;
             }
             if (pro_numb > data.pros.length) {$(".load-section").css("display","none");}
-            let loan = val.loan != 0 ? `<i class="ln_head"><b>${val.loan} ${$("#prod_list").data("words").split(",")[4]}</b></i>` : '';
+            let loan = val.loan != 0 ? `<span class="ln_head"><b>${val.loan} ${$("#prod_list").data("words").split(",")[4]}</b></span>` : '';
 						html += "<div class='col-md-4 col-sm-6 col-xs-6'><div class='product product-single'><div class='product-thumb'><div class='product-label'>"+new_case+"</div>"+discount+loan+"<a class='main-btn quick-view' href='/product/"+val.slug+"'></a><img "+img+" alt='"+val.productname+"'><div class='product-rating'>"+star+"</div></div><div class='product-body'><h3 class='product-name'><a href='/product/"+val.slug+"'>"+str_limit(val.productname,85)+"</a></h3><h2 class='product-price'>" + old_price+" </h2>"+product_btns+"</div></div></div>";
 					}
 					$(id).html(html);

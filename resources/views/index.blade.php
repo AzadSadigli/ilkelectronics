@@ -89,7 +89,7 @@
 								</div>
 								@if(!empty($bp->old_price)) <span class="prod-discount"><p>{{(int)$bp->old_price - (int)$bp->price}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 								@php($lns = App\Loans::where('prod_id',$bp->id)->where('rate',0)->orderBy('duration','desc')->first())
-								@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
+								@if(!empty($lns))<span class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></span>@endif
 								<ul class="product-countdown pro_countdown" data-date="{{$bp->end_date}}">
 									<li><span></span></li><li><span></span></li><li><span></span></li><li><span></span></li>
 								</ul>
@@ -147,7 +147,7 @@
 						</div>
 						@if(!empty($pro->old_price)) <span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <span>{{__('app.Discount_on_cash')}}</span> </span> @endif
 						@php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
-						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
+						@if(!empty($lns))<span class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></span>@endif
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img {{isset($img_ldng) ? $img_ldng : 'src='}}"/img/default.png" alt="{{$pro->productname}}">
 						@else @php($img = App\Images::where('prod_id',$pro->id)->orderBy('order','asc')->first())

@@ -15,7 +15,7 @@
 						</div>
             @if(!empty($pro->old_price)) <span class="prod-discount"><p>{{(int)$pro->old_price - (int)$pro->price}}{{currency()}}</p> <i>{{__('app.Discount_on_cash')}}</i> </span> @endif
             @php($lns = App\Loans::where('prod_id',$pro->id)->where('rate',0)->orderBy('duration','desc')->first())
-						@if(!empty($lns))<i class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></i>@endif
+						@if(!empty($lns))<span class="ln_head"><b>{{$lns->duration}} {{__('app.Interest_free')}}</b></span>@endif
 						<a href="/product/{{$pro->slug}}" class="main-btn quick-view"></a>
 						@if(App\Images::where('prod_id',$pro->id)->count() == 0)
 						<img src="/img/default.png" alt="{{$pro->productname}}">

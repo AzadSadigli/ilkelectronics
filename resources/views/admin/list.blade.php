@@ -31,6 +31,7 @@
               {{__('app.Categories')}}
             </a>
           </p>
+          @if(isset($cats))
           <div class="collapse" id="categories_list">
             <!-- <div class="card card-xbody"> -->
               <div class="btn-group">
@@ -40,6 +41,7 @@
               </div>
             <!-- </div> -->
           </div>
+          @endif
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

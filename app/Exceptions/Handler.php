@@ -52,6 +52,13 @@ class Handler extends ExceptionHandler
         if($this->isHttpException($e)){
           return redirect('/error');
         }else{
+          $whitelist = array(
+              '127.0.0.1',
+              '::1'
+          );
+          if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+            return redirect('/error-500');
+          }
           return parent::render($request, $e);
           // return redirect('/error');
         }

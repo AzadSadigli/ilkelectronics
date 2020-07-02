@@ -16,6 +16,7 @@ use App\News;
 
 Route::get('/get-lang-list','Controller@get_langs');
 Route::get('/error','Controller@error_page');
+Route::get('/error-500','Controller@error_five_hundred');
 Route::get('/','ProductController@index');
 Route::get('/currency/{currency}','Controller@change_currency');
 

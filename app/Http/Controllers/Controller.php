@@ -191,4 +191,7 @@ class Controller extends BaseController
       $type = $type || "default";
       return view('error',compact('type'));
     }
+    function error_five_hundred(){
+      return view('error_500');
+    }
 }

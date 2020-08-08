@@ -127,7 +127,7 @@
                                         @foreach($home_orders_ns as $or)
                                         <tr>
                                             <td>{{$or->name}} {{$or->surname}}</td>
-                                            <td style="width:300px;"><a href="/product/{{$or->product->slug}}" target="_blank">{{$or->product->productname}}</a> </td>
+                                            <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif >{{$or->product->productname}}</a> </td>
                                             <td>{{$or->email}}</td>
                                             <td>{{$or->contact_number}} </td>
                                             <td>
@@ -190,7 +190,7 @@
                                           @foreach($home_orders as $or)
                                           <tr>
                                               <td>{{$or->name}} {{$or->surname}}</td>
-                                              <td style="width:300px;"><a href="/product/{{$or->product->slug}}" target="_blank">{{$or->product->productname}}</a> </td>
+                                              <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif>{{$or->product->productname}}</a> </td>
                                               <td>{{$or->email}}</td>
                                               <td>{{$or->contact_number}} </td>
                                               <td>
@@ -258,7 +258,7 @@
                                     <tbody>
                                         @foreach($home_prods as $pr)
                                         <tr>
-                                            <td><a href="/product/{{$pr->slug}}" target="_blank">{{$pr->productname}}</a> </td>
+                                            <td><a @if(isset($pr->slug)) href="/product/{{$pr->slug}}" target="_blank" @endif>{{$pr->productname}}</a> </td>
                                             <td>{{$pr->created_at}}</td>
                                             <td>{{$pr->views}} {{__('app.times')}}</td>
                                         </tr>
@@ -289,7 +289,7 @@
                                           @if(!empty($ct->numbs))
                                           <tr>
                                               <td>{{$ct->id}}</td>
-                                              <td><a href="/category/{{$ct->slug}}" target="_blank">{{$ct->name}}</a> </td>
+                                              <td><a @if(isset($ct->slug)) href="/category/{{$ct->slug}}" target="_blank" @endif>{{$ct->name}}</a> </td>
                                               <td>{{\Carbon\Carbon::parse($ct->created_at)->format('d M,Y')}}</td>
                                               <td>{{$ct->numbs}} {{__('app.times')}}</td>
                                           </tr>

@@ -57,7 +57,8 @@ class Handler extends ExceptionHandler
               '::1'
           );
           if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
-            return redirect('/error-500');
+            // return redirect('/error-500');
+            return parent::render($request, $e);
           }
           return parent::render($request, $e);
           // return redirect('/error');

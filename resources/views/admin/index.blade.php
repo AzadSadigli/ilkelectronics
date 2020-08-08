@@ -127,7 +127,7 @@
                                         @foreach($home_orders_ns as $or)
                                         <tr>
                                             <td>{{$or->name}} {{$or->surname}}</td>
-                                            <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif >{{$or->product->productname}}</a> </td>
+                                            <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif >@if(isset($or->product->productname)) {{$or->product->productname}} @else --- @endif</a> </td>
                                             <td>{{$or->email}}</td>
                                             <td>{{$or->contact_number}} </td>
                                             <td>
@@ -190,7 +190,7 @@
                                           @foreach($home_orders as $or)
                                           <tr>
                                               <td>{{$or->name}} {{$or->surname}}</td>
-                                              <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif>{{$or->product->productname}}</a> </td>
+                                              <td style="width:300px;"><a @if(isset($or->product->slug)) href="/product/{{$or->product->slug}}" target="_blank" @endif>@if(isset($or->product->productname)) {{$or->product->productname}} @else --- @endif</a> </td>
                                               <td>{{$or->email}}</td>
                                               <td>{{$or->contact_number}} </td>
                                               <td>
@@ -214,7 +214,7 @@
                                                     <li class='list-group-item'><b>ID:</b> {{$or->id}}</li>
                                                     <li class='list-group-item'><b>{{__('app.Orderer')}}:</b> {{$or->name}} {{$or->surname}}</li>
                                                     <li class='list-group-item'><b>{{__('app.Father_name')}}:</b> {{$or->father_name}} </li>
-                                                    <li class='list-group-item'><b>{{__('app.Product')}}:</b> {{$or->product->productname}}</li>
+                                                    <li class='list-group-item'><b>{{__('app.Product')}}:</b> @if(isset($or->product->productname)) {{$or->product->productname}} @else --- @endif</li>
                                                     <li class='list-group-item'><b>{{__('app.Quantity')}}:</b> {{$or->quantity}}</li>
                                                     <li class='list-group-item'><b>{{__('app.Email')}}:</b> {{$or->email}}</li>
                                                     <li class='list-group-item'><b>{{__('app.ID_card')}}:</b> {{$or->id_seria}} / {{$or->id_number}} / {{$or->id_pin}}</li>
@@ -258,7 +258,7 @@
                                     <tbody>
                                         @foreach($home_prods as $pr)
                                         <tr>
-                                            <td><a @if(isset($pr->slug)) href="/product/{{$pr->slug}}" target="_blank" @endif>{{$pr->productname}}</a> </td>
+                                            <td><a @if(isset($pr->slug)) href="/product/{{$pr->slug}}" target="_blank" @endif > @if(isset($pr->productname)) {{$pr->productname}} @else --- @endif</a> </td>
                                             <td>{{$pr->created_at}}</td>
                                             <td>{{$pr->views}} {{__('app.times')}}</td>
                                         </tr>
